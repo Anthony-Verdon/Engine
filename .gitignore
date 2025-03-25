@@ -1,0 +1,5 @@
+.xmake
+build
+*.a
+*.o
+*.d
