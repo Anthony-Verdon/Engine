@@ -1,14 +1,14 @@
 #pragma once
 
 #include <string>
-#include <glm/glm.hpp>
+#include "vec/vec.hpp"
 
 struct Sprite
 {
     std::string textureName;
-    glm::vec2 textureSize; // nb sprite on x and y axis
-    glm::vec2 spriteCoords; // depending of texture size
-    glm::vec2 size;
+    ml::vec2 textureSize; // nb sprite on x and y axis
+    ml::vec2 spriteCoords; // depending of texture size
+    ml::vec2 size;
 
     bool operator==(const Sprite& other) const
     {

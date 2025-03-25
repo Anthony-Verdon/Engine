@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/2D/Renderers/SpriteRenderer/SpriteRenderer.hpp"
-#include <glm/glm.hpp>
+#include "vec/vec.hpp"
 #include <vector>
 
 class Animation

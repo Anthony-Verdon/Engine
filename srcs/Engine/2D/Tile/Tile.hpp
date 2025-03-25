@@ -2,14 +2,14 @@
 
 #include "Engine/2D/Sprite/Sprite.hpp"
 #include "Engine/2D/ATileBehavior/ATileBehavior.hpp"
-#include <glm/glm.hpp>
+#include "vec/vec.hpp"
 #include <vector>
 #include <memory>
 
 struct Tile
 {
     Sprite sprite;
-    glm::vec2 spriteOffset;
+    ml::vec2 spriteOffset;
     std::vector<TileBehaviorType> behaviors;
 
     bool operator==(const Tile& other) const

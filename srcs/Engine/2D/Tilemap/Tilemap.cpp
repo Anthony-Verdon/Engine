@@ -9,18 +9,18 @@
 #include <vector>
 #include <algorithm>
 
-const std::array<glm::vec2, 4> directions {
-    glm::vec2(0, -SPRITE_SIZE), // top
-    glm::vec2(SPRITE_SIZE, 0),  // right
-    glm::vec2(0, SPRITE_SIZE),  // bottom
-    glm::vec2(-SPRITE_SIZE, 0)  // left
+const std::array<ml::vec2, 4> directions {
+    ml::vec2(0, -SPRITE_SIZE), // top
+    ml::vec2(SPRITE_SIZE, 0),  // right
+    ml::vec2(0, SPRITE_SIZE),  // bottom
+    ml::vec2(-SPRITE_SIZE, 0)  // left
 };
 
-const std::array<std::pair<glm::vec2, glm::vec2>, 4> points {
-    std::make_pair(glm::vec2(-SPRITE_SIZE, -SPRITE_SIZE) / 2.0f, glm::vec2(SPRITE_SIZE, -SPRITE_SIZE) / 2.0f),  // top
-    std::make_pair(glm::vec2(SPRITE_SIZE, -SPRITE_SIZE) / 2.0f, glm::vec2(SPRITE_SIZE, SPRITE_SIZE) / 2.0f),    // right
-    std::make_pair(glm::vec2(-SPRITE_SIZE, SPRITE_SIZE) / 2.0f, glm::vec2(SPRITE_SIZE, SPRITE_SIZE) / 2.0f),    // bottom
-    std::make_pair(glm::vec2(-SPRITE_SIZE, -SPRITE_SIZE) / 2.0f, glm::vec2(-SPRITE_SIZE, SPRITE_SIZE) / 2.0f)   // left
+const std::array<std::pair<ml::vec2, ml::vec2>, 4> points {
+    std::make_pair(ml::vec2(-SPRITE_SIZE, -SPRITE_SIZE) / 2.0f, ml::vec2(SPRITE_SIZE, -SPRITE_SIZE) / 2.0f),  // top
+    std::make_pair(ml::vec2(SPRITE_SIZE, -SPRITE_SIZE) / 2.0f, ml::vec2(SPRITE_SIZE, SPRITE_SIZE) / 2.0f),    // right
+    std::make_pair(ml::vec2(-SPRITE_SIZE, SPRITE_SIZE) / 2.0f, ml::vec2(SPRITE_SIZE, SPRITE_SIZE) / 2.0f),    // bottom
+    std::make_pair(ml::vec2(-SPRITE_SIZE, -SPRITE_SIZE) / 2.0f, ml::vec2(-SPRITE_SIZE, SPRITE_SIZE) / 2.0f)   // left
 };
         
 Tilemap::Tilemap()
@@ -33,12 +33,12 @@ Tilemap::~Tilemap()
 
 }
 
-void Tilemap::AddTile(const glm::vec2 &position, size_t tileIndex)
+void Tilemap::AddTile(const ml::vec2 &position, size_t tileIndex)
 {
     tiles[position] = tileIndex;
 }
 
-void Tilemap::SuppressTile(const glm::vec2 &position)
+void Tilemap::SuppressTile(const ml::vec2 &position)
 {
     auto it = tiles.find(position);
     if (it == tiles.end())
@@ -47,12 +47,12 @@ void Tilemap::SuppressTile(const glm::vec2 &position)
     tiles.erase(it);
 }
 
-bool Tilemap::TileExist(const glm::vec2 &position) const
+bool Tilemap::TileExist(const ml::vec2 &position) const
 {
     return (tiles.find(position) != tiles.end());
 }
 
-Tile Tilemap::GetTile(const glm::vec2 &position) const
+Tile Tilemap::GetTile(const ml::vec2 &position) const
 {
     auto it = tiles.find(position);
     if (it == tiles.end())
@@ -66,7 +66,7 @@ void Tilemap::Draw()
     for (auto it = tiles.begin(); it != tiles.end(); it++)
     {
         Tile tile = TileDictionnary::GetTile(it->second);
-        SpriteRenderer::Draw(it->first - tile.spriteOffset, tile.sprite.size, 0, glm::vec3(1, 1, 1), tile.sprite, false, false, 1);
+        SpriteRenderer::Draw(it->first - tile.spriteOffset, tile.sprite.size, 0, ml::vec3(1, 1, 1), tile.sprite, false, false, 1);
     }
 }
 
@@ -76,7 +76,7 @@ void Tilemap::CreateCollision(b2WorldId worldId)
         return;
     
     // store each line in a multimap, in both sense (A -> B, A <- B)
-    std::multimap<glm::vec2, glm::vec2, Vec2Comparator> lines;
+    std::multimap<ml::vec2, ml::vec2, Vec2Comparator> lines;
     for (auto it = tiles.begin(); it != tiles.end(); it++)
     {
         for (int i = 0; i < 4; i++)
@@ -90,7 +90,7 @@ void Tilemap::CreateCollision(b2WorldId worldId)
     }
 
     // create the path between all the points
-    std::vector<std::vector<glm::vec2>> chains;
+    std::vector<std::vector<ml::vec2>> chains;
     while (lines.size() / 2 != 0)
         chains.push_back(DetermineChainPath(lines));
 
@@ -99,11 +99,11 @@ void Tilemap::CreateCollision(b2WorldId worldId)
         BuildChain(worldId, chains[i]);
 }
 
-std::vector<glm::vec2> Tilemap::DetermineChainPath(std::multimap<glm::vec2, glm::vec2, Vec2Comparator> &lines) const
+std::vector<ml::vec2> Tilemap::DetermineChainPath(std::multimap<ml::vec2, ml::vec2, Vec2Comparator> &lines) const
 {
     // determine path
-    std::vector<glm::vec2> chainPoints;
-    glm::vec2 point = lines.begin()->first;
+    std::vector<ml::vec2> chainPoints;
+    ml::vec2 point = lines.begin()->first;
     for (size_t i = 0; i < lines.size() / 2; i++)
     {
         chainPoints.push_back(point);
@@ -127,8 +127,8 @@ std::vector<glm::vec2> Tilemap::DetermineChainPath(std::multimap<glm::vec2, glm:
     size_t nbPoints = chainPoints.size();
     for (size_t i = 0; i < nbPoints; i++)
     {
-        glm::vec2 p1 = chainPoints[i];
-        glm::vec2 p2 = chainPoints[(i + 1) % nbPoints];
+        ml::vec2 p1 = chainPoints[i];
+        ml::vec2 p2 = chainPoints[(i + 1) % nbPoints];
         for (auto[it, rangeEnd] = lines.equal_range(p1); it != rangeEnd;)
         {
             if (it->second == p2)
@@ -148,7 +148,7 @@ std::vector<glm::vec2> Tilemap::DetermineChainPath(std::multimap<glm::vec2, glm:
     return (chainPoints);
 }
 
-void Tilemap::BuildChain(b2WorldId worldId, const std::vector<glm::vec2> &chain)
+void Tilemap::BuildChain(b2WorldId worldId, const std::vector<ml::vec2> &chain)
 {
     std::vector<b2Vec2> b2Chain;
     for (size_t i = 0; i < chain.size(); i++)

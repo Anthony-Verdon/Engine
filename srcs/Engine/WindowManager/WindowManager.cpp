@@ -6,8 +6,8 @@
 #include "Engine/defines.hpp"
 
 GLFWwindow *WindowManager::window = NULL;
-glm::vec2 WindowManager::mousePosition = glm::vec2(0,0);
-glm::vec2 WindowManager::windowSize = glm::vec2(0,0);
+ml::vec2 WindowManager::mousePosition = ml::vec2(0,0);
+ml::vec2 WindowManager::windowSize = ml::vec2(0,0);
 std::map<int, InputMode> WindowManager::inputMap;
 
 void mouse_position_callback(GLFWwindow *window, double xPos, double yPos);
@@ -55,7 +55,7 @@ void WindowManager::InitWindow(const std::string &name, unsigned int width, unsi
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, key_callback);
 
-    windowSize = glm::vec2(width, height);
+    windowSize = ml::vec2(width, height);
 }
 
 void WindowManager::DestructWindowManager()
@@ -128,7 +128,7 @@ GLFWwindow* WindowManager::GetWindow()
     return (window);
 }
 
-glm::vec2 WindowManager::GetWindowSize()
+ml::vec2 WindowManager::GetWindowSize()
 {
     return (windowSize);
 }
@@ -145,10 +145,10 @@ unsigned int WindowManager::GetWindowHeight()
 
 void WindowManager::SetMousePosition(double xPos, double yPos)
 {
-    mousePosition = glm::vec2(xPos, yPos);
+    mousePosition = ml::vec2(xPos, yPos);
 }
 
-glm::vec2 WindowManager::GetMousePosition()
+ml::vec2 WindowManager::GetMousePosition()
 {
     return (mousePosition);
 }

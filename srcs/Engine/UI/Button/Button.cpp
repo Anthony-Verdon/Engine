@@ -23,7 +23,7 @@ void UI::Button::SetHot(UIState* ui, UIID uiID)
         ui->hotThisFrame = uiID;
 }
 
-bool UI::Button::Draw(UIState *ui, size_t ID, const glm::vec2 &position, const glm::vec2 &size)
+bool UI::Button::Draw(UIState *ui, size_t ID, const ml::vec2 &position, const ml::vec2 &size)
 {
     bool result = false;
 

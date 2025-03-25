@@ -16,12 +16,12 @@ class TilemapManager
         ~TilemapManager() = delete;
     public:
 
-        static void AddTile(const std::string &tilemapName, const glm::vec2 &position, const Tile &tile);
-        static void AddTile(const std::string &tilemapName, const glm::vec2 &position, const Sprite &sprite, const glm::vec2 &spriteOffset);
-        static void SuppressTile(const std::string &tilemapName, const glm::vec2 &position);
+        static void AddTile(const std::string &tilemapName, const ml::vec2 &position, const Tile &tile);
+        static void AddTile(const std::string &tilemapName, const ml::vec2 &position, const Sprite &sprite, const ml::vec2 &spriteOffset);
+        static void SuppressTile(const std::string &tilemapName, const ml::vec2 &position);
         
-        static bool TileExist(const std::string &tilemapName, const glm::vec2 &position);
-        static Tile GetTile(const std::string &tilemapName, const glm::vec2 &position);
+        static bool TileExist(const std::string &tilemapName, const ml::vec2 &position);
+        static Tile GetTile(const std::string &tilemapName, const ml::vec2 &position);
 
         static bool GetBuildCollision(const std::string &tilemapName);
         static void SetBuildCollision(const std::string &tilemapName, bool buildCollision);

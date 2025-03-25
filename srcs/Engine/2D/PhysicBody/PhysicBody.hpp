@@ -1,7 +1,7 @@
 #pragma once
 
 #include <box2d/box2d.h>
-#include <glm/glm.hpp>
+#include "vec/vec.hpp"
 #include <string>
 #include <map>
 #include <memory>
@@ -21,7 +21,7 @@ class PhysicBody
 
         b2BodyId GetBodyId() const;
         b2ShapeId GetShape(const std::string &name) const;
-        glm::vec2 GetPosition() const;
+        ml::vec2 GetPosition() const;
         float GetAngle() const;
 
 
@@ -37,7 +37,7 @@ class PhysicBody
                 BodyBuilder();
                 ~BodyBuilder();
 
-                BodyBuilder& SetPosition(const glm::vec2 &position);
+                BodyBuilder& SetPosition(const ml::vec2 &position);
                 BodyBuilder& SetEnable(bool enable);
                 BodyBuilder& SetType(b2BodyType type);
                 BodyBuilder& SetFixedRotation(bool fixedRotation);
@@ -69,6 +69,6 @@ class PhysicBody
                 PolygonBuilder() = delete;
                 ~PolygonBuilder() = delete;
 
-                static b2Polygon Build(const glm::vec2 &size, const glm::vec2 &position = glm::vec2(0, 0), float rotation = 0);
+                static b2Polygon Build(const ml::vec2 &size, const ml::vec2 &position = ml::vec2(0, 0), float rotation = 0);
         };
 };

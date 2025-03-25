@@ -1,6 +1,7 @@
 #include "Engine/2D/PhysicBody/PhysicBody.hpp"
 #include <iostream>
 #include "Engine/defines.hpp"
+#include "geometry/geometry.hpp"
 
 //***************************************
 // PHYSICBODY
@@ -52,15 +53,15 @@ b2ShapeId PhysicBody::GetShape(const std::string &name) const
         return (b2_nullShapeId);
 }
 
-glm::vec2 PhysicBody::GetPosition() const
+ml::vec2 PhysicBody::GetPosition() const
 {
     b2Vec2 worldPosition = b2Body_GetPosition(*id);
-    return (glm::vec2(WorldToPixel(worldPosition.x), WorldToPixel(worldPosition.y)));
+    return (ml::vec2(WorldToPixel(worldPosition.x), WorldToPixel(worldPosition.y)));
 }
 
 float PhysicBody::GetAngle() const
 {
-    return (glm::degrees(b2Rot_GetAngle(b2Body_GetRotation(*id))));
+    return (ml::degrees(b2Rot_GetAngle(b2Body_GetRotation(*id))));
 }
 
 //***************************************
@@ -77,7 +78,7 @@ PhysicBody::BodyBuilder::~BodyBuilder()
 
 }
 
-PhysicBody::BodyBuilder& PhysicBody::BodyBuilder::SetPosition(const glm::vec2 &position)
+PhysicBody::BodyBuilder& PhysicBody::BodyBuilder::SetPosition(const ml::vec2 &position)
 {
     bodyDef.position = (b2Vec2){PixelToWorld(position.x), PixelToWorld(position.y)};
     return (*this);
@@ -157,9 +158,9 @@ b2ShapeDef PhysicBody::ShapeBuilder::Build()
 // POLYGONBUILDER
 //***************************************
 
-b2Polygon PhysicBody::PolygonBuilder::Build(const glm::vec2 &size, const glm::vec2 &position, float rotation)
+b2Polygon PhysicBody::PolygonBuilder::Build(const ml::vec2 &size, const ml::vec2 &position, float rotation)
 {
-    if (position == glm::vec2(0, 0))
+    if (position == ml::vec2(0, 0))
     {
         return (b2MakeBox(PixelToWorld(size.x / 2), PixelToWorld(size.y / 2)));
     }
@@ -174,7 +175,7 @@ b2Polygon PhysicBody::PolygonBuilder::Build(const glm::vec2 &size, const glm::ve
 
         b2Transform transform;
         transform.p = (b2Vec2){PixelToWorld(position.x), PixelToWorld(position.y)};
-        transform.q = b2MakeRot(glm::radians(rotation));
+        transform.q = b2MakeRot(ml::radians(rotation));
 
         return (b2MakeOffsetPolygon(&hull, 0, transform));
     }

@@ -2,14 +2,14 @@
 #include "Engine/RessourceManager/RessourceManager.hpp"
 #include "Engine/WindowManager/WindowManager.hpp"
 #include <glad/glad.h>
-#include <glm/gtc/matrix_transform.hpp>
+#include "geometry/geometry.hpp"
 #include "Engine/macros.hpp"
 
 unsigned int SpriteRenderer::VAO = -1;
 unsigned int SpriteRenderer::VBO = -1;
 bool SpriteRenderer::isInit = false;
-glm::mat4 SpriteRenderer::projectionMatAbsolute;
-glm::mat4 SpriteRenderer::projectionMatRelative;
+ml::mat4 SpriteRenderer::projectionMatAbsolute;
+ml::mat4 SpriteRenderer::projectionMatRelative;
 
 void SpriteRenderer::Init()
 {
@@ -19,7 +19,7 @@ void SpriteRenderer::Init()
     std::shared_ptr<Shader> spriteShader = RessourceManager::GetShader("Sprite");
     spriteShader->use();
     spriteShader->setInt("image", 0);
-    projectionMatAbsolute = glm::ortho(0.0f, (float)WindowManager::GetWindowWidth(), (float)WindowManager::GetWindowHeight(), 0.0f, -1.0f, 1.0f);
+    projectionMatAbsolute = ml::ortho(0.0f, (float)WindowManager::GetWindowWidth(), (float)WindowManager::GetWindowHeight(), 0.0f, -1.0f, 1.0f);
     spriteShader->setMat4("projection", projectionMatAbsolute);
 
     glGenVertexArrays(1, &VAO);
@@ -75,12 +75,12 @@ void SpriteRenderer::Draw(const SpriteRenderData &data)
     SpriteRenderer::Draw(data.position, data.size, data.rotation, data.color, data.sprite, data.flipHorizontally, data.flipVertically, data.opacity, data.drawAbsolute);
 }
 
-void SpriteRenderer::Draw(const glm::vec2 &position, const glm::vec2 &size, float rotation, const glm::vec3 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, float opacity, bool drawAbsolute)
+void SpriteRenderer::Draw(const ml::vec2 &position, const ml::vec2 &size, float rotation, const ml::vec3 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, float opacity, bool drawAbsolute)
 {
     CHECK_AND_RETURN_VOID(isInit, "SpriteRenderer not initialized");
 
-    glm::vec2 TopLeftCoords;
-    glm::vec2 BotomRightCoords;
+    ml::vec2 TopLeftCoords;
+    ml::vec2 BotomRightCoords;
     TopLeftCoords.x = 1.0f / sprite.textureSize.x * sprite.spriteCoords.x;
     TopLeftCoords.y = 1.0f / sprite.textureSize.y * sprite.spriteCoords.y;
     BotomRightCoords.x = 1.0f / sprite.textureSize.x * (sprite.spriteCoords.x + 1);
@@ -117,10 +117,10 @@ void SpriteRenderer::Draw(const glm::vec2 &position, const glm::vec2 &size, floa
     std::shared_ptr<Shader> spriteShader = RessourceManager::GetShader("Sprite");
     spriteShader->use();
 
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(position, 0.0f));  
-    model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f)); 
-    model = glm::scale(model, glm::vec3(size, 1.0f)); 
+    ml::mat4 model = ml::mat4(1.0f);
+    model = ml::translate(model, ml::vec3(position, 0.0f));  
+    model = ml::rotate(model, ml::radians(rotation), ml::vec3(0.0f, 0.0f, 1.0f)); 
+    model = ml::scale(model, ml::vec3(size, 1.0f)); 
   
     spriteShader->setMat4("model", model);
     spriteShader->setVec3("spriteColor", color);

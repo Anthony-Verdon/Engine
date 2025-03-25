@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "vec/vec.hpp"
 #include <array>
 #include "Engine/2D/Sprite/Sprite.hpp"
 
@@ -48,6 +48,6 @@ namespace UI
             
             void SetSprite(const std::array<Sprite, 3> &sprites) {this->sprites = sprites; }
             
-            bool Draw(UIState *ui, size_t ID, const glm::vec2 &position, const glm::vec2 &size);
+            bool Draw(UIState *ui, size_t ID, const ml::vec2 &position, const ml::vec2 &size);
     };
 };

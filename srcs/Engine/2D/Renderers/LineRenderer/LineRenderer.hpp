@@ -1,6 +1,7 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "vec/vec.hpp"
+#include "mat/mat.hpp"
 
 class LineRenderer
 {
@@ -9,16 +10,16 @@ class LineRenderer
         static unsigned int VBO;
         static bool isInit;
 
-        static glm::mat4 projectionMatAbsolute;
-        static glm::mat4 projectionMatRelative;
+        static ml::mat4 projectionMatAbsolute;
+        static ml::mat4 projectionMatRelative;
 
         LineRenderer() = delete;
         ~LineRenderer() = delete;
     public: 
         static void Init();
         static void Destroy();
-        static void Draw(const glm::vec2 &va, const glm::vec2 &vb, const glm::vec3 &color, bool drawAbsolute = false);
-        static void Draw(const glm::vec2 &va, const glm::vec2 &vb, const glm::vec4 &color, bool drawAbsolute = false); //@todo add something to change lineWidth
+        static void Draw(const ml::vec2 &va, const ml::vec2 &vb, const ml::vec3 &color, bool drawAbsolute = false);
+        static void Draw(const ml::vec2 &va, const ml::vec2 &vb, const ml::vec4 &color, bool drawAbsolute = false); //@todo add something to change lineWidth
 
-        static void SetProjectionMatRelative(const glm::mat4 &projectionMatRelative) { LineRenderer::projectionMatRelative = projectionMatRelative; }
+        static void SetProjectionMatRelative(const ml::mat4 &projectionMatRelative) { LineRenderer::projectionMatRelative = projectionMatRelative; }
 };

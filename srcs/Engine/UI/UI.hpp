@@ -1,9 +1,9 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "vec/vec.hpp"
 
 namespace UI
 {
-    bool PointInRectangle(const glm::vec2 &mousePosition, const glm::vec2 &rectPosition, const glm::vec2 &rectSize);
+    bool PointInRectangle(const ml::vec2 &mousePosition, const ml::vec2 &rectPosition, const ml::vec2 &rectSize);
 
 };

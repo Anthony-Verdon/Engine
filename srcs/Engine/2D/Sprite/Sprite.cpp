@@ -1,3 +1,3 @@
 #include "Engine/2D/Sprite/Sprite.hpp"
 
-Sprite Sprite::none = { "", glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0) };
+Sprite Sprite::none = { "", ml::vec2(0, 0), ml::vec2(0, 0), ml::vec2(0, 0) };

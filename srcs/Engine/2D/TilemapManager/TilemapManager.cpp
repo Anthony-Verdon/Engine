@@ -9,7 +9,7 @@
 std::map<std::string, Tilemap> TilemapManager::tilemaps;
 std::vector<std::string> TilemapManager::tilemapOrder;
 
-void TilemapManager::AddTile(const std::string &tilemapName, const glm::vec2 &position, const Tile &tile)
+void TilemapManager::AddTile(const std::string &tilemapName, const ml::vec2 &position, const Tile &tile)
 {
     auto it = tilemaps.find(tilemapName);
     if (it != tilemaps.end())
@@ -19,7 +19,7 @@ void TilemapManager::AddTile(const std::string &tilemapName, const glm::vec2 &po
     }
 }
 
-void TilemapManager::AddTile(const std::string &tilemapName, const glm::vec2 &position, const Sprite &sprite, const glm::vec2 &spriteOffset)
+void TilemapManager::AddTile(const std::string &tilemapName, const ml::vec2 &position, const Sprite &sprite, const ml::vec2 &spriteOffset)
 {
     Tile newTile;
     newTile.sprite = sprite;
@@ -27,7 +27,7 @@ void TilemapManager::AddTile(const std::string &tilemapName, const glm::vec2 &po
     AddTile(tilemapName, position, newTile);
 }
 
-void TilemapManager::SuppressTile(const std::string &tilemapName, const glm::vec2 &position)
+void TilemapManager::SuppressTile(const std::string &tilemapName, const ml::vec2 &position)
 {
     auto it = tilemaps.find(tilemapName);
     if (it == tilemaps.end())
@@ -36,7 +36,7 @@ void TilemapManager::SuppressTile(const std::string &tilemapName, const glm::vec
     it->second.SuppressTile(position);
 }
 
-bool TilemapManager::TileExist(const std::string &tilemapName, const glm::vec2 &position)
+bool TilemapManager::TileExist(const std::string &tilemapName, const ml::vec2 &position)
 {
     auto it = tilemaps.find(tilemapName);
     if (it == tilemaps.end())
@@ -45,7 +45,7 @@ bool TilemapManager::TileExist(const std::string &tilemapName, const glm::vec2 &
     return (it->second.TileExist(position));
 }
 
-Tile TilemapManager::GetTile(const std::string &tilemapName, const glm::vec2 &position)
+Tile TilemapManager::GetTile(const std::string &tilemapName, const ml::vec2 &position)
 {
     auto it = tilemaps.find(tilemapName);
     if (it == tilemaps.end())
@@ -95,10 +95,10 @@ void TilemapManager::Load()
     {
         Tile tile;
         tile.sprite.textureName = it["sprite"]["texture"]["name"];
-        tile.sprite.textureSize = glm::vec2(it["sprite"]["texture"]["size"][0], it["sprite"]["texture"]["size"][1]);
-        tile.sprite.spriteCoords = glm::vec2(it["sprite"]["position"][0], it["sprite"]["position"][1]);
-        tile.sprite.size = glm::vec2(it["sprite"]["size"][0], it["sprite"]["size"][1]);
-        tile.spriteOffset = glm::vec2(it["sprite"]["offset"][0], it["sprite"]["offset"][1]);
+        tile.sprite.textureSize = ml::vec2(it["sprite"]["texture"]["size"][0], it["sprite"]["texture"]["size"][1]);
+        tile.sprite.spriteCoords = ml::vec2(it["sprite"]["position"][0], it["sprite"]["position"][1]);
+        tile.sprite.size = ml::vec2(it["sprite"]["size"][0], it["sprite"]["size"][1]);
+        tile.spriteOffset = ml::vec2(it["sprite"]["offset"][0], it["sprite"]["offset"][1]);
         auto itBehaviors = it.find("behaviors");
         for (auto itBehavior : *itBehaviors)
             tile.behaviors.push_back(itBehavior);
@@ -118,7 +118,7 @@ void TilemapManager::Load()
         auto itTiles = itTilemap->find("tiles");
         for (auto it : *itTiles)
         {
-            tilemaps[tilemapName].AddTile(glm::vec2(it["position"][0], it["position"][1]), it["index"]);
+            tilemaps[tilemapName].AddTile(ml::vec2(it["position"][0], it["position"][1]), it["index"]);
         }
     }
 }
@@ -153,7 +153,7 @@ void TilemapManager::Save()
         file["tilemaps"][tilemapOrder[i]]["tiles"] = {};
         file["tilemaps"][tilemapOrder[i]]["build collision"] = tilemaps[tilemapOrder[i]].GetBuildCollision();
         
-        std::map<glm::vec2, size_t, Vec2Comparator> tiles = tilemaps[tilemapOrder[i]].GetTiles();
+        std::map<ml::vec2, size_t, Vec2Comparator> tiles = tilemaps[tilemapOrder[i]].GetTiles();
         int j = 0;
         for (auto it = tiles.begin(); it != tiles.end(); it++)
         {
