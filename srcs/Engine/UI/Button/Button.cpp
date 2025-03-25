@@ -1,7 +1,7 @@
 #include "Engine/UI/Button/Button.hpp"
 #include "Engine/UI/UI.hpp"
 #include "Engine/WindowManager/WindowManager.hpp"
-#include "Engine/Renderers/SpriteRenderer/SpriteRenderer.hpp"
+#include "Engine/2D/Renderers/SpriteRenderer/SpriteRenderer.hpp"
 
 UI::Button::Button()
 {

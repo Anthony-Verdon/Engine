@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <array>
-#include "Engine/Sprite/Sprite.hpp"
+#include "Engine/2D/Sprite/Sprite.hpp"
 
 namespace UI
 {
