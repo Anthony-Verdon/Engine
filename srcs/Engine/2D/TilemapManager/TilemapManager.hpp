@@ -31,9 +31,6 @@ class TilemapManager
         static std::vector<std::string> GetTilemapOrder() { return tilemapOrder; }
         static void SetTilemapOrder(const std::vector<std::string> &tilemapOrder) { TilemapManager::tilemapOrder = tilemapOrder; }
         
-        static void Save();
-        static void Load();
-
         static void Draw();
 
         static void AddCollisions(b2WorldId worldId);
