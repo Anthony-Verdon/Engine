@@ -2,8 +2,8 @@
 #include "Engine/RessourceManager/RessourceManager.hpp"
 #include "Engine/WindowManager/WindowManager.hpp"
 #include "Engine/macros.hpp"
-#include "vec/vec.hpp"
-#include "geometry/geometry.hpp"
+#include "Matrix/Matrix.hpp"
+
 
 unsigned int LineRenderer::VAO = -1;
 unsigned int LineRenderer::VBO = -1;

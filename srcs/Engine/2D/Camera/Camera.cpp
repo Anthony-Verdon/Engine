@@ -1,6 +1,6 @@
 #include "Engine/2D/Camera/Camera.hpp"
 #include "Engine/RessourceManager/RessourceManager.hpp"
-#include "geometry/geometry.hpp"
+
 #include "Engine/WindowManager/WindowManager.hpp"
 #include "Engine/2D/Renderers/SpriteRenderer/SpriteRenderer.hpp"
 #include "Engine/2D/Renderers/LineRenderer/LineRenderer.hpp"

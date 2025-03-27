@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "vec/vec.hpp"
+#include "Matrix/Matrix.hpp"
 
 struct Sprite
 {

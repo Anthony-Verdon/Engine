@@ -2,7 +2,7 @@
 #include "Engine/RessourceManager/RessourceManager.hpp"
 #include "Engine/WindowManager/WindowManager.hpp"
 #include <glad/glad.h>
-#include "geometry/geometry.hpp"
+
 #include "Engine/macros.hpp"
 
 unsigned int SpriteRenderer::VAO = -1;

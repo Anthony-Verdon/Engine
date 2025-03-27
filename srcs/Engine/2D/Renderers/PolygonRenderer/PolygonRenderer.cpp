@@ -3,7 +3,7 @@
 #include "Engine/RessourceManager/RessourceManager.hpp"
 #include "Engine/WindowManager/WindowManager.hpp"
 #include "Engine/macros.hpp"
-#include "geometry/geometry.hpp"
+
 
 std::unordered_map<std::string, PolygonGl> PolygonRenderer::polygons;
 bool PolygonRenderer::isInit = false;

@@ -3,8 +3,8 @@
 #include <string>
 
 #include <glad/glad.h>
-#include "vec/vec.hpp"
-#include "mat/mat.hpp"
+#include "Matrix/Matrix.hpp"
+
 
 class Shader
 {

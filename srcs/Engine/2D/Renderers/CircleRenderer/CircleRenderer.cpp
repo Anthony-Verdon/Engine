@@ -5,7 +5,7 @@
 #include "Engine/WindowManager/WindowManager.hpp"
 #include <vector>
 #include <cmath>
-#include "geometry/geometry.hpp"
+
 #include "Engine/macros.hpp"
 
 unsigned int CircleRenderer::VAO = -1;
