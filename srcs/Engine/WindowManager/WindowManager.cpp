@@ -32,7 +32,6 @@ void WindowManager::InitWindow(const std::string &name, unsigned int width, unsi
     if (!window)
         throw(std::runtime_error("INIT_WINDOW::INITIALIZATION_FAILED"));
     glfwMakeContextCurrent(window);
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         throw(std::runtime_error("INIT_OPENGL::INITIALIZATION_FAILED"));
@@ -41,15 +40,19 @@ void WindowManager::InitWindow(const std::string &name, unsigned int width, unsi
     glfwGetFramebufferSize(window, &viewPortWidth, &viewportHeight);
     glViewport(0, 0, viewPortWidth, viewportHeight);
 
+    
+    // region to move in specific function
     glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
-
     // cull face enabled make openGL draw only on one side
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
-    glFrontFace(GL_CW);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_FRONT);
+    //glFrontFace(GL_CW);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glEnable(GL_DEPTH_TEST);
+    // end region
 
     glfwSetCursorPosCallback(window, mouse_position_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
@@ -121,6 +124,16 @@ bool WindowManager::IsInputReleased(int input, float time)
     }
 
     return (inputMap[input].mode == GLFW_RELEASE && inputMap[input].time >= time);
+}
+
+void WindowManager::SetInputMode(int mode, int value)
+{
+    glfwSetInputMode(window, mode, value);
+}
+
+int WindowManager::GetInputMode(int mode)
+{
+    return (glfwGetInputMode(window, mode));
 }
 
 GLFWwindow* WindowManager::GetWindow()

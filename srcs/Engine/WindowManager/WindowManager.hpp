@@ -34,6 +34,9 @@ class WindowManager
     static bool IsInputReleased(int input, float time = 0);
     static void SetInputAction(int input, int action) { inputMap[input] = {action, 0}; }
     
+    static void SetInputMode(int mode, int value);
+    static int GetInputMode(int mode);
+    
     static GLFWwindow *GetWindow();
 
     static ml::vec2 GetWindowSize();
