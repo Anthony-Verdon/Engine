@@ -1,4 +1,3 @@
-set_targetdir("./")
 set_languages("cxx17")
 
 set_toolchains("clang")
@@ -11,15 +10,16 @@ add_requires("stb")
 add_requires("glad")
 add_requires("box2d")
 
-namespace("Matrix")
-includes("submodules/Matrix")
-namespace_end()
+namespace("Matrix", function ()
+    includes("submodules/Matrix")
+end)
 
-namespace("Toolbox")
-includes("submodules/Toolbox")
-namespace_end()
+namespace("Toolbox", function ()
+    includes("submodules/Toolbox")
+end)
 
 target("Engine")
+    set_targetdir("./")
     set_kind("static")
     add_files("srcs/**.cpp")
     add_includedirs("srcs", {public = true})
