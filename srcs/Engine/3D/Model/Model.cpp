@@ -53,7 +53,7 @@ void Model::Destroy()
         meshes[i].Destroy();
 }
 
-void Model::Draw(const ml::vec3 &camPos, const ml::vec3 &camDir, const Light lights[4], const ml::mat4 &projection, const ml::mat4 &view, const ml::mat4 &initTransform)
+void Model::Draw(const ml::vec3 &camPos, const ml::vec3 &camDir, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, const ml::mat4 &initTransform)
 {
     animator.Update();
     auto nodesTransform = CalculateNodeTransform(nodeIndex, initTransform);
@@ -81,7 +81,7 @@ std::map<int, ml::mat4> Model::CalculateNodeTransform(size_t nodeIndex, const ml
     return (nodesTransform);
 }
 
-void Model::DrawSubModels(size_t nodeIndex, const ml::vec3 &camPos, const ml::vec3 &camDir, const Light lights[4], const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform)
+void Model::DrawSubModels(size_t nodeIndex, const ml::vec3 &camPos, const ml::vec3 &camDir, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform)
 {
     auto node = nodes[nodeIndex];
     for (size_t i = 0; i < node.children.size(); i++)

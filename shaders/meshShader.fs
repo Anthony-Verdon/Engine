@@ -9,7 +9,7 @@ uniform vec3 uCamPos;
 
 struct PointLight
 {
-    vec3 pos;
+    vec3 position;
     vec3 color;
     float intensity;
 };
@@ -31,9 +31,13 @@ struct SpotLight
     float intensity;
 };
 
-uniform PointLight uPointLights[4];
-uniform DirectionalLight uDirectionalLight;
-uniform SpotLight uSpotLight;
+#define MAX_LIGHT 25
+uniform PointLight uPointLights[MAX_LIGHT];
+uniform int uNbPointLight;
+uniform DirectionalLight uDirectionalLights[MAX_LIGHT];
+uniform int uNbDirectionalLight;
+uniform SpotLight uSpotLights[MAX_LIGHT];
+uniform int uNbSpotLight;
 
 struct Material
 {
@@ -97,10 +101,10 @@ vec3 FresnelSchlick(float cosTheta, vec3 F0)
 
 vec3 CalculatePointLight(vec3 N, vec3 V, vec3 F0, vec3 baseColor, PointLight pointLight)
 {
-    vec3 L = normalize(pointLight.pos - WorldPos);
+    vec3 L = normalize(pointLight.position - WorldPos);
     vec3 H = normalize(V + L);
 
-    float distance = length(pointLight.pos - WorldPos);
+    float distance = length(pointLight.position - WorldPos);
     float attenuation = 1.0 / (distance * distance);
     vec3 radiance = pointLight.color * attenuation;
 
@@ -181,13 +185,13 @@ void main()
 
     vec3 F0 = mix(vec3(0.04), baseColor, uMaterials[uMaterialIndex].metallicFactor);
     vec3 Lo = vec3(0.0);
-    for (int i = 0; i < 4; i++)
-    {
+
+    for (int i = 0; i < uNbPointLight && i < MAX_LIGHT; i++)
         Lo += CalculatePointLight(N, V, F0, baseColor, uPointLights[i]);
-    }
-    Lo += CalculateDirectionalLight(N, V, F0, baseColor, uDirectionalLight);
-    
-    Lo += CalculateSpotLight(N, V, F0, baseColor, uSpotLight);
+    for (int i = 0; i < uNbDirectionalLight && i < MAX_LIGHT; i++)
+        Lo += CalculateDirectionalLight(N, V, F0, baseColor, uDirectionalLights[i]);
+    for (int i = 0; i < uNbSpotLight && i < MAX_LIGHT; i++)
+        Lo += CalculateSpotLight(N, V, F0, baseColor, uSpotLights[i]);
 
     vec3 ambient = vec3(0.03) * baseColor;
     vec3 color = ambient + Lo * uMaterials[uMaterialIndex].ambientOcclusion + uMaterials[uMaterialIndex].emissiveFactor;

@@ -106,7 +106,7 @@ void Mesh::Destroy()
     EBOs.clear();
 }
 
-void Mesh::Draw(const ml::vec3 &camPos, const ml::vec3 &camDir, const Light lights[4], const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform)
+void Mesh::Draw(const ml::vec3 &camPos, const ml::vec3 &camDir, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform)
 {
     auto shader = RessourceManager::GetShader("mesh_shader");
     shader->use();
@@ -120,22 +120,52 @@ void Mesh::Draw(const ml::vec3 &camPos, const ml::vec3 &camDir, const Light ligh
     
     // fs
     shader->setVec3("uCamPos", camPos);
-    for (size_t i = 0; i < 4; i++)
+    (void)camDir;
+    int nbPointLight = 0;
+    int nbDirectionalLight = 0;
+    int nbSpotLight = 0;
+    for (size_t i = 0; i < lights.size(); i++)
     {
-        shader->setVec3("uPointLights[" + std::to_string(i) + "].pos", lights[i].GetPos());
-        shader->setVec3("uPointLights[" + std::to_string(i) + "].color", lights[i].GetColor());
-        shader->setFloat("uPointLights[" + std::to_string(i) + "].intensity", lights[i].GetIntensity());
+        switch (lights[i]->type)
+        {
+            case POINT_LIGHT:
+            {
+                auto light = dynamic_cast<PointLight*>(lights[i].get());
+                shader->setVec3("uPointLights[" + std::to_string(nbPointLight) + "].position", light->position);
+                shader->setVec3("uPointLights[" + std::to_string(nbPointLight) + "].color", light->color);
+                shader->setFloat("uPointLights[" + std::to_string(nbPointLight) + "].intensity", light->intensity);
+                nbPointLight++;
+                break;
+            }
+            case DIRECTIONAL_LIGHT:
+            {
+                auto light = dynamic_cast<DirectionalLight*>(lights[i].get());
+                shader->setVec3("uDirectionalLights[" + std::to_string(nbDirectionalLight) + "].direction", light->direction);
+                shader->setVec3("uDirectionalLights[" + std::to_string(nbDirectionalLight) + "].color", light->color);
+                shader->setFloat("uDirectionalLights[" + std::to_string(nbDirectionalLight) + "].intensity", light->intensity);
+                nbDirectionalLight++;
+                break;
+            }
+            case SPOT_LIGHT:
+            {
+                auto light = dynamic_cast<SpotLight*>(lights[i].get());
+                shader->setVec3("uSpotLights[" + std::to_string(nbSpotLight) + "].position", light->position);
+                shader->setVec3("uSpotLights[" + std::to_string(nbSpotLight) + "].direction", light->direction);
+                shader->setFloat("uSpotLights[" + std::to_string(nbSpotLight) + "].cutOff", cosf(ml::radians(light->cutOff)));
+                shader->setFloat("uSpotLights[" + std::to_string(nbSpotLight) + "].outerCutOff", cosf(ml::radians(light->outerCutOff)));
+                shader->setVec3("uSpotLights[" + std::to_string(nbSpotLight) + "].color", light->color);
+                shader->setFloat("uSpotLights[" + std::to_string(nbSpotLight) + "].intensity", light->intensity);
+                nbSpotLight++;
+                break;
+            }
+            default:
+                break;
+        }
     }
-    shader->setVec3("uDirectionalLight.direction", ml::vec3(0, -1, 0));
-    shader->setVec3("uDirectionalLight.color", ml::vec3(1, 1, 0));
-    shader->setFloat("uDirectionalLight.intensity", 3);
 
-    shader->setVec3("uSpotLight.position", camPos);
-    shader->setVec3("uSpotLight.direction", camDir);
-    shader->setFloat("uSpotLight.cutOff", cosf(ml::radians(12.5f)));
-    shader->setFloat("uSpotLight.outerCutOff", cosf(ml::radians(17.5f)));
-    shader->setVec3("uSpotLight.color", ml::vec3(0, 1, 1));
-    shader->setFloat("uSpotLight.intensity", 15);
+    shader->setInt("uNbPointLight", nbPointLight);
+    shader->setInt("uNbDirectionalLight", nbDirectionalLight);
+    shader->setInt("uNbSpotLight", nbSpotLight);
 
     for (size_t i = 0; i < materials.size(); i++)
     {

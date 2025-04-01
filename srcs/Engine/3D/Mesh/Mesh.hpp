@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GlbParser/GlbParser.hpp"
-#include "Engine/3D/Light/Light.hpp"
+#include "Engine/3D/Lights/Lights.hpp"
 
 class Mesh
 {
@@ -11,7 +11,7 @@ class Mesh
 
         void Init();
         void Destroy();
-        void Draw(const ml::vec3 &camPos, const ml::vec3 &camDir, const Light lights[4], const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform);
+        void Draw(const ml::vec3 &camPos, const ml::vec3 &camDir, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform);
 
     private:
         std::string name;
