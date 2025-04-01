@@ -4,13 +4,17 @@
 #include <cmath>
 #include <glad/glad.h>
 
+#ifndef PATH_TO_ENGINE
+    #define PATH_TO_ENGINE ""
+#endif
+
 bool Mesh::shaderInitialized = false;
 
 Mesh::Mesh(const Glb::GltfData &data, size_t nodeIndex)
 {
     if (!shaderInitialized)
     {
-        RessourceManager::AddShader("mesh_shader", PATH_TO_ENGINE"/shaders/meshShader.vs", PATH_TO_ENGINE"/shaders/meshShader.fs");
+        RessourceManager::AddShader("mesh_shader", PATH_TO_ENGINE"shaders/meshShader.vs", PATH_TO_ENGINE"shaders/meshShader.fs");
         shaderInitialized = true;
     }
 
