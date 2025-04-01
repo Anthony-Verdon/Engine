@@ -106,7 +106,7 @@ void Mesh::Destroy()
     EBOs.clear();
 }
 
-void Mesh::Draw(const ml::vec3 &camPos, const ml::vec3 &camDir, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform)
+void Mesh::Draw(const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform)
 {
     auto shader = RessourceManager::GetShader("mesh_shader");
     shader->use();
@@ -120,7 +120,6 @@ void Mesh::Draw(const ml::vec3 &camPos, const ml::vec3 &camDir, const std::vecto
     
     // fs
     shader->setVec3("uCamPos", camPos);
-    (void)camDir;
     int nbPointLight = 0;
     int nbDirectionalLight = 0;
     int nbSpotLight = 0;
