@@ -19,7 +19,7 @@ namespace ModelLoader
 
     std::vector<Model> LoadModelFromGlb(const std::string &path)
     {
-        auto [gltfJson, binStr] = Glb::LoadBinaryFile(path, true);
+        auto [gltfJson, binStr] = Glb::LoadBinaryFile(path);
 
         Glb::GltfData data = Glb::LoadGltf(gltfJson, binStr);
         Glb::Scene scene = data.scenes[data.rootScene];
