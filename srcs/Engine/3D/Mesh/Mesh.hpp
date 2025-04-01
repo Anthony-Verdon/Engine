@@ -24,4 +24,6 @@ class Mesh
         std::vector<Glb::Joint> joints;
         
         size_t nodeIndex;
+
+        static bool shaderInitialized;
 };

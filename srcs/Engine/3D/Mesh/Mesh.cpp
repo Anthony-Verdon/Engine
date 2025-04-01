@@ -4,8 +4,16 @@
 #include <cmath>
 #include <glad/glad.h>
 
+bool Mesh::shaderInitialized = false;
+
 Mesh::Mesh(const Glb::GltfData &data, size_t nodeIndex)
 {
+    if (!shaderInitialized)
+    {
+        RessourceManager::AddShader("mesh_shader", PATH_TO_ENGINE"/shaders/meshShader.vs", PATH_TO_ENGINE"/shaders/meshShader.fs");
+        shaderInitialized = true;
+    }
+
     this->nodeIndex = nodeIndex;
     auto node = data.nodes[nodeIndex];
     auto mesh = data.meshes[node.mesh];
