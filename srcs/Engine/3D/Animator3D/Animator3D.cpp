@@ -49,7 +49,7 @@ std::vector<std::string> Animator3D::GetAnimationsName() const
 void Animator3D::Play(const std::string &name)
 {
     auto animation = animations.find(name);
-    if (animation != animations.end())
+    if (animation != animations.end() && currentAnimation != name)
     {
         currentAnimation = name;
         animation->second.Reset();
