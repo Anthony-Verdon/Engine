@@ -11,6 +11,7 @@ Animation3D::Animation3D(const std::vector<Glb::Node> &nodes, const Glb::Animati
         nodesTransform[animation.channels[i].node].identity();
     for (size_t i = 0; i < nodes.size(); i++)
         nodesInitTransform[i] = nodes[i].transform;
+    ended = false;
 }
 
 Animation3D::~Animation3D()
@@ -20,6 +21,7 @@ Animation3D::~Animation3D()
 void Animation3D::Reset()
 {
     timer = 0;
+    ended = false;
     for (auto it = nodesTransform.begin(); it != nodesTransform.end(); it++)
         it->second.identity();
 }
@@ -46,6 +48,7 @@ void Animation3D::Update()
         {
             keyframe = 0;
             timer = 0;
+            ended = true;
         }
         size_t nextKeyFrame = (keyframe + 1) % sampler.timecodes.size();
         size_t previousBufferIndex = keyframe * sampler.nbElement;

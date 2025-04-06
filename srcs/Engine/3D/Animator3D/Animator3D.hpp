@@ -16,6 +16,7 @@ class Animator3D
         void Update();
         ml::mat4 GetNodeTransform(size_t node) const;
         std::vector<std::string> GetAnimationsName() const;
+        bool CurrentAnimationEnded() const;
         std::string GetCurrentAnimation() const { return currentAnimation; }
     
     private:

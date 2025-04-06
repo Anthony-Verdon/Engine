@@ -28,6 +28,8 @@ class Model
         
         std::vector<std::string> GetAnimationsName() const { return (animator.GetAnimationsName()); }
         void Play(const std::string &name) { animator.Play(name); }
+        bool CurrentAnimationEnded() const { return animator.CurrentAnimationEnded(); }
+        std::string GetCurrentAnimation() const { return animator.GetCurrentAnimation(); }
 
         std::map<int, NodeModel> &GetNodes() { return (nodes); }
         size_t GetRootIndex() { return (nodeIndex); }

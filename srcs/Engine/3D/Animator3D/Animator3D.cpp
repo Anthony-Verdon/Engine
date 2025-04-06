@@ -55,3 +55,11 @@ void Animator3D::Play(const std::string &name)
         animation->second.Reset();
     }
 }
+
+bool Animator3D::CurrentAnimationEnded() const
+{
+    auto animation = animations.find(currentAnimation);
+    if (animation != animations.end())
+        return (animation->second.Ended());
+    return (true);
+}
