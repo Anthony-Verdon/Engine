@@ -27,7 +27,7 @@ class Model
         void DrawSubModels(size_t nodeIndex, const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform);
         
         std::vector<std::string> GetAnimationsName() const { return (animator.GetAnimationsName()); }
-        void Play(const std::string &name) { animator.Play(name); }
+        void Play(const std::string &name, float animationSpeed = 1.0f) { animator.Play(name, animationSpeed); }
         bool CurrentAnimationEnded() const { return animator.CurrentAnimationEnded(); }
         std::string GetCurrentAnimation() const { return animator.GetCurrentAnimation(); }
         float GetCurrentAnimationDuration() const { return animator.CurrentAnimationDuration(); }

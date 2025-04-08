@@ -12,7 +12,7 @@ class Animator3D
 
         void LoadAnimation(const std::vector<Glb::Node> &nodes, const Glb::Animation &animation);
         
-        void Play(const std::string &animation);
+        void Play(const std::string &animation, float animationSpeed = 1.0f);
         void Update();
         ml::mat4 GetNodeTransform(size_t node) const;
         std::vector<std::string> GetAnimationsName() const;

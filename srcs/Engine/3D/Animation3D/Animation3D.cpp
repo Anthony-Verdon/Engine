@@ -6,6 +6,7 @@
 Animation3D::Animation3D(const std::vector<Glb::Node> &nodes, const Glb::Animation &animation)
 {   
     data = animation;
+    animationSpeed = 1;
     timer = 0;
     for (size_t i = 0; i < animation.channels.size(); i++)
         nodesTransform[animation.channels[i].node].identity();
@@ -35,7 +36,7 @@ void Animation3D::Reset()
 
 void Animation3D::Update()
 {
-    timer += Time::getDeltaTime();
+    timer += Time::getDeltaTime() * animationSpeed;
     for (auto it = nodesTransform.begin(); it != nodesTransform.end(); it++)
         it->second.identity();
 

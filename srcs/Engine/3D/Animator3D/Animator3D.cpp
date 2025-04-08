@@ -46,12 +46,13 @@ std::vector<std::string> Animator3D::GetAnimationsName() const
     return (animationsName);
 }
 
-void Animator3D::Play(const std::string &name)
+void Animator3D::Play(const std::string &name, float animationSpeed)
 {
     auto animation = animations.find(name);
     if (animation != animations.end() && currentAnimation != name)
     {
         currentAnimation = name;
+        animation->second.SetAnimationSpeed(animationSpeed);
         animation->second.Reset();
     }
 }
