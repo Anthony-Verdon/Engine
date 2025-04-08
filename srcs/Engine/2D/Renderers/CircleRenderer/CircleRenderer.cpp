@@ -1,6 +1,6 @@
 #define _USE_MATH_DEFINES
 #include "Engine/2D/Renderers/CircleRenderer/CircleRenderer.hpp"
-#include "Engine/2D/Renderers/LineRenderer/LineRenderer.hpp"
+#include "Engine/2D/Renderers/LineRenderer2D/LineRenderer2D.hpp"
 #include "Engine/RessourceManager/RessourceManager.hpp"
 #include "Engine/WindowManager/WindowManager.hpp"
 #include <vector>
@@ -116,7 +116,7 @@ void CircleRenderer::Draw(const ml::vec2 &position, float radius, float rotation
             va = va * radius + position;
             vb = vb * radius + position;
 
-            LineRenderer::Draw(va, vb, edgeColor, drawAbsolute);
+            LineRenderer2D::Draw(va, vb, edgeColor, drawAbsolute);
         }
     }
 }

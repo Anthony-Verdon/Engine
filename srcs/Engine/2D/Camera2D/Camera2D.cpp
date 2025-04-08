@@ -2,7 +2,7 @@
 #include "Engine/RessourceManager/RessourceManager.hpp"
 #include "Engine/WindowManager/WindowManager.hpp"
 #include "Engine/2D/Renderers/SpriteRenderer/SpriteRenderer.hpp"
-#include "Engine/2D/Renderers/LineRenderer/LineRenderer.hpp"
+#include "Engine/2D/Renderers/LineRenderer2D/LineRenderer2D.hpp"
 #include "Engine/2D/Renderers/PolygonRenderer/PolygonRenderer.hpp"
 #include "Engine/2D/Renderers/CircleRenderer/CircleRenderer.hpp"
 
@@ -51,7 +51,7 @@ void Camera2D::UpdateShaders() const
     ml::mat4 projection = ml::ortho(left, right, bottom, top, -1.0f, 1.0f);
 
     SpriteRenderer::SetProjectionMatRelative(projection); //@todo factorize renderers with a common class ARenderer
-    LineRenderer::SetProjectionMatRelative(projection);
+    LineRenderer2D::SetProjectionMatRelative(projection);
     CircleRenderer::SetProjectionMatRelative(projection);
     PolygonRenderer::SetProjectionMatRelative(projection);
 }

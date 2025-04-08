@@ -1,5 +1,5 @@
 #include "Engine/2D/Renderers/PolygonRenderer/PolygonRenderer.hpp"
-#include "Engine/2D/Renderers/LineRenderer/LineRenderer.hpp"
+#include "Engine/2D/Renderers/LineRenderer2D/LineRenderer2D.hpp"
 #include "Engine/RessourceManager/RessourceManager.hpp"
 #include "Engine/WindowManager/WindowManager.hpp"
 #include "Engine/macros.hpp"
@@ -124,7 +124,7 @@ void PolygonRenderer::Draw(const std::string &polygonName, const ml::vec2 &posit
             x = vb.x * cos(ml::radians(rotation)) - vb.y * sin(ml::radians(rotation));
             y = vb.x * sin(ml::radians(rotation)) + vb.y * cos(ml::radians(rotation));
             vb = ml::vec2(x, y) + position;
-            LineRenderer::Draw(va, vb, edgeColor); //@todo should be init in PolygonRenderer in case it's not done before
+            LineRenderer2D::Draw(va, vb, edgeColor); //@todo should be init in PolygonRenderer in case it's not done before
         }
     }
 }

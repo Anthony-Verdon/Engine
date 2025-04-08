@@ -1,19 +1,19 @@
-#include "Engine/2D/Renderers/LineRenderer/LineRenderer.hpp"
+#include "Engine/2D/Renderers/LineRenderer2D/LineRenderer2D.hpp"
 #include "Engine/RessourceManager/RessourceManager.hpp"
 #include "Engine/WindowManager/WindowManager.hpp"
 #include "Engine/macros.hpp"
 #include "Matrix/Matrix.hpp"
 
 
-unsigned int LineRenderer::VAO = -1;
-unsigned int LineRenderer::VBO = -1;
-bool LineRenderer::isInit = false;
-ml::mat4 LineRenderer::projectionMatAbsolute;
-ml::mat4 LineRenderer::projectionMatRelative;
+unsigned int LineRenderer2D::VAO = -1;
+unsigned int LineRenderer2D::VBO = -1;
+bool LineRenderer2D::isInit = false;
+ml::mat4 LineRenderer2D::projectionMatAbsolute;
+ml::mat4 LineRenderer2D::projectionMatRelative;
 
-void LineRenderer::Init()
+void LineRenderer2D::Init()
 {
-    CHECK_AND_RETURN_VOID(!isInit, "LineRenderer already initialized");
+    CHECK_AND_RETURN_VOID(!isInit, "LineRenderer2D already initialized");
 
 
     RessourceManager::AddShader("Line", "shaders/line/line.vs", "shaders/line/line.fs");
@@ -41,22 +41,22 @@ void LineRenderer::Init()
     isInit = true;
 }
 
-void LineRenderer::Destroy()
+void LineRenderer2D::Destroy()
 {
-    CHECK_AND_RETURN_VOID(isInit, "LineRenderer not initialized");
+    CHECK_AND_RETURN_VOID(isInit, "LineRenderer2D not initialized");
 
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
 }
 
-void LineRenderer::Draw(const ml::vec2 &va, const ml::vec2 &vb, const ml::vec3 &color, bool drawAbsolute)
+void LineRenderer2D::Draw(const ml::vec2 &va, const ml::vec2 &vb, const ml::vec3 &color, bool drawAbsolute)
 {
-    LineRenderer::Draw(va, vb, ml::vec4(color, 1), drawAbsolute);
+    LineRenderer2D::Draw(va, vb, ml::vec4(color, 1), drawAbsolute);
 }
 
-void LineRenderer::Draw(const ml::vec2 &va, const ml::vec2 &vb, const ml::vec4 &color, bool drawAbsolute)
+void LineRenderer2D::Draw(const ml::vec2 &va, const ml::vec2 &vb, const ml::vec4 &color, bool drawAbsolute)
 {
-    CHECK_AND_RETURN_VOID(isInit, "LineRenderer not initialized");
+    CHECK_AND_RETURN_VOID(isInit, "LineRenderer2D not initialized");
 
     std::shared_ptr<Shader> lineShader = RessourceManager::GetShader("Line");
     lineShader->use();

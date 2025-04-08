@@ -1,7 +1,7 @@
 #include "Engine/2D/Tilemap/Tilemap.hpp"
 #include "Engine/2D/TileDictionnary/TileDictionnary.hpp"
 #include "Engine/2D/Renderers/SpriteRenderer/SpriteRenderer.hpp"
-#include "Engine/2D/Renderers/LineRenderer/LineRenderer.hpp"
+#include "Engine/2D/Renderers/LineRenderer2D/LineRenderer2D.hpp"
 #include "Engine/2D/PhysicBody/PhysicBody.hpp"
 #include "Engine/defines.hpp"
 #include <array>
