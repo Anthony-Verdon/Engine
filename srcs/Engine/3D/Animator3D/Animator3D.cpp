@@ -63,3 +63,11 @@ bool Animator3D::CurrentAnimationEnded() const
         return (animation->second.Ended());
     return (true);
 }
+
+float Animator3D::CurrentAnimationDuration() const
+{
+    auto animation = animations.find(currentAnimation);
+    if (animation != animations.end())
+        return (animation->second.AnimationDuration());
+    return (1.0f);
+}

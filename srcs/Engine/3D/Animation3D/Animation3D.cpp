@@ -12,6 +12,13 @@ Animation3D::Animation3D(const std::vector<Glb::Node> &nodes, const Glb::Animati
     for (size_t i = 0; i < nodes.size(); i++)
         nodesInitTransform[i] = nodes[i].transform;
     ended = false;
+    animationDuration = 0;
+    for (size_t i = 0; i < data.channels.size(); i++)
+    {
+        size_t samplerIndex = data.channels[i].sampler;
+        auto sampler = data.samplers[samplerIndex];
+        animationDuration = std::max(animationDuration, sampler.timecodes[sampler.timecodes.size() - 1]);
+    }
 }
 
 Animation3D::~Animation3D()

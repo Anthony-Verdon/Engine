@@ -30,6 +30,7 @@ class Model
         void Play(const std::string &name) { animator.Play(name); }
         bool CurrentAnimationEnded() const { return animator.CurrentAnimationEnded(); }
         std::string GetCurrentAnimation() const { return animator.GetCurrentAnimation(); }
+        float GetCurrentAnimationDuration() const { return animator.CurrentAnimationDuration(); }
 
         std::map<int, NodeModel> &GetNodes() { return (nodes); }
         size_t GetRootIndex() { return (nodeIndex); }
