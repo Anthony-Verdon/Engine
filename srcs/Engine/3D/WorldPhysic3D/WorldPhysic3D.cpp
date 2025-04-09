@@ -49,6 +49,11 @@ void WorldPhysic3D::Update()
     physicSystem.Update(cDeltaTime, cCollisionSteps, tempAllocator.get(), jobSystem.get());
 }
 
+void WorldPhysic3D::DebugDraw(const JPH::BodyManager::DrawSettings &inSettings, JPH::DebugRenderer *inRenderer, const JPH::BodyDrawFilter *inBodyFilter)
+{
+    physicSystem.DrawBodies(inSettings, inRenderer, inBodyFilter);
+}
+
 void WorldPhysic3D::Destroy()
 {
     JPH::UnregisterTypes();

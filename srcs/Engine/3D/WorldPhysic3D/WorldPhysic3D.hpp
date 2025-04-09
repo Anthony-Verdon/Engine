@@ -12,6 +12,7 @@ class WorldPhysic3D
     public:
         static void Init(const JPH::BroadPhaseLayerInterface &BPLayerInterface, const JPH::ObjectVsBroadPhaseLayerFilter &objVsBPLayerFilter, const JPH::ObjectLayerPairFilter &OLPFilter);
         static void Update();
+        static void DebugDraw(const JPH::BodyManager::DrawSettings &inSettings, JPH::DebugRenderer *inRenderer, const JPH::BodyDrawFilter *inBodyFilter = nullptr);
         static void Destroy();
 
         static JPH::BodyInterface &GetBodyInterface() { return bodyInterface; }

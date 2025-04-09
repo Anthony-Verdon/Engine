@@ -9,7 +9,7 @@ add_requires("glfw")
 add_requires("stb")
 add_requires("glad")
 add_requires("box2d")
-add_requires("joltphysics")
+add_requires("joltphysics", {configs = {rtti = true}})
 
 if has_config("PATH_TO_ENGINE") then
     add_defines("PATH_TO_ENGINE=\"" .. get_config("PATH_TO_ENGINE") .. "\"");
