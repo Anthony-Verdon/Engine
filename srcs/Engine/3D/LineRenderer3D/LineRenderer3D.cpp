@@ -4,6 +4,9 @@
 #include "Engine/macros.hpp"
 #include "Matrix/Matrix.hpp"
 
+#ifndef PATH_TO_ENGINE
+    #define PATH_TO_ENGINE ""
+#endif
 
 unsigned int LineRenderer3D::VAO = -1;
 unsigned int LineRenderer3D::VBO = -1;
@@ -12,7 +15,6 @@ bool LineRenderer3D::isInit = false;
 void LineRenderer3D::Init()
 {
     CHECK_AND_RETURN_VOID(!isInit, "LineRenderer3D already initialized");
-
 
     RessourceManager::AddShader("Line3D", PATH_TO_ENGINE"shaders/line3D.vs", PATH_TO_ENGINE"shaders/line3D.fs");
     std::shared_ptr<Shader> lineShader = RessourceManager::GetShader("Line3D");
