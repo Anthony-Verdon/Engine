@@ -11,6 +11,12 @@ add_requires("glad")
 add_requires("box2d")
 add_requires("joltphysics")
 
+if has_config("PATH_TO_ENGINE") then
+    add_defines("PATH_TO_ENGINE=\"" .. get_config("PATH_TO_ENGINE") .. "\"");
+else
+    add_defines("PATH_TO_ENGINE=\"\"");
+end
+
 namespace("GlbParser", function ()
     includes("submodules/GlbParser")
 end)

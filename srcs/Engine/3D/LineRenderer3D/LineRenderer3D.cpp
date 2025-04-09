@@ -4,10 +4,6 @@
 #include "Engine/macros.hpp"
 #include "Matrix/Matrix.hpp"
 
-#ifndef PATH_TO_ENGINE
-    #define PATH_TO_ENGINE ""
-#endif
-
 unsigned int LineRenderer3D::VAO = -1;
 unsigned int LineRenderer3D::VBO = -1;
 bool LineRenderer3D::isInit = false;

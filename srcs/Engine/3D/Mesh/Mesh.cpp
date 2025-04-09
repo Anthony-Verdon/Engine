@@ -4,10 +4,6 @@
 #include <cmath>
 #include <glad/glad.h>
 
-#ifndef PATH_TO_ENGINE
-    #define PATH_TO_ENGINE ""
-#endif
-
 bool Mesh::shaderInitialized = false;
 
 Mesh::Mesh(const Glb::GltfData &data, size_t nodeIndex)
