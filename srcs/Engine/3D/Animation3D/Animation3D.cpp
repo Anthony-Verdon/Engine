@@ -54,8 +54,11 @@ void Animation3D::Update()
         }
         if (keyframe == sampler.timecodes.size() - 1)
         {
-            keyframe = 0;
-            timer = 0;
+            if (replayAnimation)
+            {
+                keyframe = 0;
+                timer = 0;
+            }
             ended = true;
         }
         size_t nextKeyFrame = (keyframe + 1) % sampler.timecodes.size();

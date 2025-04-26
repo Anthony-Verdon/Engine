@@ -14,6 +14,7 @@ class Animation3D
         ml::mat4 GetNodeTransform(size_t node) const;
         float AnimationDuration() const { return (animationDuration / animationSpeed); }
         void SetAnimationSpeed(float animationSpeed) { this->animationSpeed = animationSpeed; }
+        void SetReplayAnimation(bool replayAnimation) { this->replayAnimation = replayAnimation; }
 
     private:
         Glb::Animation data;
@@ -22,6 +23,7 @@ class Animation3D
         float timer;
         float animationDuration;
         float animationSpeed;
+        bool replayAnimation;
         bool ended;
 
         ml::vec3 CalculateLerp(const ml::vec3 &previousPoint, const ml::vec3 &nextPoint, float interpolation);
