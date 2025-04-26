@@ -19,6 +19,7 @@ class WorldPhysic3D
 
         static void AddBodyActivationListener(JPH::BodyActivationListener *listener) { physicSystem.SetBodyActivationListener(listener); }
         static void SetContactListener(JPH::ContactListener *listener) { physicSystem.SetContactListener(listener); }
+        static JPH::ContactListener *GetContactListener() { return physicSystem.GetContactListener(); }
     private:
         WorldPhysic3D() = delete;
 
