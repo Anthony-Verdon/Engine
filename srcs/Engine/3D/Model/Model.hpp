@@ -23,7 +23,7 @@ class Model
 
         void Init();
         void Destroy();
-        void Draw(const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, const ml::mat4 &initTransform);
+        void Draw(const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, const ml::mat4 &initTransform, bool enableRootMotion = true);
         void DrawSubModels(size_t nodeIndex, const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform);
         
         std::vector<std::string> GetAnimationsName() const { return (animator.GetAnimationsName()); }
@@ -33,14 +33,15 @@ class Model
         float GetCurrentAnimationDuration() const { return animator.CurrentAnimationDuration(); }
 
         std::map<int, NodeModel> &GetNodes() { return (nodes); }
-        size_t GetRootIndex() { return (nodeIndex); }
+        int GetRootIndex() { return (nodeIndex); }
         
     private:
+        int DetermineRootNode(int node);
         void LoadMesh(const Glb::GltfData &data, size_t nodeIndex);
         void LoadAnimations(const Glb::GltfData &data);
-        std::map<int, ml::mat4> CalculateNodeTransform(size_t nodeIndex, const ml::mat4 &parentTransform);
+        std::map<int, ml::mat4> CalculateNodeTransform(size_t nodeIndex, const ml::mat4 &parentTransform, bool enableRootMotion);
 
-        size_t nodeIndex;
+        int nodeIndex;
         std::map<int, NodeModel> nodes;
 
         std::vector<Mesh> meshes;

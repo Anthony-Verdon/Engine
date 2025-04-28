@@ -7,15 +7,32 @@ Model::Model()
 
 Model::Model(const Glb::GltfData &data, size_t nodeIndex)
 {
-    this->nodeIndex = nodeIndex;
     LoadMesh(data, nodeIndex);
     LoadAnimations(data);
+    this->nodeIndex = DetermineRootNode(nodeIndex);
+    if (this->nodeIndex == -1)
+        this->nodeIndex = nodeIndex;
     animator.Play("");
 }
 
 Model::~Model()
 {
 
+}
+
+int Model::DetermineRootNode(int node)
+{
+    if (animator.IsNodeAnimated(node))
+        return (node);
+
+    for (size_t i = 0; i < nodes[node].children.size(); i++)
+    {
+        int possibleRootNode = DetermineRootNode(nodes[node].children[i]);
+        if (possibleRootNode != -1)
+            return (possibleRootNode);
+    }
+
+    return (-1);
 }
 
 void Model::LoadMesh(const Glb::GltfData &data, size_t nodeIndex)
@@ -53,30 +70,38 @@ void Model::Destroy()
         meshes[i].Destroy();
 }
 
-void Model::Draw(const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, const ml::mat4 &initTransform)
+void Model::Draw(const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, const ml::mat4 &initTransform, bool enableRootMotion)
 {
     animator.Update();
-    auto nodesTransform = CalculateNodeTransform(nodeIndex, initTransform);
+    auto nodesTransform = CalculateNodeTransform(nodeIndex, initTransform, enableRootMotion);
     for (size_t i = 0; i < meshes.size(); i++)
         meshes[i].Draw(camPos, lights, projection, view, nodesTransform);
     DrawSubModels(nodeIndex, camPos, lights, projection, view, nodesTransform);
 }
 
-std::map<int, ml::mat4> Model::CalculateNodeTransform(size_t nodeIndex, const ml::mat4 &parentTransform)
+std::map<int, ml::mat4> Model::CalculateNodeTransform(size_t nodeIndex, const ml::mat4 &parentTransform, bool enableRootMotion)
 {
     auto node = nodes[nodeIndex];
 
     ml::mat4 transform;
     if (animator.GetCurrentAnimation() == "")
-        transform = parentTransform * node.transform;
+        transform = node.transform;
     else
-        transform = parentTransform * animator.GetNodeTransform(nodeIndex);
+        transform = animator.GetNodeTransform(nodeIndex);
 
+    if (!enableRootMotion)
+    {
+        transform[0][3] = 0;
+        transform[1][3] = 0; 
+        transform[2][3] = 0;
+    }
+
+    transform = parentTransform * transform;
     std::map<int, ml::mat4> nodesTransform;
     nodesTransform[nodeIndex] = transform;
 
     for (size_t i = 0; i < node.children.size(); i++)
-        nodesTransform.merge(CalculateNodeTransform(node.children[i], transform));
+        nodesTransform.merge(CalculateNodeTransform(node.children[i], transform, true));
 
     return (nodesTransform);
 }

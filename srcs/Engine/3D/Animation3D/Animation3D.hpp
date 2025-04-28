@@ -15,6 +15,7 @@ class Animation3D
         float AnimationDuration() const { return (animationDuration / animationSpeed); }
         void SetAnimationSpeed(float animationSpeed) { this->animationSpeed = animationSpeed; }
         void SetReplayAnimation(bool replayAnimation) { this->replayAnimation = replayAnimation; }
+        bool IsNodeAffected(int node) const { return (nodesTransform.find(node) != nodesTransform.end()); }
 
     private:
         Glb::Animation data;

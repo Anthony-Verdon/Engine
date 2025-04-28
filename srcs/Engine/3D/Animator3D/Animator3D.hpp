@@ -19,7 +19,8 @@ class Animator3D
         bool CurrentAnimationEnded() const;
         float CurrentAnimationDuration() const;
         std::string GetCurrentAnimation() const { return currentAnimation; }
-    
+
+        bool IsNodeAnimated(int node) const;
     private:
         std::map<std::string, Animation3D> animations;
         std::string currentAnimation;

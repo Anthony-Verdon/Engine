@@ -73,3 +73,14 @@ float Animator3D::CurrentAnimationDuration() const
         return (animation->second.AnimationDuration());
     return (1.0f);
 }
+
+bool Animator3D::IsNodeAnimated(int node) const
+{
+    for (auto it = animations.begin(); it != animations.end(); it++)
+    {
+        if (it->second.IsNodeAffected(node))
+            return (true);
+    }
+
+    return (false);
+}
