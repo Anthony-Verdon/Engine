@@ -18,6 +18,7 @@ std::unique_ptr<JPH::TempAllocatorImpl> WorldPhysic3D::tempAllocator = NULL;
 std::unique_ptr<JPH::JobSystemThreadPool> WorldPhysic3D::jobSystem = NULL;
 JPH::PhysicsSystem WorldPhysic3D::physicSystem;
 JPH::BodyInterface &WorldPhysic3D::bodyInterface = physicSystem.GetBodyInterface();
+float WorldPhysic3D::deltaTime = 1.0f / 60;
 
 void WorldPhysic3D::Init(const JPH::BroadPhaseLayerInterface &BPLayerInterface, const JPH::ObjectVsBroadPhaseLayerFilter &objVsBPLayerFilter, const JPH::ObjectLayerPairFilter &OLPFilter)
 {
@@ -44,9 +45,8 @@ void WorldPhysic3D::Init(const JPH::BroadPhaseLayerInterface &BPLayerInterface, 
 
 void WorldPhysic3D::Update()
 {
-    const float cDeltaTime = 1.0f / 60.0f;
     const int cCollisionSteps = 1;
-    physicSystem.Update(cDeltaTime, cCollisionSteps, tempAllocator.get(), jobSystem.get());
+    physicSystem.Update(deltaTime, cCollisionSteps, tempAllocator.get(), jobSystem.get());
 }
 
 void WorldPhysic3D::DebugDraw(const JPH::BodyManager::DrawSettings &inSettings, JPH::DebugRenderer *inRenderer, const JPH::BodyDrawFilter *inBodyFilter)

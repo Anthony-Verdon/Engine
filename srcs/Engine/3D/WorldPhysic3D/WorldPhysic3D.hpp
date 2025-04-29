@@ -20,6 +20,9 @@ class WorldPhysic3D
         static void AddBodyActivationListener(JPH::BodyActivationListener *listener) { physicSystem.SetBodyActivationListener(listener); }
         static void SetContactListener(JPH::ContactListener *listener) { physicSystem.SetContactListener(listener); }
         static JPH::ContactListener *GetContactListener() { return physicSystem.GetContactListener(); }
+
+        static float GetDeltaTime() { return (deltaTime); }
+        static void SetDeltaTime(float deltaTime) { WorldPhysic3D::deltaTime = deltaTime; }
     private:
         WorldPhysic3D() = delete;
 
@@ -27,4 +30,6 @@ class WorldPhysic3D
         static std::unique_ptr<JPH::JobSystemThreadPool> jobSystem;
         static JPH::PhysicsSystem physicSystem;
     	static JPH::BodyInterface &bodyInterface;
+
+        static float deltaTime;
 };
