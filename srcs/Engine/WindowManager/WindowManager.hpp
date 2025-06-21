@@ -1,15 +1,17 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
-#include <string>
+#include <glad/glad.h>
+
 #include "Engine/AProgram/AProgram.hpp"
 #include "Matrix/Matrix.hpp"
+#include <GLFW/glfw3.h>
 #include <map>
+#include <string>
 
 struct InputMode
 {
-  int mode;
-  float time;
+    int mode;
+    float time;
 };
 
 class WindowManager
@@ -32,11 +34,14 @@ class WindowManager
     static bool IsInputPressed(int input);
     static bool IsInputPressedOrMaintain(int input, float time = 0);
     static bool IsInputReleased(int input, float time = 0);
-    static void SetInputAction(int input, int action) { inputMap[input] = {action, 0}; }
-    
+    static void SetInputAction(int input, int action)
+    {
+        inputMap[input] = {action, 0};
+    }
+
     static void SetInputMode(int mode, int value);
     static int GetInputMode(int mode);
-    
+
     static GLFWwindow *GetWindow();
 
     static ml::vec2 GetWindowSize();
@@ -47,7 +52,7 @@ class WindowManager
     static void SetMousePosition(double xPos, double yPos);
 
     static void SetUserPointer(void *ptr);
-    
+
     static void SetCharCallback(void (*func)(GLFWwindow *window, unsigned int character));
     static void SetScrollCallback(void (*func)(GLFWwindow *window, double xOffset, double yOffset));
 };

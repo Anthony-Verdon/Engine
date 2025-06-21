@@ -1,18 +1,18 @@
 #include "Engine/WindowManager/WindowManager.hpp"
 #include "Engine/Time/Time.hpp"
+#include "Engine/defines.hpp"
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <stdexcept>
-#include "Engine/defines.hpp"
 
 GLFWwindow *WindowManager::window = NULL;
-ml::vec2 WindowManager::mousePosition = ml::vec2(0,0);
-ml::vec2 WindowManager::windowSize = ml::vec2(0,0);
+ml::vec2 WindowManager::mousePosition = ml::vec2(0, 0);
+ml::vec2 WindowManager::windowSize = ml::vec2(0, 0);
 std::map<int, InputMode> WindowManager::inputMap;
 
 void mouse_position_callback(GLFWwindow *window, double xPos, double yPos);
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 
 void WindowManager::InitWindow(const std::string &name, unsigned int width, unsigned int height)
 {
@@ -40,13 +40,12 @@ void WindowManager::InitWindow(const std::string &name, unsigned int width, unsi
     glfwGetFramebufferSize(window, &viewPortWidth, &viewportHeight);
     glViewport(0, 0, viewPortWidth, viewportHeight);
 
-    
     // region to move in specific function
     glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
     // cull face enabled make openGL draw only on one side
-    //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_FRONT);
-    //glFrontFace(GL_CW);
+    // glEnable(GL_CULL_FACE);
+    // glCullFace(GL_FRONT);
+    // glFrontFace(GL_CW);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -71,7 +70,7 @@ void WindowManager::StartUpdateLoop(AProgram *game)
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+
         Time::updateTime();
 
         game->Run();
@@ -136,7 +135,7 @@ int WindowManager::GetInputMode(int mode)
     return (glfwGetInputMode(window, mode));
 }
 
-GLFWwindow* WindowManager::GetWindow()
+GLFWwindow *WindowManager::GetWindow()
 {
     return (window);
 }
@@ -191,16 +190,16 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 {
     (void)window;
     (void)mods;
-    
+
     WindowManager::SetInputAction(button, action);
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     (void)window;
     (void)scancode;
     (void)mods;
-    
+
     if (action == GLFW_REPEAT)
         return;
 
