@@ -17,6 +17,12 @@ else
     add_defines("PATH_TO_ENGINE=\"\"");
 end
 
+if has_config("FULL_SCREEN") then
+    add_defines("FULL_SCREEN=" .. get_config("FULL_SCREEN"));
+else
+    add_defines("FULL_SCREEN=1");
+end
+
 namespace("GlbParser", function ()
     includes("submodules/GlbParser")
 end)

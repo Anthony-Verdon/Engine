@@ -23,7 +23,7 @@ void WindowManager::InitWindow(const std::string &name, unsigned int width, unsi
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-#ifdef FULL_SCREEN
+#if FULL_SCREEN
     window = glfwCreateWindow(width, height, name.c_str(), glfwGetPrimaryMonitor(), NULL);
 #else
     window = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
