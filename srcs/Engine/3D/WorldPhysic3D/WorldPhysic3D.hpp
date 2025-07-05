@@ -12,7 +12,7 @@ class WorldPhysic3D
     public:
         static void Init(const JPH::BroadPhaseLayerInterface &BPLayerInterface, const JPH::ObjectVsBroadPhaseLayerFilter &objVsBPLayerFilter, const JPH::ObjectLayerPairFilter &OLPFilter);
         static void Update();
-        static void DebugDraw(const JPH::BodyManager::DrawSettings &inSettings, JPH::DebugRenderer *inRenderer, const JPH::BodyDrawFilter *inBodyFilter = nullptr);
+        static void DebugDraw(const JPH::BodyManager::DrawSettings &inSettings = {}, const JPH::BodyDrawFilter *inBodyFilter = nullptr);
         static void Destroy();
 
         static JPH::BodyInterface &GetBodyInterface() { return bodyInterface; }
@@ -23,13 +23,14 @@ class WorldPhysic3D
 
         static float GetDeltaTime() { return (deltaTime); }
         static void SetDeltaTime(float deltaTime) { WorldPhysic3D::deltaTime = deltaTime; }
+
     private:
         WorldPhysic3D() = delete;
 
         static std::unique_ptr<JPH::TempAllocatorImpl> tempAllocator;
         static std::unique_ptr<JPH::JobSystemThreadPool> jobSystem;
         static JPH::PhysicsSystem physicSystem;
-    	static JPH::BodyInterface &bodyInterface;
+        static JPH::BodyInterface &bodyInterface;
 
         static float deltaTime;
 };
