@@ -1,5 +1,6 @@
 #include "Engine/3D/WorldPhysic3D/WorldPhysic3D.hpp"
 #include "Engine/3D/WorldPhysic3D/DebugRenderer/DebugRenderer.hpp"
+#include "Engine/3D/WorldPhysic3D/ContactListener/ContactListener.hpp"
 #include <Jolt/Core/Factory.h>
 #include <Jolt/RegisterTypes.h>
 #include <cstdarg>
@@ -19,7 +20,7 @@ static void TraceImpl(const char *inFMT, ...)
 std::unique_ptr<JPH::TempAllocatorImpl> WorldPhysic3D::tempAllocator = NULL;
 std::unique_ptr<JPH::JobSystemThreadPool> WorldPhysic3D::jobSystem = NULL;
 JPH::PhysicsSystem WorldPhysic3D::physicSystem;
-ContactListener WorldPhysic3D::contactListener;
+WorldPhysic3D::ContactListener WorldPhysic3D::contactListener;
 JPH::BodyInterface &WorldPhysic3D::bodyInterface = physicSystem.GetBodyInterface();
 
 float WorldPhysic3D::deltaTime = 1.0f / 60;

@@ -6,7 +6,6 @@
 #include <Jolt/Core/JobSystemThreadPool.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/Physics/Body/BodyActivationListener.h>
-#include "Engine/3D/WorldPhysic3D/ContactListener/ContactListener.hpp"
 
 class WorldPhysic3D
 {
@@ -24,6 +23,8 @@ class WorldPhysic3D
     static float GetDeltaTime() { return (deltaTime); }
     static void SetDeltaTime(float deltaTime) { WorldPhysic3D::deltaTime = deltaTime; }
 
+    class ContactListener;
+
   private:
     WorldPhysic3D() = delete;
 
@@ -34,4 +35,6 @@ class WorldPhysic3D
     static JPH::BodyInterface &bodyInterface;
 
     static float deltaTime;
+
+    class DebugRenderer;
 };

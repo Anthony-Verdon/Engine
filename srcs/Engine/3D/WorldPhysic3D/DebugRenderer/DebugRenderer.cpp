@@ -2,12 +2,12 @@
 #include "Engine/3D/WorldPhysic3D/DebugRenderer/DebugRenderer.hpp"
 #include "Engine/3D/LineRenderer3D/LineRenderer3D.hpp"
 
-void DebugRenderer::DrawLine(JPH::RVec3Arg inFrom, JPH::RVec3Arg inTo, JPH::ColorArg inColor)
+void WorldPhysic3D::DebugRenderer::DrawLine(JPH::RVec3Arg inFrom, JPH::RVec3Arg inTo, JPH::ColorArg inColor)
 {
     JPH::Vec4 jphColor = inColor.ToVec4();
     LineRenderer3D::Draw(ml::vec3(inFrom.GetX(), inFrom.GetY(), inFrom.GetZ()), ml::vec3(inTo.GetX(), inTo.GetY(), inTo.GetZ()), ml::vec4(jphColor.GetX(), jphColor.GetY(), jphColor.GetZ(), jphColor.GetW()));
 }
-void DebugRenderer::DrawTriangle(JPH::RVec3Arg inV1, JPH::RVec3Arg inV2, JPH::RVec3Arg inV3, JPH::ColorArg inColor, ECastShadow inCastShadow)
+void WorldPhysic3D::DebugRenderer::DrawTriangle(JPH::RVec3Arg inV1, JPH::RVec3Arg inV2, JPH::RVec3Arg inV3, JPH::ColorArg inColor, ECastShadow inCastShadow)
 {
     (void)inCastShadow;
 
@@ -19,7 +19,7 @@ void DebugRenderer::DrawTriangle(JPH::RVec3Arg inV1, JPH::RVec3Arg inV2, JPH::RV
     LineRenderer3D::Draw(v1, v3, color);
     LineRenderer3D::Draw(v2, v3, color);
 }
-void DebugRenderer::DrawText3D(JPH::RVec3Arg inPosition, const JPH::string_view &inString, JPH::ColorArg inColor, float inHeight)
+void WorldPhysic3D::DebugRenderer::DrawText3D(JPH::RVec3Arg inPosition, const JPH::string_view &inString, JPH::ColorArg inColor, float inHeight)
 {
     (void)inPosition;
     (void)inString;

@@ -1,8 +1,9 @@
 #pragma once
 
+#include <map>
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Collision/ContactListener.h>
-#include <map>
+#include "Engine/3D/WorldPhysic3D/WorldPhysic3D.hpp"
 
 struct Contact
 {
@@ -10,7 +11,7 @@ struct Contact
     JPH::Vec3 normal;
 };
 
-class ContactListener : public JPH::ContactListener
+class WorldPhysic3D::ContactListener : public JPH::ContactListener
 {
   private:
     std::map<JPH::BodyID, std::vector<Contact>> contacts;
