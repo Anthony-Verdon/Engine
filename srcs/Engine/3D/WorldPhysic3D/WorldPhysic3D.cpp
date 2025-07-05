@@ -19,6 +19,7 @@ static void TraceImpl(const char *inFMT, ...)
 std::unique_ptr<JPH::TempAllocatorImpl> WorldPhysic3D::tempAllocator = NULL;
 std::unique_ptr<JPH::JobSystemThreadPool> WorldPhysic3D::jobSystem = NULL;
 JPH::PhysicsSystem WorldPhysic3D::physicSystem;
+ContactListener WorldPhysic3D::contactListener;
 JPH::BodyInterface &WorldPhysic3D::bodyInterface = physicSystem.GetBodyInterface();
 
 float WorldPhysic3D::deltaTime = 1.0f / 60;
@@ -44,6 +45,7 @@ void WorldPhysic3D::Init(const JPH::BroadPhaseLayerInterface &BPLayerInterface, 
 
     physicSystem.Init(cMaxBodies, cNumBodyMutexes, cMaxBodyPairs, cMaxContactConstraints, BPLayerInterface, objVsBPLayerFilter, OLPFilter);
     physicSystem.OptimizeBroadPhase();
+    physicSystem.SetContactListener(&contactListener);
 }
 
 void WorldPhysic3D::Update()
