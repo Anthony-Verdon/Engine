@@ -19,8 +19,6 @@ class WorldPhysic3D
     static void DebugDraw(const JPH::BodyManager::DrawSettings &inSettings = {}, const JPH::BodyDrawFilter *inBodyFilter = nullptr);
     static void Destroy();
 
-    // todo: remove this method
-    static JPH::BodyInterface &GetBodyInterface() { return bodyInterface; }
     static void AddBody(PhysicBody3D *ptr, const JPH::BodyCreationSettings &settings, JPH::EActivation inActivationMode);
     static void RemoveBody(const JPH::BodyID &id);
 
@@ -28,6 +26,11 @@ class WorldPhysic3D
     static void SetDeltaTime(float deltaTime) { WorldPhysic3D::deltaTime = deltaTime; }
     static int GetCollisionStep() { return (collisionStep); }
     static void SetCollisionStep(int collisionStep) { WorldPhysic3D::collisionStep = collisionStep; }
+
+    static void SetShape(const JPH::BodyID &inBodyID, const JPH::Shape *inShape, bool inUpdateMassProperties, JPH::EActivation inActivationMode) { bodyInterface.SetShape(inBodyID, inShape, inUpdateMassProperties, inActivationMode); }
+    static JPH::Vec3 GetLinearVelocity(const JPH::BodyID &inBodyID) { return (bodyInterface.GetLinearVelocity(inBodyID)); }
+    static void SetLinearVelocity(const JPH::BodyID &inBodyID, JPH::Vec3Arg inLinearVelocity) { bodyInterface.SetLinearVelocity(inBodyID, inLinearVelocity); }
+    static JPH::Vec3 GetPosition(const JPH::BodyID &inBodyID) { return (bodyInterface.GetPosition(inBodyID)); }
 
   private:
     WorldPhysic3D() = delete;
