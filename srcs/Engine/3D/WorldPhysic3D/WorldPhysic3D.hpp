@@ -13,8 +13,16 @@
 
 class WorldPhysic3D
 {
+  private:
+    class BroadPhaseLayerInterface;
+    class ObjectVsBroadPhaseLayerFilter;
+    class ObjectLayerPairFilter;
+    class DebugRenderer;
+    class ContactListener;
+    friend ContactListener;
+
   public:
-    static void Init(const JPH::BroadPhaseLayerInterface &BPLayerInterface, const JPH::ObjectVsBroadPhaseLayerFilter &objVsBPLayerFilter, const JPH::ObjectLayerPairFilter &OLPFilter);
+    static void Init();
     static void Update();
     static void DebugDraw(const JPH::BodyManager::DrawSettings &inSettings = {}, const JPH::BodyDrawFilter *inBodyFilter = nullptr);
     static void Destroy();
@@ -32,12 +40,12 @@ class WorldPhysic3D
     static void SetLinearVelocity(const JPH::BodyID &inBodyID, JPH::Vec3Arg inLinearVelocity) { bodyInterface.SetLinearVelocity(inBodyID, inLinearVelocity); }
     static JPH::Vec3 GetPosition(const JPH::BodyID &inBodyID) { return (bodyInterface.GetPosition(inBodyID)); }
 
+    static BroadPhaseLayerInterface broadPhaseLayerInterface;
+    static ObjectVsBroadPhaseLayerFilter objectVsBroadPhaseLayerFilter;
+    static ObjectLayerPairFilter objectLayerPairFilter;
+
   private:
     WorldPhysic3D() = delete;
-
-    class DebugRenderer;
-    class ContactListener;
-    friend ContactListener;
 
     static std::unique_ptr<JPH::TempAllocatorImpl> tempAllocator;
     static std::unique_ptr<JPH::JobSystemThreadPool> jobSystem;

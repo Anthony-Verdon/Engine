@@ -1,6 +1,7 @@
 #include "Engine/3D/WorldPhysic3D/WorldPhysic3D.hpp"
 #include "Engine/3D/WorldPhysic3D/DebugRenderer/DebugRenderer.hpp"
 #include "Engine/3D/WorldPhysic3D/ContactListener/ContactListener.hpp"
+#include "Engine/3D/WorldPhysic3D/ObjectAndBroadPhaseLayer/ObjectAndBroadPhaseLayer.hpp"
 #include <Jolt/Core/Factory.h>
 #include <Jolt/RegisterTypes.h>
 #include <cstdarg>
@@ -20,6 +21,9 @@ static void TraceImpl(const char *inFMT, ...)
 std::unique_ptr<JPH::TempAllocatorImpl> WorldPhysic3D::tempAllocator = NULL;
 std::unique_ptr<JPH::JobSystemThreadPool> WorldPhysic3D::jobSystem = NULL;
 JPH::PhysicsSystem WorldPhysic3D::physicSystem;
+WorldPhysic3D::BroadPhaseLayerInterface WorldPhysic3D::broadPhaseLayerInterface;
+WorldPhysic3D::ObjectVsBroadPhaseLayerFilter WorldPhysic3D::objectVsBroadPhaseLayerFilter;
+WorldPhysic3D::ObjectLayerPairFilter WorldPhysic3D::objectLayerPairFilter;
 WorldPhysic3D::ContactListener WorldPhysic3D::contactListener;
 JPH::BodyInterface &WorldPhysic3D::bodyInterface = physicSystem.GetBodyInterface();
 
@@ -27,7 +31,7 @@ float WorldPhysic3D::deltaTime = 1.0f / 60;
 int WorldPhysic3D::collisionStep = 1;
 std::map<JPH::BodyID, PhysicBody3D *> WorldPhysic3D::bodies;
 
-void WorldPhysic3D::Init(const JPH::BroadPhaseLayerInterface &BPLayerInterface, const JPH::ObjectVsBroadPhaseLayerFilter &objVsBPLayerFilter, const JPH::ObjectLayerPairFilter &OLPFilter)
+void WorldPhysic3D::Init()
 {
     JPH::RegisterDefaultAllocator();
 
@@ -46,7 +50,7 @@ void WorldPhysic3D::Init(const JPH::BroadPhaseLayerInterface &BPLayerInterface, 
     const uint cMaxBodyPairs = 1024;
     const uint cMaxContactConstraints = 1024;
 
-    physicSystem.Init(cMaxBodies, cNumBodyMutexes, cMaxBodyPairs, cMaxContactConstraints, BPLayerInterface, objVsBPLayerFilter, OLPFilter);
+    physicSystem.Init(cMaxBodies, cNumBodyMutexes, cMaxBodyPairs, cMaxContactConstraints, broadPhaseLayerInterface, objectVsBroadPhaseLayerFilter, objectLayerPairFilter);
     physicSystem.OptimizeBroadPhase();
     physicSystem.SetContactListener(&contactListener);
 }
