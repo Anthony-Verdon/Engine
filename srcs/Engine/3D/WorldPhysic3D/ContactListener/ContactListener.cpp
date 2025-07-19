@@ -15,69 +15,20 @@ void WorldPhysic3D::ContactListener::OnContactAdded(const JPH::Body &inBody1, co
 {
     (void)ioSettings;
 
-    {
-        Contact newContact;
-        newContact.id = inBody2.GetID();
-        newContact.normal = inManifold.mWorldSpaceNormal;
-        contacts[inBody1.GetID()].push_back(newContact);
-    }
-    {
-        Contact newContact;
-        newContact.id = inBody1.GetID();
-        newContact.normal = -inManifold.mWorldSpaceNormal;
-        contacts[inBody2.GetID()].push_back(newContact);
-    }
+    WorldPhysic3D::bodies[inBody1.GetID()]->OnContactAdded(inManifold);
+    WorldPhysic3D::bodies[inBody2.GetID()]->OnContactAdded(inManifold);
 }
 
 void WorldPhysic3D::ContactListener::OnContactPersisted(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold, JPH::ContactSettings &ioSettings)
 {
-    (void)inBody1;
-    (void)inBody2;
-    (void)inManifold;
     (void)ioSettings;
+
+    WorldPhysic3D::bodies[inBody1.GetID()]->OnContactPersisted(inManifold);
+    WorldPhysic3D::bodies[inBody2.GetID()]->OnContactPersisted(inManifold);
 }
 
 void WorldPhysic3D::ContactListener::OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair)
 {
-    {
-        auto contactMapIt = contacts.find(inSubShapePair.GetBody1ID());
-        if (contactMapIt != contacts.end())
-        {
-            for (auto contactVectorIt = contactMapIt->second.begin();
-                 contactVectorIt != contactMapIt->second.end();
-                 contactVectorIt++)
-            {
-                if (contactVectorIt->id == inSubShapePair.GetBody2ID())
-                {
-                    contactMapIt->second.erase(contactVectorIt);
-                    break;
-                }
-            }
-        }
-    }
-    {
-        auto contactMapIt = contacts.find(inSubShapePair.GetBody2ID());
-        if (contactMapIt != contacts.end())
-        {
-            for (auto contactVectorIt = contactMapIt->second.begin();
-                 contactVectorIt != contactMapIt->second.end();
-                 contactVectorIt++)
-            {
-                if (contactVectorIt->id == inSubShapePair.GetBody1ID())
-                {
-                    contactMapIt->second.erase(contactVectorIt);
-                    break;
-                }
-            }
-        }
-    }
-}
-
-std::vector<Contact> WorldPhysic3D::ContactListener::GetContacts(const JPH::BodyID &id)
-{
-    auto contactMapIt = contacts.find(id);
-    if (contactMapIt != contacts.end())
-        return (contactMapIt->second);
-    else
-        return (std::vector<Contact>{});
+    WorldPhysic3D::bodies[inSubShapePair.GetBody1ID()]->OnContactRemoved();
+    WorldPhysic3D::bodies[inSubShapePair.GetBody2ID()]->OnContactRemoved();
 }
