@@ -1,3 +1,4 @@
+#if DEBUG_DRAW_PHYSIC_3D
 #include <Jolt/Jolt.h>
 #include "Engine/3D/WorldPhysic3D/DebugRenderer/DebugRenderer.hpp"
 #include "Engine/3D/LineRenderer3D/LineRenderer3D.hpp"
@@ -28,3 +29,4 @@ void WorldPhysic3D::DebugRenderer::DrawText3D(JPH::RVec3Arg inPosition, const JP
 
     std::cout << "DrawText3D" << std::endl;
 }
+#endif

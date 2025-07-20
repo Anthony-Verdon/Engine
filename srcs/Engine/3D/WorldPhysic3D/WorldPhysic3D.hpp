@@ -17,7 +17,9 @@ class WorldPhysic3D
     class BroadPhaseLayerInterface;
     class ObjectVsBroadPhaseLayerFilter;
     class ObjectLayerPairFilter;
+#if DEBUG_DRAW_PHYSIC_3D
     class DebugRenderer;
+#endif
     class ContactListener;
     friend ContactListener;
 

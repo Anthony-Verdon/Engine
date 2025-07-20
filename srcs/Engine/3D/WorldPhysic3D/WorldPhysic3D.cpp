@@ -62,6 +62,7 @@ void WorldPhysic3D::Update()
     physicSystem.Update(deltaTime, collisionStep, tempAllocator.get(), jobSystem.get());
 }
 
+#if DEBUG_DRAW_PHYSIC_3D
 void WorldPhysic3D::DebugDraw(const JPH::BodyManager::DrawSettings &inSettings, const JPH::BodyDrawFilter *inBodyFilter)
 {
     if (JPH::DebugRenderer::sInstance == nullptr)
@@ -69,6 +70,7 @@ void WorldPhysic3D::DebugDraw(const JPH::BodyManager::DrawSettings &inSettings, 
 
     physicSystem.DrawBodies(inSettings, JPH::DebugRenderer::sInstance, inBodyFilter);
 }
+#endif
 
 void WorldPhysic3D::Destroy()
 {
@@ -77,11 +79,13 @@ void WorldPhysic3D::Destroy()
     delete JPH::Factory::sInstance;
     JPH::Factory::sInstance = nullptr;
 
+#if DEBUG_DRAW_PHYSIC_3D
     if (JPH::DebugRenderer::sInstance != nullptr)
     {
         delete JPH::DebugRenderer::sInstance;
         JPH::DebugRenderer::sInstance = nullptr;
     }
+#endif
 }
 
 void WorldPhysic3D::AddBody(PhysicBody3D *ptr, const JPH::BodyCreationSettings &settings, JPH::EActivation inActivationMode)

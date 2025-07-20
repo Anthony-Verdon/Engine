@@ -23,6 +23,12 @@ else
     add_defines("FULL_SCREEN=1");
 end
 
+if has_config("DEBUG_DRAW_PHYSIC_3D") then
+    add_defines("DEBUG_DRAW_PHYSIC_3D=" .. get_config("DEBUG_DRAW_PHYSIC_3D"));
+else
+    add_defines("DEBUG_DRAW_PHYSIC_3D=0");
+end
+
 namespace("GlbParser", function ()
     includes("submodules/GlbParser")
 end)
