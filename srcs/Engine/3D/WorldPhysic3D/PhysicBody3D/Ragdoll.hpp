@@ -12,8 +12,10 @@ class Ragdoll : public PhysicBody3D
     virtual ~Ragdoll() {}
 
     const JPH::Array<JPH::BodyID> &GetBodyIDs() const { return ragdoll->GetBodyIDs(); }
+    size_t GetBodyCount() const { return ragdoll->GetBodyCount(); }
+    JPH::BodyID GetBodyID(int index) const { return ragdoll->GetBodyID(index); }
 
-  private:
+  public: // private:
     JPH::Ref<JPH::Ragdoll> ragdoll;
 
     friend WorldPhysic3D;

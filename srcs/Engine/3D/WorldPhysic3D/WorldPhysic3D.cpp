@@ -94,6 +94,13 @@ void WorldPhysic3D::AddRigidBody(RigidBody *ptr, const JPH::BodyCreationSettings
     bodies[ptr->id] = ptr;
 }
 
+void WorldPhysic3D::RemoveBody(const JPH::BodyID &id)
+{
+    bodies.erase(id);
+    bodyInterface.RemoveBody(id);
+    bodyInterface.DestroyBody(id);
+}
+
 void WorldPhysic3D::AddRagdoll(Ragdoll *ptr, const JPH::RagdollSettings &settings, JPH::EActivation inActivationMode)
 {
     ptr->ragdoll = settings.CreateRagdoll(0, 0, &physicSystem);
@@ -102,9 +109,9 @@ void WorldPhysic3D::AddRagdoll(Ragdoll *ptr, const JPH::RagdollSettings &setting
         bodies[id] = ptr;
 }
 
-void WorldPhysic3D::RemoveBody(const JPH::BodyID &id)
+void WorldPhysic3D::RemoveRagdoll(Ragdoll *ptr)
 {
-    bodies.erase(id);
-    bodyInterface.RemoveBody(id);
-    bodyInterface.DestroyBody(id);
+    for (JPH::BodyID id : ptr->ragdoll->GetBodyIDs())
+        bodies.erase(id);
+    ptr->ragdoll->RemoveFromPhysicsSystem();
 }

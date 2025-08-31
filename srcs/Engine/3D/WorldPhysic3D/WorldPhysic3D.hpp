@@ -31,8 +31,9 @@ class WorldPhysic3D
     static void Destroy();
 
     static void AddRigidBody(RigidBody *ptr, const JPH::BodyCreationSettings &settings, JPH::EActivation inActivationMode);
-    static void AddRagdoll(Ragdoll *ptr, const JPH::RagdollSettings &settings, JPH::EActivation inActivationMode);
     static void RemoveBody(const JPH::BodyID &id);
+    static void AddRagdoll(Ragdoll *ptr, const JPH::RagdollSettings &settings, JPH::EActivation inActivationMode);
+    static void RemoveRagdoll(Ragdoll *ptr);
 
     static float GetDeltaTime() { return (deltaTime); }
     static void SetDeltaTime(float deltaTime) { WorldPhysic3D::deltaTime = deltaTime; }
@@ -44,6 +45,10 @@ class WorldPhysic3D
     static JPH::Vec3 GetLinearVelocity(const JPH::BodyID &inBodyID) { return (bodyInterface.GetLinearVelocity(inBodyID)); }
     static void SetPosition(const JPH::BodyID &inBodyID, JPH::RVec3Arg inPosition, JPH::EActivation inActivationMode) { bodyInterface.SetPosition(inBodyID, inPosition, inActivationMode); }
     static JPH::Vec3 GetPosition(const JPH::BodyID &inBodyID) { return (bodyInterface.GetPosition(inBodyID)); }
+    static JPH::RMat44 GetWorldTransform(const JPH::BodyID &inBodyID) { return (bodyInterface.GetWorldTransform(inBodyID)); }
+    static void ActivateBody(const JPH::BodyID &inBodyID) { bodyInterface.ActivateBody(inBodyID); }
+    static void DeactivateBody(const JPH::BodyID &inBodyID) { bodyInterface.DeactivateBody(inBodyID); }
+    static JPH::Quat GetRotation(const JPH::BodyID &inBodyID) { return (bodyInterface.GetRotation(inBodyID)); }
 
     static BroadPhaseLayerInterface broadPhaseLayerInterface;
     static ObjectVsBroadPhaseLayerFilter objectVsBroadPhaseLayerFilter;

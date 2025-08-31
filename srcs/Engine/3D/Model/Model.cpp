@@ -1,5 +1,6 @@
 #include "Engine/3D/Model/Model.hpp"
 #include "Engine/3D/ModelManager/ModelManager.hpp"
+#include "Engine/3D/WorldPhysic3D/WorldPhysic3D.hpp"
 
 Model::Model()
 {
@@ -17,7 +18,6 @@ Model::Model(const Glb::GltfData &data, size_t nodeIndex)
 
 Model::~Model()
 {
-
 }
 
 int Model::DetermineRootNode(int node)
@@ -92,7 +92,7 @@ std::map<int, ml::mat4> Model::CalculateNodeTransform(size_t nodeIndex, const ml
     if (!enableRootMotion)
     {
         transform[0][3] = 0;
-        transform[1][3] = 0; 
+        transform[1][3] = 0;
         transform[2][3] = 0;
     }
 
@@ -113,4 +113,30 @@ void Model::DrawSubModels(size_t nodeIndex, const ml::vec3 &camPos, const std::v
         DrawSubModels(node.children[i], camPos, lights, projection, view, nodesTransform);
     for (size_t i = 0; i < node.models.size(); i++)
         ModelManager::GetModel(node.models[i]).Draw(camPos, lights, projection, view, nodesTransform[nodeIndex]);
+}
+
+void Model::Draw(const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, Ragdoll *ragdoll)
+{
+    auto nodesTransform = CalculateNodeTransform2(nodeIndex, ragdoll);
+    for (size_t i = 0; i < meshes.size(); i++)
+        meshes[i].Draw(camPos, lights, projection, view, nodesTransform);
+}
+
+std::map<int, ml::mat4> Model::CalculateNodeTransform2(size_t nodeIndex, Ragdoll *ragdoll)
+{
+    auto node = nodes[nodeIndex];
+    std::map<int, ml::mat4> nodesTransform;
+    JPH::RMat44 joltTransform = WorldPhysic3D::GetWorldTransform(ragdoll->GetBodyID(nodeIndex));
+    ml::mat4 transform;
+    for (int j = 0; j < 4; j++)
+    {
+        for (int k = 0; k < 4; k++)
+            transform[j][k] = joltTransform(j, k);
+    }
+
+    nodesTransform[nodeIndex] = transform;
+    for (size_t i = 0; i < node.children.size(); i++)
+        nodesTransform.merge(CalculateNodeTransform2(node.children[i], ragdoll));
+
+    return (nodesTransform);
 }
