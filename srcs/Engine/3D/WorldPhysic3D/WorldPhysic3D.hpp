@@ -9,8 +9,7 @@
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/EActivation.h>
-#include "Engine/3D/WorldPhysic3D/PhysicBody3D/RigidBody.hpp"
-#include "Engine/3D/WorldPhysic3D/PhysicBody3D/Ragdoll.hpp"
+#include "Engine/3D/WorldPhysic3D/PhysicBody3D/PhysicBody3D.hpp"
 
 class WorldPhysic3D
 {
@@ -30,8 +29,7 @@ class WorldPhysic3D
     static void DebugDraw(const JPH::BodyManager::DrawSettings &inSettings = {}, const JPH::BodyDrawFilter *inBodyFilter = nullptr);
     static void Destroy();
 
-    static void AddRigidBody(RigidBody *ptr, const JPH::BodyCreationSettings &settings, JPH::EActivation inActivationMode);
-    static void AddRagdoll(Ragdoll *ptr, const JPH::RagdollSettings &settings, JPH::EActivation inActivationMode);
+    static void AddBody(PhysicBody3D *ptr, const JPH::BodyCreationSettings &settings, JPH::EActivation inActivationMode);
     static void RemoveBody(const JPH::BodyID &id);
 
     static float GetDeltaTime() { return (deltaTime); }
@@ -40,9 +38,8 @@ class WorldPhysic3D
     static void SetCollisionStep(int collisionStep) { WorldPhysic3D::collisionStep = collisionStep; }
 
     static void SetShape(const JPH::BodyID &inBodyID, const JPH::Shape *inShape, bool inUpdateMassProperties, JPH::EActivation inActivationMode) { bodyInterface.SetShape(inBodyID, inShape, inUpdateMassProperties, inActivationMode); }
-    static void SetLinearVelocity(const JPH::BodyID &inBodyID, JPH::Vec3Arg inLinearVelocity) { bodyInterface.SetLinearVelocity(inBodyID, inLinearVelocity); }
     static JPH::Vec3 GetLinearVelocity(const JPH::BodyID &inBodyID) { return (bodyInterface.GetLinearVelocity(inBodyID)); }
-    static void SetPosition(const JPH::BodyID &inBodyID, JPH::RVec3Arg inPosition, JPH::EActivation inActivationMode) { bodyInterface.SetPosition(inBodyID, inPosition, inActivationMode); }
+    static void SetLinearVelocity(const JPH::BodyID &inBodyID, JPH::Vec3Arg inLinearVelocity) { bodyInterface.SetLinearVelocity(inBodyID, inLinearVelocity); }
     static JPH::Vec3 GetPosition(const JPH::BodyID &inBodyID) { return (bodyInterface.GetPosition(inBodyID)); }
 
     static BroadPhaseLayerInterface broadPhaseLayerInterface;
