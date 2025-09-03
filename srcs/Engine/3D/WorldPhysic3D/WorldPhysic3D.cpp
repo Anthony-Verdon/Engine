@@ -20,12 +20,11 @@ static void TraceImpl(const char *inFMT, ...)
 
 std::unique_ptr<JPH::TempAllocatorImpl> WorldPhysic3D::tempAllocator = NULL;
 std::unique_ptr<JPH::JobSystemThreadPool> WorldPhysic3D::jobSystem = NULL;
-JPH::PhysicsSystem WorldPhysic3D::physicSystem;
-WorldPhysic3D::BroadPhaseLayerInterface WorldPhysic3D::broadPhaseLayerInterface;
-WorldPhysic3D::ObjectVsBroadPhaseLayerFilter WorldPhysic3D::objectVsBroadPhaseLayerFilter;
-WorldPhysic3D::ObjectLayerPairFilter WorldPhysic3D::objectLayerPairFilter;
-WorldPhysic3D::ContactListener WorldPhysic3D::contactListener;
-JPH::BodyInterface &WorldPhysic3D::bodyInterface = physicSystem.GetBodyInterface();
+std::unique_ptr<JPH::PhysicsSystem> WorldPhysic3D::physicSystem = NULL;
+std::unique_ptr<WorldPhysic3D::BroadPhaseLayerInterface> WorldPhysic3D::broadPhaseLayerInterface = NULL;
+std::unique_ptr<WorldPhysic3D::ObjectVsBroadPhaseLayerFilter> WorldPhysic3D::objectVsBroadPhaseLayerFilter = NULL;
+std::unique_ptr<WorldPhysic3D::ObjectLayerPairFilter> WorldPhysic3D::objectLayerPairFilter = NULL;
+std::unique_ptr<WorldPhysic3D::ContactListener> WorldPhysic3D::contactListener = NULL;
 
 float WorldPhysic3D::deltaTime = 1.0f / 60;
 int WorldPhysic3D::collisionStep = 1;
@@ -44,22 +43,27 @@ void WorldPhysic3D::Init()
 
     tempAllocator = std::make_unique<JPH::TempAllocatorImpl>(10 * 1024 * 1024);
     jobSystem = std::make_unique<JPH::JobSystemThreadPool>(JPH::cMaxPhysicsJobs, JPH::cMaxPhysicsBarriers, JPH::thread::hardware_concurrency() - 1);
+    physicSystem = std::make_unique<JPH::PhysicsSystem>();
+    broadPhaseLayerInterface = std::make_unique<WorldPhysic3D::BroadPhaseLayerInterface>();
+    objectVsBroadPhaseLayerFilter = std::make_unique<WorldPhysic3D::ObjectVsBroadPhaseLayerFilter>();
+    objectLayerPairFilter = std::make_unique<WorldPhysic3D::ObjectLayerPairFilter>();
+    contactListener = std::make_unique<WorldPhysic3D::ContactListener>();
 
     const uint cMaxBodies = 1024;
     const uint cNumBodyMutexes = 0;
     const uint cMaxBodyPairs = 1024;
     const uint cMaxContactConstraints = 1024;
 
-    physicSystem.Init(cMaxBodies, cNumBodyMutexes, cMaxBodyPairs, cMaxContactConstraints, broadPhaseLayerInterface, objectVsBroadPhaseLayerFilter, objectLayerPairFilter);
-    physicSystem.OptimizeBroadPhase();
-    physicSystem.SetContactListener(&contactListener);
+    physicSystem->Init(cMaxBodies, cNumBodyMutexes, cMaxBodyPairs, cMaxContactConstraints, *broadPhaseLayerInterface, *objectVsBroadPhaseLayerFilter, *objectLayerPairFilter);
+    physicSystem->OptimizeBroadPhase();
+    physicSystem->SetContactListener(contactListener.get());
 }
 
 void WorldPhysic3D::Update()
 {
     for (auto it = bodies.begin(); it != bodies.end(); it++)
         it->second->OnWorldPhysicUpdated();
-    physicSystem.Update(deltaTime, collisionStep, tempAllocator.get(), jobSystem.get());
+    physicSystem->Update(deltaTime, collisionStep, tempAllocator.get(), jobSystem.get());
 }
 
 #if DEBUG_DRAW_PHYSIC_3D
@@ -68,7 +72,7 @@ void WorldPhysic3D::DebugDraw(const JPH::BodyManager::DrawSettings &inSettings, 
     if (JPH::DebugRenderer::sInstance == nullptr)
         JPH::DebugRenderer::sInstance = new DebugRenderer();
 
-    physicSystem.DrawBodies(inSettings, JPH::DebugRenderer::sInstance, inBodyFilter);
+    physicSystem->DrawBodies(inSettings, JPH::DebugRenderer::sInstance, inBodyFilter);
 }
 #endif
 
@@ -90,13 +94,13 @@ void WorldPhysic3D::Destroy()
 
 void WorldPhysic3D::AddBody(PhysicBody3D *ptr, const JPH::BodyCreationSettings &settings, JPH::EActivation inActivationMode)
 {
-    ptr->id = bodyInterface.CreateAndAddBody(settings, inActivationMode);
+    ptr->id = physicSystem->GetBodyInterface().CreateAndAddBody(settings, inActivationMode);
     bodies[ptr->id] = ptr;
 }
 
 void WorldPhysic3D::RemoveBody(const JPH::BodyID &id)
 {
     bodies.erase(id);
-    bodyInterface.RemoveBody(id);
-    bodyInterface.DestroyBody(id);
+    physicSystem->GetBodyInterface().RemoveBody(id);
+    physicSystem->GetBodyInterface().DestroyBody(id);
 }

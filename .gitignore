@@ -1,5 +1,5 @@
 .xmake
 build
-*.a
+*.so
 *.o
 *.d

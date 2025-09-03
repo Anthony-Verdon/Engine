@@ -37,24 +37,23 @@ class WorldPhysic3D
     static int GetCollisionStep() { return (collisionStep); }
     static void SetCollisionStep(int collisionStep) { WorldPhysic3D::collisionStep = collisionStep; }
 
-    static void SetShape(const JPH::BodyID &inBodyID, const JPH::Shape *inShape, bool inUpdateMassProperties, JPH::EActivation inActivationMode) { bodyInterface.SetShape(inBodyID, inShape, inUpdateMassProperties, inActivationMode); }
-    static JPH::Vec3 GetLinearVelocity(const JPH::BodyID &inBodyID) { return (bodyInterface.GetLinearVelocity(inBodyID)); }
-    static void SetLinearVelocity(const JPH::BodyID &inBodyID, JPH::Vec3Arg inLinearVelocity) { bodyInterface.SetLinearVelocity(inBodyID, inLinearVelocity); }
-    static JPH::Vec3 GetPosition(const JPH::BodyID &inBodyID) { return (bodyInterface.GetPosition(inBodyID)); }
-    static void SetPosition(const JPH::BodyID &inBodyID, JPH::RVec3Arg inPosition, JPH::EActivation inActivationMode) { bodyInterface.SetPosition(inBodyID, inPosition, inActivationMode); }
+    static void SetShape(const JPH::BodyID &inBodyID, const JPH::Shape *inShape, bool inUpdateMassProperties, JPH::EActivation inActivationMode) { physicSystem->GetBodyInterface().SetShape(inBodyID, inShape, inUpdateMassProperties, inActivationMode); }
+    static JPH::Vec3 GetLinearVelocity(const JPH::BodyID &inBodyID) { return (physicSystem->GetBodyInterface().GetLinearVelocity(inBodyID)); }
+    static void SetLinearVelocity(const JPH::BodyID &inBodyID, JPH::Vec3Arg inLinearVelocity) { physicSystem->GetBodyInterface().SetLinearVelocity(inBodyID, inLinearVelocity); }
+    static JPH::Vec3 GetPosition(const JPH::BodyID &inBodyID) { return (physicSystem->GetBodyInterface().GetPosition(inBodyID)); }
+    static void SetPosition(const JPH::BodyID &inBodyID, JPH::RVec3Arg inPosition, JPH::EActivation inActivationMode) { physicSystem->GetBodyInterface().SetPosition(inBodyID, inPosition, inActivationMode); }
 
-    static BroadPhaseLayerInterface broadPhaseLayerInterface;
-    static ObjectVsBroadPhaseLayerFilter objectVsBroadPhaseLayerFilter;
-    static ObjectLayerPairFilter objectLayerPairFilter;
+    static std::unique_ptr<BroadPhaseLayerInterface> broadPhaseLayerInterface;
+    static std::unique_ptr<ObjectVsBroadPhaseLayerFilter> objectVsBroadPhaseLayerFilter;
+    static std::unique_ptr<ObjectLayerPairFilter> objectLayerPairFilter;
 
   private:
     WorldPhysic3D() = delete;
 
     static std::unique_ptr<JPH::TempAllocatorImpl> tempAllocator;
     static std::unique_ptr<JPH::JobSystemThreadPool> jobSystem;
-    static ContactListener contactListener;
-    static JPH::PhysicsSystem physicSystem;
-    static JPH::BodyInterface &bodyInterface;
+    static std::unique_ptr<ContactListener> contactListener;
+    static std::unique_ptr<JPH::PhysicsSystem> physicSystem;
 
     static float deltaTime;
     static int collisionStep;
