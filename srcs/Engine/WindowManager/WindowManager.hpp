@@ -7,6 +7,9 @@
 #include <GLFW/glfw3.h>
 #include <map>
 #include <string>
+#ifdef HOTRELOAD
+#include <filesystem>
+#endif
 
 #if FULL_SCREEN
 constexpr int WINDOW_WIDTH = 1920;
@@ -29,13 +32,17 @@ class WindowManager
     static ml::vec2 windowSize;
     static ml::vec2 mousePosition;
     static std::map<int, InputMode> inputMap;
+#ifdef HOTRELOAD
+    static void *DLL;
+    static std::filesystem::file_time_type DLLtimestamp;
+#endif
 
     WindowManager() = delete;
     ~WindowManager() = delete;
 
   public:
     static void InitWindow(const std::string &name, unsigned int width, unsigned int height);
-    static void StartUpdateLoop(AProgram *game);
+    static void StartUpdateLoop(AProgram *program);
     static void StopUpdateLoop();
     static void DestructWindowManager();
 
@@ -60,6 +67,13 @@ class WindowManager
     static void SetMousePosition(double xPos, double yPos);
 
     static void SetUserPointer(void *ptr);
+
+#ifdef HOTRELOAD
+    static AProgram *SwapDLL();
+    static void *LoadDLL(const std::string &path);
+    static void *LoadFunctionFromDLL(void *DLL, const std::string &func);
+    static bool UnloadDLL(void *DLL);
+#endif
 
     static void SetCharCallback(void (*func)(GLFWwindow *window, unsigned int character));
     static void SetScrollCallback(void (*func)(GLFWwindow *window, double xOffset, double yOffset));

@@ -4,11 +4,19 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <stdexcept>
+#include "Engine/macros.hpp"
+#ifdef HOTRELOAD
+#include <dlfcn.h>
+#endif
 
 GLFWwindow *WindowManager::window = NULL;
 ml::vec2 WindowManager::mousePosition = ml::vec2(0, 0);
 ml::vec2 WindowManager::windowSize = ml::vec2(0, 0);
 std::map<int, InputMode> WindowManager::inputMap;
+#ifdef HOTRELOAD
+void *WindowManager::DLL = NULL;
+std::filesystem::file_time_type WindowManager::DLLtimestamp;
+#endif
 
 void mouse_position_callback(GLFWwindow *window, double xPos, double yPos);
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
@@ -62,18 +70,42 @@ void WindowManager::InitWindow(const std::string &name, unsigned int width, unsi
 
 void WindowManager::DestructWindowManager()
 {
+#ifdef HOTRELOAD
+    if (DLL)
+        UnloadDLL(DLL);
+#endif
+
     glfwTerminate();
 }
 
-void WindowManager::StartUpdateLoop(AProgram *game)
+void WindowManager::StartUpdateLoop(AProgram *program)
 {
+#ifdef HOTRELOAD
+    if (!program)
+    {
+        AProgram *newProgram = SwapDLL();
+        if (newProgram)
+            program = newProgram;
+    }
+#endif
+
+    CHECK_AND_RETURN_VOID(program, "program pointer is NULL");
+
     while (!glfwWindowShouldClose(window))
     {
+#ifdef HOTRELOAD
+        if (DLLtimestamp != std::filesystem::last_write_time("./libGame.so"))
+        {
+            AProgram *newProgram = SwapDLL();
+            if (newProgram)
+                program = newProgram;
+        }
+#endif
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Time::updateTime();
 
-        game->Run();
+        program->Run();
 
         for (auto it = inputMap.begin(); it != inputMap.end(); it++)
         {
@@ -169,6 +201,83 @@ void WindowManager::SetUserPointer(void *ptr)
 {
     glfwSetWindowUserPointer(window, ptr);
 }
+
+#ifdef HOTRELOAD
+AProgram *WindowManager::SwapDLL()
+{
+    if (DLLtimestamp == std::filesystem::last_write_time("./libGame.so"))
+        return (NULL);
+
+    static int nb = 0;
+    std::string copyname = "libGame" + std::to_string(nb) + ".so";
+    std::filesystem::copy("libGame.so", copyname);
+    nb++;
+    void *newDLL = LoadDLL(copyname);
+    CHECK_AND_RETURN(newDLL, NULL, "failed to load DLL");
+
+    DLLtimestamp = std::filesystem::last_write_time("./libGame.so");
+
+    auto create = (AProgram * (*)()) LoadFunctionFromDLL(newDLL, "create");
+    if (!create)
+        std::cerr << "failed to load \"AProgram *create()\" function" << std::endl;
+
+    auto destroy = (void (*)(AProgram *))LoadFunctionFromDLL(newDLL, "destroy");
+    if (!destroy)
+        std::cerr << "failed to load \"void destroy(AProgram *)\" function" << std::endl;
+
+    if (!create || !destroy)
+    {
+        UnloadDLL(newDLL);
+        return (NULL);
+    }
+
+    AProgram *newProgram = create();
+    if (!newProgram)
+    {
+        UnloadDLL(newDLL);
+        return (NULL);
+    }
+
+    if (DLL)
+        UnloadDLL(DLL);
+    DLL = newDLL;
+
+    return (newProgram);
+}
+
+void *WindowManager::LoadDLL(const std::string &path)
+{
+    std::string pathModif = "./" + path;
+    CHECK_AND_RETURN(std::filesystem::exists(pathModif), NULL, pathModif << " not found");
+
+    void *lib = dlopen(pathModif.c_str(), RTLD_NOW);
+    char *errstr = dlerror();
+    CHECK(!errstr, "A dynamic linking error occurred: " << errstr);
+    CHECK(lib, "failed to load " << pathModif);
+
+    return (lib);
+}
+
+void *WindowManager::LoadFunctionFromDLL(void *DLL, const std::string &func)
+{
+    CHECK_AND_RETURN(DLL, NULL, "no DLL supplied");
+
+    void *proc = dlsym(DLL, func.c_str());
+    CHECK_AND_RETURN(proc, NULL, "fail to load function " << func << "from DLL");
+
+    return (proc);
+}
+
+bool WindowManager::UnloadDLL(void *DLL)
+{
+    CHECK_AND_RETURN(DLL, false, "no DLL supplied");
+
+    int freeResult = dlclose(DLL);
+    CHECK_AND_RETURN((freeResult == 0), false, "failed to close DLL (errorcode: " << freeResult << ")");
+
+    return (freeResult);
+}
+#endif
 
 void WindowManager::SetCharCallback(void (*func)(GLFWwindow *window, unsigned int character))
 {

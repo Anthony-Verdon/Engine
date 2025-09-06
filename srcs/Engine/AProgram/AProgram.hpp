@@ -2,7 +2,7 @@
 
 class AProgram
 {
-    public:
+  public:
     AProgram();
     virtual ~AProgram();
 

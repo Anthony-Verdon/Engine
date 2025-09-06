@@ -12,10 +12,41 @@ add_requires("glad")
 add_requires("box2d  3.0.0")
 add_requires("joltphysics", {configs = {rtti = true}})
 
+option("HOTRELOAD")
+    set_showmenu(true)
+    set_description("Enable Hotreload")
+    set_default(false)
+    set_category("Features")
+option_end()
+
+function split(inputstr, sep)
+  local t = {}
+  for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+    table.insert(t, str)
+  end
+  return t
+end
+
+targetDir = "./"
+targetName = "Exe"
+
 if has_config("PATH_TO_ENGINE") then
     add_defines("PATH_TO_ENGINE=\"" .. get_config("PATH_TO_ENGINE") .. "\"");
+    if has_config("HOTRELOAD") then
+        folders = split(get_config("PATH_TO_ENGINE"), "/")
+        for _ in pairs(folders) do
+            targetDir = targetDir .. "../"
+        end
+    end
 else
     add_defines("PATH_TO_ENGINE=\"\"");
+end
+
+if has_config("HOTRELOAD") then
+    if has_config("TARGET_NAME") then
+        targetName = get_config("TARGET_NAME")
+    end
+    add_defines("HOTRELOAD")
 end
 
 if has_config("FULL_SCREEN") then
@@ -34,10 +65,20 @@ namespace("GlbParser", function ()
     includes("submodules/GlbParser")
 end)
 
+target("Exe")
+    if has_config("HOTRELOAD") then 
+        set_targetdir(targetDir)
+        set_kind("binary")
+        add_files("srcs/Engine/main.cpp")
+        add_deps("Engine")
+        set_basename(targetName)
+    end
+
 target("Engine")
     set_targetdir("./")
     set_kind("shared")
     add_files("srcs/**.cpp")
+    remove_files("srcs/Engine/main.cpp")
     add_includedirs("srcs", {public = true})
     add_packages("glfw")
     add_packages("stb")
