@@ -1,4 +1,4 @@
-set_languages("cxx17")
+set_languages("cxx20")
 
 set_toolchains("clang")
 set_warnings("allextra", "error")
@@ -47,6 +47,7 @@ if has_config("HOTRELOAD") then
         targetName = get_config("TARGET_NAME")
     end
     add_defines("HOTRELOAD")
+    add_defines("EXECUTABLE_NAME=\"" .. targetName .. "\"");
 end
 
 if has_config("FULL_SCREEN") then

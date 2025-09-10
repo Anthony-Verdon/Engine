@@ -7,6 +7,9 @@
 #include "Engine/macros.hpp"
 #ifdef HOTRELOAD
 #include <dlfcn.h>
+#include <chrono>
+#define HOTRELOAD_LIB_DIRECTORY "./GameplayDLL/"
+#define DLL_NAME "./lib" EXECUTABLE_NAME
 #endif
 
 GLFWwindow *WindowManager::window = NULL;
@@ -73,6 +76,8 @@ void WindowManager::DestructWindowManager()
 #ifdef HOTRELOAD
     if (DLL)
         UnloadDLL(DLL);
+    if (std::filesystem::exists(HOTRELOAD_LIB_DIRECTORY))
+        std::filesystem::remove_all(HOTRELOAD_LIB_DIRECTORY);
 #endif
 
     glfwTerminate();
@@ -94,7 +99,7 @@ void WindowManager::StartUpdateLoop(AProgram *program)
     while (!glfwWindowShouldClose(window))
     {
 #ifdef HOTRELOAD
-        if (DLLtimestamp != std::filesystem::last_write_time("./libGame.so"))
+        if (DLLtimestamp != std::filesystem::last_write_time(DLL_NAME ".so"))
         {
             AProgram *newProgram = SwapDLL();
             if (newProgram)
@@ -205,17 +210,17 @@ void WindowManager::SetUserPointer(void *ptr)
 #ifdef HOTRELOAD
 AProgram *WindowManager::SwapDLL()
 {
-    if (DLLtimestamp == std::filesystem::last_write_time("./libGame.so"))
+    if (!std::filesystem::exists(HOTRELOAD_LIB_DIRECTORY))
+        std::filesystem::create_directory(HOTRELOAD_LIB_DIRECTORY);
+
+    if (DLLtimestamp == std::filesystem::last_write_time(DLL_NAME ".so"))
         return (NULL);
 
-    static int nb = 0;
-    std::string copyname = "libGame" + std::to_string(nb) + ".so";
-    std::filesystem::copy("libGame.so", copyname);
-    nb++;
+    DLLtimestamp = std::filesystem::last_write_time(DLL_NAME ".so");
+    std::string copyname = HOTRELOAD_LIB_DIRECTORY DLL_NAME "-" + ConvertTimeStampToString(DLLtimestamp) + ".so";
+    std::filesystem::copy(DLL_NAME ".so", copyname);
     void *newDLL = LoadDLL(copyname);
     CHECK_AND_RETURN(newDLL, NULL, "failed to load DLL");
-
-    DLLtimestamp = std::filesystem::last_write_time("./libGame.so");
 
     auto create = (AProgram * (*)()) LoadFunctionFromDLL(newDLL, "create");
     if (!create)
@@ -243,6 +248,17 @@ AProgram *WindowManager::SwapDLL()
     DLL = newDLL;
 
     return (newProgram);
+}
+
+std::string WindowManager::ConvertTimeStampToString(const std::filesystem::file_time_type &timestamp)
+{
+    auto sctp = std::chrono::clock_cast<std::chrono::system_clock>(timestamp);
+    std::time_t cftime = std::chrono::system_clock::to_time_t(sctp);
+    std::tm *tm = std::localtime(&cftime);
+    std::ostringstream oss;
+    // example: 2025-09-10-23-13-59
+    oss << std::put_time(tm, "%Y-%m-%d-%H-%M-%S");
+    return (oss.str());
 }
 
 void *WindowManager::LoadDLL(const std::string &path)

@@ -70,6 +70,7 @@ class WindowManager
 
 #ifdef HOTRELOAD
     static AProgram *SwapDLL();
+    static std::string ConvertTimeStampToString(const std::filesystem::file_time_type &timestamp);
     static void *LoadDLL(const std::string &path);
     static void *LoadFunctionFromDLL(void *DLL, const std::string &func);
     static bool UnloadDLL(void *DLL);
