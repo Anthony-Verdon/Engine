@@ -222,9 +222,9 @@ AProgram *WindowManager::SwapDLL()
     void *newDLL = LoadDLL(copyname);
     CHECK_AND_RETURN(newDLL, NULL, "failed to load DLL");
 
-    auto create = (AProgram * (*)()) LoadFunctionFromDLL(newDLL, "create");
+    auto create = (AProgram * (*)(AProgramState *)) LoadFunctionFromDLL(newDLL, "create");
     if (!create)
-        std::cerr << "failed to load \"AProgram *create()\" function" << std::endl;
+        std::cerr << "failed to load \"AProgram *create(AProgramState *)\" function" << std::endl;
 
     auto destroy = (void (*)(AProgram *))LoadFunctionFromDLL(newDLL, "destroy");
     if (!destroy)
@@ -236,7 +236,21 @@ AProgram *WindowManager::SwapDLL()
         return (NULL);
     }
 
-    AProgram *newProgram = create();
+    AProgramState *state = NULL;
+    if (DLL)
+    {
+        auto save = (AProgramState * (*)()) LoadFunctionFromDLL(DLL, "save");
+        if (!save)
+        {
+            std::cerr << "failed to load \"AProgramState *save()\" function" << std::endl;
+            UnloadDLL(newDLL);
+            return (NULL);
+        }
+
+        state = save();
+    }
+
+    AProgram *newProgram = create(state);
     if (!newProgram)
     {
         UnloadDLL(newDLL);
