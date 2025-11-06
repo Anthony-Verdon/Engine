@@ -13,5 +13,6 @@ class AProgram
     AProgram([[maybe_unused]] AProgramState *state = nullptr) {}
     virtual ~AProgram() {}
 
+    virtual void Init() = 0;
     virtual void Run() = 0;
 };

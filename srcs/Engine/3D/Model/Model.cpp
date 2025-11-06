@@ -17,7 +17,6 @@ Model::Model(const Glb::GltfData &data, size_t nodeIndex)
 
 Model::~Model()
 {
-
 }
 
 int Model::DetermineRootNode(int node)
@@ -92,7 +91,7 @@ std::map<int, ml::mat4> Model::CalculateNodeTransform(size_t nodeIndex, const ml
     if (!enableRootMotion)
     {
         transform[0][3] = 0;
-        transform[1][3] = 0; 
+        transform[1][3] = 0;
         transform[2][3] = 0;
     }
 

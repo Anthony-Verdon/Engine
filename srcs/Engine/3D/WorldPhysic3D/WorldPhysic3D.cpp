@@ -85,6 +85,8 @@ void WorldPhysic3D::Destroy()
     delete JPH::Factory::sInstance;
     JPH::Factory::sInstance = nullptr;
 
+    bodies.clear();
+
 #if DEBUG_DRAW_PHYSIC_3D
     if (JPH::DebugRenderer::sInstance != nullptr)
     {

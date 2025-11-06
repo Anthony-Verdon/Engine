@@ -13,7 +13,7 @@ void LineRenderer3D::Init()
 {
     CHECK_AND_RETURN_VOID(!isInit, "LineRenderer3D already initialized");
 
-    RessourceManager::AddShader("Line3D", PATH_TO_ENGINE"shaders/line3D.vs", PATH_TO_ENGINE"shaders/line3D.fs");
+    RessourceManager::AddShader("Line3D", PATH_TO_ENGINE "shaders/line3D.vs", PATH_TO_ENGINE "shaders/line3D.fs");
     std::shared_ptr<Shader> lineShader = RessourceManager::GetShader("Line3D");
     lineShader->use();
 
@@ -27,10 +27,10 @@ void LineRenderer3D::Init()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *)0); //xyz
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *)0); // xyz
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *)(sizeof(float) * 3)); //rgba
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *)(sizeof(float) * 3)); // rgba
     glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -45,6 +45,8 @@ void LineRenderer3D::Destroy()
 
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
+
+    isInit = false;
 }
 
 void LineRenderer3D::Draw(const ml::vec3 &va, const ml::vec3 &vb, const ml::vec3 &color)
@@ -77,10 +79,10 @@ void LineRenderer3D::Draw(const ml::mat4 &projection, const ml::mat4 &view)
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
+
     glBindVertexArray(VAO);
     glDrawArrays(GL_LINES, 0, vertices.size() / 7);
-    
+
     glBindVertexArray(0);
 
     vertices.clear();

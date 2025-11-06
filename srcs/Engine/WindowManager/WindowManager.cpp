@@ -18,6 +18,7 @@ ml::vec2 WindowManager::windowSize = ml::vec2(0, 0);
 std::map<int, InputMode> WindowManager::inputMap;
 #ifdef HOTRELOAD
 void *WindowManager::DLL = NULL;
+AProgram *WindowManager::program = NULL;
 std::filesystem::file_time_type WindowManager::DLLtimestamp;
 #endif
 
@@ -83,28 +84,23 @@ void WindowManager::DestructWindowManager()
     glfwTerminate();
 }
 
-void WindowManager::StartUpdateLoop(AProgram *program)
+void WindowManager::StartUpdateLoop(AProgram *inProgram)
 {
 #ifdef HOTRELOAD
-    if (!program)
-    {
-        AProgram *newProgram = SwapDLL();
-        if (newProgram)
-            program = newProgram;
-    }
+    if (!inProgram)
+        SwapDLL();
+    else
+        program = inProgram;
 #endif
 
+    std::cout << program << std::endl;
     CHECK_AND_RETURN_VOID(program, "program pointer is NULL");
 
     while (!glfwWindowShouldClose(window))
     {
 #ifdef HOTRELOAD
         if (DLLtimestamp != std::filesystem::last_write_time(DLL_NAME ".so"))
-        {
-            AProgram *newProgram = SwapDLL();
-            if (newProgram)
-                program = newProgram;
-        }
+            SwapDLL();
 #endif
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -208,20 +204,20 @@ void WindowManager::SetUserPointer(void *ptr)
 }
 
 #ifdef HOTRELOAD
-AProgram *WindowManager::SwapDLL()
+void WindowManager::SwapDLL()
 {
     if (!std::filesystem::exists(HOTRELOAD_LIB_DIRECTORY))
         std::filesystem::create_directory(HOTRELOAD_LIB_DIRECTORY);
 
     if (DLLtimestamp == std::filesystem::last_write_time(DLL_NAME ".so"))
-        return (NULL);
+        return;
 
     DLLtimestamp = std::filesystem::last_write_time(DLL_NAME ".so");
     std::string copyname = HOTRELOAD_LIB_DIRECTORY DLL_NAME "-" + ConvertTimeStampToString(DLLtimestamp) + ".so";
     if (!std::filesystem::exists(copyname))
         std::filesystem::copy(DLL_NAME ".so", copyname);
     void *newDLL = LoadDLL(copyname);
-    CHECK_AND_RETURN(newDLL, NULL, "failed to load DLL");
+    CHECK_AND_RETURN_VOID(newDLL, "failed to load DLL");
 
     auto create = (AProgram * (*)(AProgramState *)) LoadFunctionFromDLL(newDLL, "create");
     if (!create)
@@ -234,7 +230,7 @@ AProgram *WindowManager::SwapDLL()
     if (!create || !destroy)
     {
         UnloadDLL(newDLL);
-        return (NULL);
+        return;
     }
 
     AProgramState *state = NULL;
@@ -245,7 +241,7 @@ AProgram *WindowManager::SwapDLL()
         {
             std::cerr << "failed to load \"AProgramState *save()\" function" << std::endl;
             UnloadDLL(newDLL);
-            return (NULL);
+            return;
         }
 
         state = save();
@@ -255,14 +251,18 @@ AProgram *WindowManager::SwapDLL()
     if (!newProgram)
     {
         UnloadDLL(newDLL);
-        return (NULL);
+        return;
+    }
+    else
+    {
+        destroy(program);
+        program = newProgram;
+        program->Init();
     }
 
     if (DLL)
         UnloadDLL(DLL);
     DLL = newDLL;
-
-    return (newProgram);
 }
 
 std::string WindowManager::ConvertTimeStampToString(const std::filesystem::file_time_type &timestamp)

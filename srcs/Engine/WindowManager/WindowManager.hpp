@@ -34,6 +34,7 @@ class WindowManager
     static std::map<int, InputMode> inputMap;
 #ifdef HOTRELOAD
     static void *DLL;
+    static AProgram *program;
     static std::filesystem::file_time_type DLLtimestamp;
 #endif
 
@@ -69,7 +70,7 @@ class WindowManager
     static void SetUserPointer(void *ptr);
 
 #ifdef HOTRELOAD
-    static AProgram *SwapDLL();
+    static void SwapDLL();
     static std::string ConvertTimeStampToString(const std::filesystem::file_time_type &timestamp);
     static void *LoadDLL(const std::string &path);
     static void *LoadFunctionFromDLL(void *DLL, const std::string &func);
