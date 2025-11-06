@@ -93,7 +93,6 @@ void WindowManager::StartUpdateLoop(AProgram *inProgram)
         program = inProgram;
 #endif
 
-    std::cout << program << std::endl;
     CHECK_AND_RETURN_VOID(program, "program pointer is NULL");
 
     while (!glfwWindowShouldClose(window))
