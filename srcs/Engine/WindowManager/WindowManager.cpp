@@ -218,7 +218,8 @@ AProgram *WindowManager::SwapDLL()
 
     DLLtimestamp = std::filesystem::last_write_time(DLL_NAME ".so");
     std::string copyname = HOTRELOAD_LIB_DIRECTORY DLL_NAME "-" + ConvertTimeStampToString(DLLtimestamp) + ".so";
-    std::filesystem::copy(DLL_NAME ".so", copyname);
+    if (!std::filesystem::exists(copyname))
+        std::filesystem::copy(DLL_NAME ".so", copyname);
     void *newDLL = LoadDLL(copyname);
     CHECK_AND_RETURN(newDLL, NULL, "failed to load DLL");
 

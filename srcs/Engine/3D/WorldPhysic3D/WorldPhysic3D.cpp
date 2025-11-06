@@ -30,7 +30,7 @@ float WorldPhysic3D::deltaTime = 1.0f / 60;
 int WorldPhysic3D::collisionStep = 1;
 std::map<JPH::BodyID, PhysicBody3D *> WorldPhysic3D::bodies;
 
-void WorldPhysic3D::Init()
+void WorldPhysic3D::Init(void (*setupLayerFunction)())
 {
     JPH::RegisterDefaultAllocator();
 
@@ -48,6 +48,8 @@ void WorldPhysic3D::Init()
     objectVsBroadPhaseLayerFilter = std::make_unique<WorldPhysic3D::ObjectVsBroadPhaseLayerFilter>();
     objectLayerPairFilter = std::make_unique<WorldPhysic3D::ObjectLayerPairFilter>();
     contactListener = std::make_unique<WorldPhysic3D::ContactListener>();
+
+    setupLayerFunction();
 
     const uint cMaxBodies = 1024;
     const uint cNumBodyMutexes = 0;

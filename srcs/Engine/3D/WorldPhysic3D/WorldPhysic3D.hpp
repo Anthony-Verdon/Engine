@@ -24,7 +24,7 @@ class WorldPhysic3D
     friend ContactListener;
 
   public:
-    static void Init();
+    static void Init(void (*setupLayerFunction)());
     static void Update();
     static void DebugDraw(const JPH::BodyManager::DrawSettings &inSettings = {}, const JPH::BodyDrawFilter *inBodyFilter = nullptr);
     static void Destroy();
