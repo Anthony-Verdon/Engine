@@ -111,5 +111,5 @@ void Model::DrawSubModels(size_t nodeIndex, const ml::vec3 &camPos, const std::v
     for (size_t i = 0; i < node.children.size(); i++)
         DrawSubModels(node.children[i], camPos, lights, projection, view, nodesTransform);
     for (size_t i = 0; i < node.models.size(); i++)
-        ModelManager::GetModel(node.models[i]).Draw(camPos, lights, projection, view, nodesTransform[nodeIndex]);
+        ModelManager::Draw(node.models[i], camPos, lights, projection, view, nodesTransform[nodeIndex]);
 }
