@@ -16,9 +16,9 @@ GLFWwindow *WindowManager::window = NULL;
 ml::vec2 WindowManager::mousePosition = ml::vec2(0, 0);
 ml::vec2 WindowManager::windowSize = ml::vec2(0, 0);
 std::map<int, InputMode> WindowManager::inputMap;
+AProgram *WindowManager::program = NULL;
 #ifdef HOTRELOAD
 void *WindowManager::DLL = NULL;
-AProgram *WindowManager::program = NULL;
 std::filesystem::file_time_type WindowManager::DLLtimestamp;
 #endif
 
@@ -91,6 +91,8 @@ void WindowManager::StartUpdateLoop(AProgram *inProgram)
         SwapDLL();
     else
         program = inProgram;
+#else
+    program = inProgram;
 #endif
 
     CHECK_AND_RETURN_VOID(program, "program pointer is NULL");

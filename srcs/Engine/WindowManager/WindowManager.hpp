@@ -32,9 +32,9 @@ class WindowManager
     static ml::vec2 windowSize;
     static ml::vec2 mousePosition;
     static std::map<int, InputMode> inputMap;
+    static AProgram *program;
 #ifdef HOTRELOAD
     static void *DLL;
-    static AProgram *program;
     static std::filesystem::file_time_type DLLtimestamp;
 #endif
 
