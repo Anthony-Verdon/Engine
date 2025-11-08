@@ -4,7 +4,6 @@
 #include "Engine/macros.hpp"
 #include "Matrix/Matrix.hpp"
 
-
 unsigned int LineRenderer2D::VAO = -1;
 unsigned int LineRenderer2D::VBO = -1;
 bool LineRenderer2D::isInit = false;
@@ -15,11 +14,10 @@ void LineRenderer2D::Init()
 {
     CHECK_AND_RETURN_VOID(!isInit, "LineRenderer2D already initialized");
 
-
-    RessourceManager::AddShader("Line", "shaders/line/line.vs", "shaders/line/line.fs");
+    RessourceManager::AddShader("Line", PATH_TO_ENGINE "shaders/2D/line/line.vs", PATH_TO_ENGINE "shaders/2D/line/line.fs");
     std::shared_ptr<Shader> lineShader = RessourceManager::GetShader("Line");
     lineShader->use();
-    projectionMatAbsolute = ml::ortho(0.0f, (float)WindowManager::GetWindowWidth(), (float)WindowManager::GetWindowHeight(), 0.0f, -1.0f, 1.0f);
+    projectionMatAbsolute = ml::ortho(0.0f, (float)WindowManager::GetWindowWidth(), 0.0f, (float)WindowManager::GetWindowHeight(), -1.0f, 1.0f);
     lineShader->setMat4("projection", projectionMatAbsolute);
 
     glGenVertexArrays(1, &VAO);
@@ -47,6 +45,8 @@ void LineRenderer2D::Destroy()
 
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
+
+    isInit = false;
 }
 
 void LineRenderer2D::Draw(const ml::vec2 &va, const ml::vec2 &vb, const ml::vec3 &color, bool drawAbsolute)
@@ -65,10 +65,10 @@ void LineRenderer2D::Draw(const ml::vec2 &va, const ml::vec2 &vb, const ml::vec4
         lineShader->setMat4("projection", projectionMatAbsolute);
     else
         lineShader->setMat4("projection", projectionMatRelative);
-    
-    float vertices[] = {va.x, va.y, 
+
+    float vertices[] = {va.x, va.y,
                         vb.x, vb.y};
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
