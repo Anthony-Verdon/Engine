@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 class AScene
 {
   public:
@@ -7,7 +9,7 @@ class AScene
     virtual ~AScene() {}
 
     virtual void Load(){};
-    virtual void Run(){};
+    virtual std::unique_ptr<AScene> Run() { return NULL; };
     virtual void Quit(){};
 
     virtual int GetID() = 0;
