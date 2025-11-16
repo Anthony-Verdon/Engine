@@ -8,9 +8,9 @@ class AScene
     AScene() {}
     virtual ~AScene() {}
 
-    virtual void Load(){};
-    virtual std::unique_ptr<AScene> Run() { return NULL; };
-    virtual void Quit(){};
+    virtual void Load() {}
+    virtual std::unique_ptr<AScene> Run() { return NULL; }
+    virtual void Quit() {}
 
     virtual int GetID() = 0;
 };

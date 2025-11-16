@@ -1,53 +1,27 @@
 #pragma once
 
-#include "Matrix/Matrix.hpp"
-#include <array>
-#include "Engine/2D/Sprite/Sprite.hpp"
+#include "Engine/UI/AComponent/AComponent.hpp"
+#include <string>
 
 namespace UI
 {
+class Button : public AComponent
+{
+  private:
+    std::string text;
+    std::string font;
+    ml::vec2 size;
+    ml::vec4 color;
 
-    struct UIID
-    {
-        size_t ID;
-        size_t layer;
-    };
-    
-    struct UIState
-    {
-        UIID active;
-        UIID hotThisFrame;
-        UIID hotLastFrame;
+    bool clicked;
+    bool hover;
 
-        size_t globalLayer;
-    };
+  public:
+    Button();
+    Button(const std::string &text, const std::string &font, const ml::vec2 &pos, const ml::vec2 &size);
+    ~Button();
 
-    class Button
-    {
-        private:
-            enum ButtonAnimation
-            {
-                INACTIVE,
-                HOT, // hovering
-                ACTIVE // clicked + holding
-            };
-
-            std::array<Sprite, 3> sprites;
-
-            void SetHot(UIState* ui, UIID uiID);
-            void SetActive(UIState* ui, UIID uiID) { ui->active = uiID; }
-            void SetInactive(UIState* ui) { ui->active = {}; }
-            
-            bool IsHot(UIState* ui, size_t ID) { return (ui->hotLastFrame.ID > 0 && ui->hotLastFrame.ID == ID); }
-            bool IsActive(UIState* ui, size_t ID) { return (ui->active.ID > 0 && ui->active.ID == ID); }        
-            
-            public:
-            Button();
-            Button(const std::array<Sprite, 3> &sprites);
-            ~Button();
-            
-            void SetSprite(const std::array<Sprite, 3> &sprites) {this->sprites = sprites; }
-            
-            bool Draw(UIState *ui, size_t ID, const ml::vec2 &position, const ml::vec2 &size);
-    };
+    void Update();
+    void Draw();
 };
+}; // namespace UI

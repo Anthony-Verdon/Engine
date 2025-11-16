@@ -1,56 +1,61 @@
 #include "Engine/UI/Button/Button.hpp"
-#include "Engine/UI/UI.hpp"
+#include "Engine/2D/Renderers/TextRenderer/TextRenderer.hpp"
+#include "Engine/2D/Renderers/LineRenderer2D/LineRenderer2D.hpp"
 #include "Engine/WindowManager/WindowManager.hpp"
-#include "Engine/2D/Renderers/SpriteRenderer/SpriteRenderer.hpp"
+#include "Engine/UI/UI.hpp"
+#include "Engine/UI/Events.hpp"
 
 UI::Button::Button()
 {
-    for (size_t i = 0; i < 3; i++)
-        sprites[i] = Sprite::none;
 }
-UI::Button::Button(const std::array<Sprite, 3> &sprites)
+
+UI::Button::Button(const std::string &text, const std::string &font, const ml::vec2 &pos, const ml::vec2 &size)
 {
-    this->sprites = sprites;
+    this->text = text;
+    this->font = font;
+    this->pos = pos;
+    this->size = size;
 }
 
 UI::Button::~Button()
 {
 }
 
-void UI::Button::SetHot(UIState* ui, UIID uiID)
+void UI::Button::Update()
 {
-    if (!(ui->active.ID > 0) && uiID.layer >= ui->hotThisFrame.layer)
-        ui->hotThisFrame = uiID;
+    if (UI::PointInRectangle(WindowManager::GetMousePosition(), pos + size / 2, size))
+    {
+        if (!hover)
+        {
+            SendEvent(CURSEUR_ON);
+            hover = true;
+        }
+
+        if (WindowManager::IsInputPressed(GLFW_MOUSE_BUTTON_1))
+        {
+            SendEvent(CLICK_ON);
+            clicked = true;
+        }
+        else if (clicked && WindowManager::IsInputReleased(GLFW_MOUSE_BUTTON_1))
+        {
+            SendEvent(CLICK_OFF);
+            clicked = false;
+        }
+    }
+    else if (hover)
+    {
+        {
+            SendEvent(CURSEUR_OFF);
+            hover = false;
+        }
+    }
 }
 
-bool UI::Button::Draw(UIState *ui, size_t ID, const ml::vec2 &position, const ml::vec2 &size)
+void UI::Button::Draw()
 {
-    bool result = false;
-
-    if (IsActive(ui, ID))
-    {
-        if (!WindowManager::IsInputPressed(GLFW_MOUSE_BUTTON_1)) // not holding anymore
-        {
-            if (PointInRectangle(WindowManager::GetMousePosition(), position, size)) // still on the button
-                result = true;
-
-            SetInactive(ui);
-        }
-        SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(position).SetSize(size).SetSprite(sprites[ButtonAnimation::ACTIVE]).SetDrawAbsolute(true).Build());
-    }
-    else if (IsHot(ui, ID))
-    {
-        if (WindowManager::IsInputPressed(GLFW_MOUSE_BUTTON_1))
-            SetActive(ui, {ID, ui->globalLayer});
-        SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(position).SetSize(size).SetSprite(sprites[ButtonAnimation::HOT]).SetDrawAbsolute(true).Build());
-    }
-    else
-    {
-        SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(position).SetSize(size).SetSprite(sprites[ButtonAnimation::INACTIVE]).SetDrawAbsolute(true).Build());
-    }
-    
-    if (PointInRectangle(WindowManager::GetMousePosition(), position, size))
-        SetHot(ui, {ID, ui->globalLayer});
-
-    return (result);
+    LineRenderer2D::Draw(pos, pos + ml::vec2(size.x, 0), ml::vec3(1, 1, 1), true);
+    LineRenderer2D::Draw(pos, pos + ml::vec2(0, size.y), ml::vec3(1, 1, 1), true);
+    LineRenderer2D::Draw(pos + size, pos + ml::vec2(size.x, 0), ml::vec3(1, 1, 1), true);
+    LineRenderer2D::Draw(pos + size, pos + ml::vec2(0, size.y), ml::vec3(1, 1, 1), true);
+    TextRenderer::Draw(text, font, pos.x, pos.y, 1, ml::vec4(1, 1, 1, 1));
 }
