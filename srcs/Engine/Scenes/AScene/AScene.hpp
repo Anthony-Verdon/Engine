@@ -9,7 +9,7 @@ class AScene
     virtual ~AScene() {}
 
     virtual void Load() {}
-    virtual std::unique_ptr<AScene> Run() { return NULL; }
+    virtual void Run() {}
     virtual void Quit() {}
 
     virtual int GetID() = 0;

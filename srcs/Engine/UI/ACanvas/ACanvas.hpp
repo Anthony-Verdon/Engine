@@ -19,7 +19,6 @@ class ACanvas
     virtual ~ACanvas() {}
 
     void Update();
-    void Draw();
     virtual void HandleEvents([[maybe_unused]] unsigned int componentID, [[maybe_unused]] unsigned int event) {}
 
     static void BeginCanvas(ACanvas *canvasPtr);

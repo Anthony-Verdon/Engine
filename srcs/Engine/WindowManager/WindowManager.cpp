@@ -76,7 +76,17 @@ void WindowManager::DestructWindowManager()
 {
 #ifdef HOTRELOAD
     if (DLL)
-        UnloadDLL(DLL);
+    {
+        if (program)
+        {
+            auto destroy = (void (*)(AProgram *))LoadFunctionFromDLL(DLL, "destroy");
+            if (!destroy)
+                std::cerr << "failed to load \"void destroy(AProgram *)\" function" << std::endl;
+            else
+                destroy(program);
+        }
+    }
+    UnloadDLL(DLL);
     if (std::filesystem::exists(HOTRELOAD_LIB_DIRECTORY))
         std::filesystem::remove_all(HOTRELOAD_LIB_DIRECTORY);
 #endif

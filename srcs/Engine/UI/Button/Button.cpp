@@ -7,6 +7,8 @@
 
 UI::Button::Button()
 {
+    hover = false;
+    clicked = false;
 }
 
 UI::Button::Button(const std::string &text, const std::string &font, const ml::vec2 &pos, const ml::vec2 &size)
@@ -15,6 +17,9 @@ UI::Button::Button(const std::string &text, const std::string &font, const ml::v
     this->font = font;
     this->pos = pos;
     this->size = size;
+
+    hover = false;
+    clicked = false;
 }
 
 UI::Button::~Button()

@@ -10,15 +10,12 @@ void ACanvas::Update()
 {
     for (const auto &component : components)
     {
-        component->Update();
+        component->Draw();
     }
-}
 
-void ACanvas::Draw()
-{
     for (const auto &component : components)
     {
-        component->Draw();
+        component->Update();
     }
 }
 
