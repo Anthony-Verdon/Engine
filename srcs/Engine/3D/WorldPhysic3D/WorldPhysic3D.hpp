@@ -42,6 +42,7 @@ class WorldPhysic3D
     static void SetLinearVelocity(const JPH::BodyID &inBodyID, JPH::Vec3Arg inLinearVelocity) { physicSystem->GetBodyInterface().SetLinearVelocity(inBodyID, inLinearVelocity); }
     static JPH::Vec3 GetPosition(const JPH::BodyID &inBodyID) { return (physicSystem->GetBodyInterface().GetPosition(inBodyID)); }
     static void SetPosition(const JPH::BodyID &inBodyID, JPH::RVec3Arg inPosition, JPH::EActivation inActivationMode) { physicSystem->GetBodyInterface().SetPosition(inBodyID, inPosition, inActivationMode); }
+    static void DeactivateBody(const JPH::BodyID &inBodyID) { physicSystem->GetBodyInterface().DeactivateBody(inBodyID); }
 
     static std::unique_ptr<BroadPhaseLayerInterface> broadPhaseLayerInterface;
     static std::unique_ptr<ObjectVsBroadPhaseLayerFilter> objectVsBroadPhaseLayerFilter;

@@ -15,20 +15,20 @@ void WorldPhysic3D::ContactListener::OnContactAdded(const JPH::Body &inBody1, co
 {
     (void)ioSettings;
 
-    WorldPhysic3D::bodies[inBody1.GetID()]->OnContactAdded(inManifold);
-    WorldPhysic3D::bodies[inBody2.GetID()]->OnContactAdded(inManifold);
+    WorldPhysic3D::bodies[inBody1.GetID()]->OnContactAdded(inManifold, WorldPhysic3D::bodies[inBody2.GetID()]);
+    WorldPhysic3D::bodies[inBody2.GetID()]->OnContactAdded(inManifold, WorldPhysic3D::bodies[inBody1.GetID()]);
 }
 
 void WorldPhysic3D::ContactListener::OnContactPersisted(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold, JPH::ContactSettings &ioSettings)
 {
     (void)ioSettings;
 
-    WorldPhysic3D::bodies[inBody1.GetID()]->OnContactPersisted(inManifold);
-    WorldPhysic3D::bodies[inBody2.GetID()]->OnContactPersisted(inManifold);
+    WorldPhysic3D::bodies[inBody1.GetID()]->OnContactPersisted(inManifold, WorldPhysic3D::bodies[inBody2.GetID()]);
+    WorldPhysic3D::bodies[inBody2.GetID()]->OnContactPersisted(inManifold, WorldPhysic3D::bodies[inBody1.GetID()]);
 }
 
 void WorldPhysic3D::ContactListener::OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair)
 {
-    WorldPhysic3D::bodies[inSubShapePair.GetBody1ID()]->OnContactRemoved();
-    WorldPhysic3D::bodies[inSubShapePair.GetBody2ID()]->OnContactRemoved();
+    WorldPhysic3D::bodies[inSubShapePair.GetBody1ID()]->OnContactRemoved(WorldPhysic3D::bodies[inSubShapePair.GetBody2ID()]);
+    WorldPhysic3D::bodies[inSubShapePair.GetBody2ID()]->OnContactRemoved(WorldPhysic3D::bodies[inSubShapePair.GetBody1ID()]);
 }

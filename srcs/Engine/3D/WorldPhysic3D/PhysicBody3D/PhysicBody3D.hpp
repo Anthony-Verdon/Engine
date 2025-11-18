@@ -8,6 +8,9 @@ class WorldPhysic3D;
 
 class PhysicBody3D
 {
+  protected:
+    int physicBodyType;
+
   public:
     PhysicBody3D() {}
     virtual ~PhysicBody3D() {}
@@ -16,11 +19,12 @@ class PhysicBody3D
     PhysicBody3D &operator=(const PhysicBody3D &instance) = delete;
 
     virtual void OnWorldPhysicUpdated() {}
-    virtual void OnContactAdded([[maybe_unused]] const JPH::ContactManifold &inManifold) {}
-    virtual void OnContactPersisted([[maybe_unused]] const JPH::ContactManifold &inManifold) {}
-    virtual void OnContactRemoved() {}
+    virtual void OnContactAdded([[maybe_unused]] const JPH::ContactManifold &inManifold, [[maybe_unused]] const PhysicBody3D *collisionedBody) {}
+    virtual void OnContactPersisted([[maybe_unused]] const JPH::ContactManifold &inManifold, [[maybe_unused]] const PhysicBody3D *collisionedBody) {}
+    virtual void OnContactRemoved([[maybe_unused]] const PhysicBody3D *collisionedBody) {}
 
     JPH::BodyID GetID() const { return (id); }
+    int GetPhysicBodyType() const { return physicBodyType; }
 
   private:
     JPH::BodyID id;
