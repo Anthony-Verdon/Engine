@@ -29,6 +29,7 @@ std::unique_ptr<WorldPhysic3D::ContactListener> WorldPhysic3D::contactListener =
 float WorldPhysic3D::deltaTime = 1.0f / 60;
 int WorldPhysic3D::collisionStep = 1;
 std::map<JPH::BodyID, PhysicBody3D *> WorldPhysic3D::bodies;
+std::vector<JPH::BodyID> WorldPhysic3D::bodiesToDeactivate;
 
 void WorldPhysic3D::Init(void (*setupLayerFunction)())
 {
@@ -66,6 +67,9 @@ void WorldPhysic3D::Update()
     for (auto it = bodies.begin(); it != bodies.end(); it++)
         it->second->OnWorldPhysicUpdated();
     physicSystem->Update(deltaTime, collisionStep, tempAllocator.get(), jobSystem.get());
+    for (auto it = bodiesToDeactivate.begin(); it != bodiesToDeactivate.end(); it++)
+        WorldPhysic3D::DeactivateBody(*it);
+    bodiesToDeactivate.clear();
 }
 
 #if DEBUG_DRAW_PHYSIC_3D

@@ -44,6 +44,8 @@ class WorldPhysic3D
     static void SetPosition(const JPH::BodyID &inBodyID, JPH::RVec3Arg inPosition, JPH::EActivation inActivationMode) { physicSystem->GetBodyInterface().SetPosition(inBodyID, inPosition, inActivationMode); }
     static void DeactivateBody(const JPH::BodyID &inBodyID) { physicSystem->GetBodyInterface().DeactivateBody(inBodyID); }
 
+    static void DeactivateBodyNextFrame(const JPH::BodyID &inBodyID) { bodiesToDeactivate.push_back(inBodyID); }
+
     static std::unique_ptr<BroadPhaseLayerInterface> broadPhaseLayerInterface;
     static std::unique_ptr<ObjectVsBroadPhaseLayerFilter> objectVsBroadPhaseLayerFilter;
     static std::unique_ptr<ObjectLayerPairFilter> objectLayerPairFilter;
@@ -59,4 +61,9 @@ class WorldPhysic3D
     static float deltaTime;
     static int collisionStep;
     static std::map<JPH::BodyID, PhysicBody3D *> bodies;
+
+    // for the moment, only used to deactivate body next frame (because else it doesn't work on ContactListener callbacks),
+    // but maybe in the future if I need something like that for another function
+    // we should generalize it,  but I don't know how for the moment
+    static std::vector<JPH::BodyID> bodiesToDeactivate;
 };
