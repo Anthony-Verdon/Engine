@@ -10,6 +10,7 @@
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/EActivation.h>
 #include "Engine/3D/WorldPhysic3D/PhysicBody3D/PhysicBody3D.hpp"
+#include "Engine/3D/WorldPhysic3D/ABodyInterfaceActionDelayed/ABodyInterfaceActionDelayed.hpp"
 
 class WorldPhysic3D
 {
@@ -44,7 +45,7 @@ class WorldPhysic3D
     static void SetPosition(const JPH::BodyID &inBodyID, JPH::RVec3Arg inPosition, JPH::EActivation inActivationMode) { physicSystem->GetBodyInterface().SetPosition(inBodyID, inPosition, inActivationMode); }
     static void DeactivateBody(const JPH::BodyID &inBodyID) { physicSystem->GetBodyInterface().DeactivateBody(inBodyID); }
 
-    static void DeactivateBodyNextFrame(const JPH::BodyID &inBodyID) { bodiesToDeactivate.push_back(inBodyID); }
+    static void SaveActionDelayed(std::unique_ptr<ABodyInterfaceActionDelayed> action) { actionDelayed.push_back(std::move(action)); }
 
     static std::unique_ptr<BroadPhaseLayerInterface> broadPhaseLayerInterface;
     static std::unique_ptr<ObjectVsBroadPhaseLayerFilter> objectVsBroadPhaseLayerFilter;
@@ -62,8 +63,5 @@ class WorldPhysic3D
     static int collisionStep;
     static std::map<JPH::BodyID, PhysicBody3D *> bodies;
 
-    // for the moment, only used to deactivate body next frame (because else it doesn't work on ContactListener callbacks),
-    // but maybe in the future if I need something like that for another function
-    // we should generalize it,  but I don't know how for the moment
-    static std::vector<JPH::BodyID> bodiesToDeactivate;
+    static std::vector<std::unique_ptr<ABodyInterfaceActionDelayed>> actionDelayed;
 };

@@ -29,7 +29,7 @@ std::unique_ptr<WorldPhysic3D::ContactListener> WorldPhysic3D::contactListener =
 float WorldPhysic3D::deltaTime = 1.0f / 60;
 int WorldPhysic3D::collisionStep = 1;
 std::map<JPH::BodyID, PhysicBody3D *> WorldPhysic3D::bodies;
-std::vector<JPH::BodyID> WorldPhysic3D::bodiesToDeactivate;
+std::vector<std::unique_ptr<ABodyInterfaceActionDelayed>> WorldPhysic3D::actionDelayed;
 
 void WorldPhysic3D::Init(void (*setupLayerFunction)())
 {
@@ -65,11 +65,30 @@ void WorldPhysic3D::Init(void (*setupLayerFunction)())
 void WorldPhysic3D::Update()
 {
     for (auto it = bodies.begin(); it != bodies.end(); it++)
-        it->second->OnWorldPhysicUpdated();
+    {
+        if (it->second)
+            it->second->OnWorldPhysicUpdated();
+    }
     physicSystem->Update(deltaTime, collisionStep, tempAllocator.get(), jobSystem.get());
-    for (auto it = bodiesToDeactivate.begin(); it != bodiesToDeactivate.end(); it++)
-        WorldPhysic3D::DeactivateBody(*it);
-    bodiesToDeactivate.clear();
+
+    // do action delayed
+    for (auto it = actionDelayed.begin(); it != actionDelayed.end(); it++)
+    {
+        switch ((*it)->GetType())
+        {
+        case BodyInterfaceActionType::DEACTIVATE_BODY: {
+            auto action = dynamic_cast<DeactivateBodyAction *>(it->get());
+            DeactivateBody(action->id);
+            break;
+        }
+        case BodyInterfaceActionType::REMOVE_BODY: {
+            auto action = dynamic_cast<RemoveBodyAction *>(it->get());
+            RemoveBody(action->id);
+            break;
+        }
+        }
+    }
+    actionDelayed.clear();
 }
 
 #if DEBUG_DRAW_PHYSIC_3D
@@ -108,6 +127,7 @@ void WorldPhysic3D::AddBody(PhysicBody3D *ptr, const JPH::BodyCreationSettings &
 
 void WorldPhysic3D::RemoveBody(const JPH::BodyID &id)
 {
+    bodies[id]->removed = true;
     bodies.erase(id);
     physicSystem->GetBodyInterface().RemoveBody(id);
     physicSystem->GetBodyInterface().DestroyBody(id);

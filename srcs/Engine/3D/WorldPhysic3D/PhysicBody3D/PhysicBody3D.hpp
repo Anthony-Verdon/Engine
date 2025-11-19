@@ -12,7 +12,7 @@ class PhysicBody3D
     int physicBodyType;
 
   public:
-    PhysicBody3D() {}
+    PhysicBody3D() { removed = false; }
     virtual ~PhysicBody3D() {}
 
     PhysicBody3D(const PhysicBody3D &instance) = delete;
@@ -25,9 +25,11 @@ class PhysicBody3D
 
     JPH::BodyID GetID() const { return (id); }
     int GetPhysicBodyType() const { return physicBodyType; }
+    bool BodyRemoved() const { return removed; }
 
   private:
     JPH::BodyID id;
+    bool removed;
 
     friend WorldPhysic3D;
 };
