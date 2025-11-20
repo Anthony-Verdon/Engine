@@ -1,5 +1,6 @@
 #include "Engine/UI/ACanvas/ACanvas.hpp"
 #include "Engine/macros.hpp"
+#include "Engine/UI/Events.hpp"
 
 namespace UI
 {
@@ -17,6 +18,21 @@ void ACanvas::Update()
     {
         component->Update();
     }
+}
+
+std::unique_ptr<AComponent> &ACanvas::GetComponent(unsigned int ID)
+{
+    for (auto &component : components)
+    {
+        if (component->GetID() == ID)
+            return (component);
+    }
+
+    throw(std::runtime_error("component not found"));
+}
+
+void ACanvas::HandleEvents([[maybe_unused]] EventData &data)
+{
 }
 
 void ACanvas::BeginCanvas(ACanvas *canvasPtr)

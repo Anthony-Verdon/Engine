@@ -15,5 +15,6 @@ class SceneManager
     static void SwitchScene(std::unique_ptr<AScene> newScene);
     static void QuitScene();
     static void UpdateCurrentScene();
+    static std::unique_ptr<AScene> &GetCurrentScene() { return currentScene; }
     static unsigned int GetCurrentSceneID();
 };

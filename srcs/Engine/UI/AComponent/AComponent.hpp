@@ -7,6 +7,7 @@
 namespace UI
 {
 class ACanvas;
+struct EventData;
 
 class AComponent
 {
@@ -17,7 +18,7 @@ class AComponent
   protected:
     ml::vec2 pos;
 
-    void SendEvent(int event);
+    void SendEvent(EventData &data);
 
   public:
     AComponent();

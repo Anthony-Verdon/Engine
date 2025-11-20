@@ -7,6 +7,7 @@
 namespace UI
 {
 
+struct EventData;
 class ACanvas
 {
   private:
@@ -19,7 +20,8 @@ class ACanvas
     virtual ~ACanvas() {}
 
     void Update();
-    virtual void HandleEvents([[maybe_unused]] unsigned int componentID, [[maybe_unused]] unsigned int event) {}
+    std::unique_ptr<AComponent> &GetComponent(unsigned int ID);
+    virtual void HandleEvents([[maybe_unused]] EventData &data);
 
     static void BeginCanvas(ACanvas *canvasPtr);
     static unsigned int AddComponent(std::unique_ptr<AComponent> component);
