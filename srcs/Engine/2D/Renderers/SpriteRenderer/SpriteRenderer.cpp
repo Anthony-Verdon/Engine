@@ -15,8 +15,10 @@ void SpriteRenderer::Init()
 {
     CHECK_AND_RETURN_VOID(!isInit, "SpriteRenderer already initialized");
 
-    RessourceManager::AddShader("Sprite", "shaders/sprite/sprite.vs", "shaders/sprite/sprite.fs");
+    RessourceManager::AddShader("Sprite", PATH_TO_ENGINE "shaders/2D/sprite/sprite.vs", PATH_TO_ENGINE "shaders/2D/sprite/sprite.fs");
     std::shared_ptr<Shader> spriteShader = RessourceManager::GetShader("Sprite");
+    if (!spriteShader)
+        return;
     spriteShader->use();
     spriteShader->setInt("image", 0);
     projectionMatAbsolute = ml::ortho(0.0f, (float)WindowManager::GetWindowWidth(), (float)WindowManager::GetWindowHeight(), 0.0f, -1.0f, 1.0f);
@@ -24,26 +26,24 @@ void SpriteRenderer::Init()
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    
-    float positions[] = { 
-        -0.5f, 0.5f, 
-        0.5f, -0.5f, 
-       -0.5f, -0.5f, 
-    
-        -0.5f, 0.5f, 
-        0.5f, 0.5f, 
-        0.5f, -0.5f
-    };
+
+    float positions[] = {
+        -0.5f, 0.5f,
+        0.5f, -0.5f,
+        -0.5f, -0.5f,
+
+        -0.5f, 0.5f,
+        0.5f, 0.5f,
+        0.5f, -0.5f};
 
     float textures[] = {
         0.0f, 1.0f,
         1.0f, 0.0f,
-        0.0f, 0.0f, 
+        0.0f, 0.0f,
 
         0.0f, 1.0f,
         1.0f, 1.0f,
-        1.0f, 0.0f
-    };
+        1.0f, 0.0f};
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(positions) + sizeof(textures), NULL, GL_STATIC_DRAW);
@@ -51,12 +51,12 @@ void SpriteRenderer::Init()
     glBufferSubData(GL_ARRAY_BUFFER, sizeof(positions), sizeof(textures), textures);
 
     glBindVertexArray(VAO);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)sizeof(positions));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void *)sizeof(positions));
     glEnableVertexAttribArray(1);
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);  
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
     isInit = true;
@@ -91,25 +91,23 @@ void SpriteRenderer::Draw(const ml::vec2 &position, const ml::vec2 &size, float 
     if (flipVertically)
         std::swap(TopLeftCoords.y, BotomRightCoords.y);
 
-    float positions[] = { 
-        -0.5f, 0.5f, 
-        0.5f, -0.5f, 
-       -0.5f, -0.5f, 
-    
-        -0.5f, 0.5f, 
-        0.5f, 0.5f, 
-        0.5f, -0.5f
-    };
+    float positions[] = {
+        -0.5f, 0.5f,
+        0.5f, -0.5f,
+        -0.5f, -0.5f,
+
+        -0.5f, 0.5f,
+        0.5f, 0.5f,
+        0.5f, -0.5f};
 
     float textures[] = {
-        TopLeftCoords.x,    BotomRightCoords.y,
+        TopLeftCoords.x, BotomRightCoords.y,
         BotomRightCoords.x, TopLeftCoords.y,
-        TopLeftCoords.x,    TopLeftCoords.y, 
+        TopLeftCoords.x, TopLeftCoords.y,
 
-        TopLeftCoords.x,    BotomRightCoords.y,
+        TopLeftCoords.x, BotomRightCoords.y,
         BotomRightCoords.x, BotomRightCoords.y,
-        BotomRightCoords.x, TopLeftCoords.y
-    };
+        BotomRightCoords.x, TopLeftCoords.y};
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferSubData(GL_ARRAY_BUFFER, sizeof(positions), sizeof(textures), textures);
@@ -118,10 +116,10 @@ void SpriteRenderer::Draw(const ml::vec2 &position, const ml::vec2 &size, float 
     spriteShader->use();
 
     ml::mat4 model = ml::mat4(1.0f);
-    model = ml::translate(model, ml::vec3(position, 0.0f));  
-    model = ml::rotate(model, ml::radians(rotation), ml::vec3(0.0f, 0.0f, 1.0f)); 
-    model = ml::scale(model, ml::vec3(size, 1.0f)); 
-  
+    model = ml::translate(model, ml::vec3(position, 0.0f));
+    model = ml::rotate(model, ml::radians(rotation), ml::vec3(0.0f, 0.0f, 1.0f));
+    model = ml::scale(model, ml::vec3(size, 1.0f));
+
     spriteShader->setMat4("model", model);
     spriteShader->setVec3("spriteColor", color);
     spriteShader->setFloat("opacity", opacity);
@@ -129,7 +127,7 @@ void SpriteRenderer::Draw(const ml::vec2 &position, const ml::vec2 &size, float 
         spriteShader->setMat4("projection", projectionMatAbsolute);
     else
         spriteShader->setMat4("projection", projectionMatRelative);
-  
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, RessourceManager::GetTexture(sprite.textureName)->getID()); //@todo check
 

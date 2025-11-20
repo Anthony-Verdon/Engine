@@ -8,12 +8,11 @@ Shader::Shader()
 
 Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath)
 {
-
-    const std::string vertexCode = Toolbox::readFile(vertexPath); // @todo check if path is correct
-    const std::string fragmentCode = Toolbox::readFile(fragmentPath); // @todo check if path is correct
+    const std::string vertexCode = Toolbox::readFile(vertexPath);
+    const std::string fragmentCode = Toolbox::readFile(fragmentPath);
     const unsigned int vertex = compileShader(vertexCode.c_str(), GL_VERTEX_SHADER);
     const unsigned int fragment = compileShader(fragmentCode.c_str(), GL_FRAGMENT_SHADER);
-    compileProgram(vertex, fragment);
+    linkProgram(vertex, fragment);
 }
 
 Shader::Shader(const Shader &copy)
@@ -40,7 +39,6 @@ unsigned int Shader::compileShader(const char *shaderCode, const GLenum &shaderT
 {
     int success;
     char infoLogChar[512];
-    std::string infoLogString;
 
     unsigned int shader = glCreateShader(shaderType);
     glShaderSource(shader, 1, &shaderCode, NULL);
@@ -50,17 +48,15 @@ unsigned int Shader::compileShader(const char *shaderCode, const GLenum &shaderT
     if (!success)
     {
         glGetShaderInfoLog(shader, 512, NULL, infoLogChar);
-        infoLogString = infoLogChar;
-        throw(Exception("COMPILE_SHADER", "COMPILATION_FAILED", infoLogString));
+        throw(std::runtime_error("failed to compile shader : " + std::string(infoLogChar)));
     }
     return (shader);
 }
 
-void Shader::compileProgram(unsigned int vertex, unsigned int fragment)
+void Shader::linkProgram(unsigned int vertex, unsigned int fragment)
 {
     int success;
     char infoLogChar[512];
-    std::string infoLogString;
 
     ID = glCreateProgram();
     glAttachShader(ID, vertex);
@@ -74,8 +70,7 @@ void Shader::compileProgram(unsigned int vertex, unsigned int fragment)
     if (!success)
     {
         glGetProgramInfoLog(ID, 512, NULL, infoLogChar);
-        infoLogString = infoLogChar;
-        throw(Exception("COMPILE_PROGRAM", "LINKAGE_FAILED", infoLogString));
+        throw(std::runtime_error("failed to link program : " + std::string(infoLogChar)));
     }
 }
 
@@ -142,18 +137,4 @@ void Shader::setMat4(const std::string &name, const ml::mat4 &matrix) const
 unsigned int Shader::getID() const
 {
     return (ID);
-}
-
-Shader::Exception::Exception(const std::string &functionName, const std::string &errorMessage,
-                             const std::string &infoLog)
-{
-    this->errorMessage = "SHADER::" + functionName + "::" + errorMessage;
-    this->errorMessage += "\n|\n| ";
-    this->errorMessage += "infoLog: " + infoLog;
-    this->errorMessage += "\n|";
-}
-
-const char *Shader::Exception::what(void) const throw()
-{
-    return (errorMessage.c_str());
 }

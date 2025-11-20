@@ -4,7 +4,6 @@
 #include <string>
 #include "Matrix/Matrix.hpp"
 
-
 class Shader
 {
   private:
@@ -12,17 +11,7 @@ class Shader
 
     const std::string readShaderFile(const std::string &shaderPath);
     unsigned int compileShader(const char *shaderCode, const GLenum &shaderType);
-    void compileProgram(unsigned int vertex, unsigned int fragment);
-
-    class Exception : public std::exception //@todo update this assert (maybe a Shadr::none or something like that could be return)
-    {
-      public:
-        Exception(const std::string &functionName, const std::string &errorMessage, const std::string &infoLog);
-        const char *what(void) const throw();
-
-      private:
-        std::string errorMessage;
-    };
+    void linkProgram(unsigned int vertex, unsigned int fragment);
 
   public:
     Shader();
