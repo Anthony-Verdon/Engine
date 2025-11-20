@@ -16,7 +16,13 @@ void WorldPhysic3D::ContactListener::OnContactAdded(const JPH::Body &inBody1, co
     (void)ioSettings;
 
     if (WorldPhysic3D::bodies[inBody1.GetID()])
-        WorldPhysic3D::bodies[inBody1.GetID()]->OnContactAdded(inManifold, WorldPhysic3D::bodies[inBody2.GetID()]);
+    {
+        // In Jolt Engine, the normal is calculated with the collision going from Body2 to Body1
+        // so to have good value in both PhysicBody3D callbacks, I reverse the normal for Body1
+        JPH::ContactManifold manifoldCopy = inManifold;
+        manifoldCopy.mWorldSpaceNormal = -manifoldCopy.mWorldSpaceNormal;
+        WorldPhysic3D::bodies[inBody1.GetID()]->OnContactAdded(manifoldCopy, WorldPhysic3D::bodies[inBody2.GetID()]);
+    }
     if (WorldPhysic3D::bodies[inBody2.GetID()])
         WorldPhysic3D::bodies[inBody2.GetID()]->OnContactAdded(inManifold, WorldPhysic3D::bodies[inBody1.GetID()]);
 }
@@ -26,7 +32,13 @@ void WorldPhysic3D::ContactListener::OnContactPersisted(const JPH::Body &inBody1
     (void)ioSettings;
 
     if (WorldPhysic3D::bodies[inBody1.GetID()])
-        WorldPhysic3D::bodies[inBody1.GetID()]->OnContactPersisted(inManifold, WorldPhysic3D::bodies[inBody2.GetID()]);
+    {
+        // In Jolt Engine, the normal is calculated with the collision going from Body2 to Body1
+        // so to have good value in both PhysicBody3D callbacks, I reverse the normal for Body1
+        JPH::ContactManifold manifoldCopy = inManifold;
+        manifoldCopy.mWorldSpaceNormal = -manifoldCopy.mWorldSpaceNormal;
+        WorldPhysic3D::bodies[inBody1.GetID()]->OnContactPersisted(manifoldCopy, WorldPhysic3D::bodies[inBody2.GetID()]);
+    }
     if (WorldPhysic3D::bodies[inBody2.GetID()])
         WorldPhysic3D::bodies[inBody2.GetID()]->OnContactPersisted(inManifold, WorldPhysic3D::bodies[inBody1.GetID()]);
 }
