@@ -39,6 +39,7 @@ void ACanvas::BeginCanvas(ACanvas *canvasPtr)
 {
     CHECK_AND_RETURN_VOID((currentCanvas == NULL), "a canvas already exists");
     currentCanvas = canvasPtr;
+    currentCanvas->components.clear();
     currentID = 0;
 }
 
