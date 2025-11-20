@@ -8,11 +8,12 @@ namespace UI
 {
 class ACanvas;
 struct EventData;
+typedef unsigned int ComponentID;
 
 class AComponent
 {
   private:
-    unsigned int ID;
+    ComponentID ID;
     ACanvas *rootCanvas;
 
   protected:
@@ -27,6 +28,6 @@ class AComponent
     virtual void Update() {}
     virtual void Draw() {}
 
-    unsigned int GetID() { return ID; }
+    ComponentID GetID() { return ID; }
 };
 } // namespace UI

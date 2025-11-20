@@ -20,7 +20,7 @@ void ACanvas::Update()
     }
 }
 
-std::unique_ptr<AComponent> &ACanvas::GetComponent(unsigned int ID)
+std::unique_ptr<AComponent> &ACanvas::GetComponent(ComponentID ID)
 {
     for (auto &component : components)
     {
@@ -42,7 +42,7 @@ void ACanvas::BeginCanvas(ACanvas *canvasPtr)
     currentID = 0;
 }
 
-unsigned int ACanvas::AddComponent(std::unique_ptr<AComponent> component)
+ComponentID ACanvas::AddComponent(std::unique_ptr<AComponent> component)
 {
     CHECK_AND_RETURN((currentCanvas != NULL), 0, "no current canvas");
     currentCanvas->components.push_back(std::move(component));
@@ -61,7 +61,7 @@ ACanvas *ACanvas::GetCurrentCanvas()
     return currentCanvas;
 }
 
-unsigned int ACanvas::GenerateNewID()
+ComponentID ACanvas::GenerateNewID()
 {
     CHECK_AND_RETURN((currentCanvas != NULL), 0, "no current canvas");
     return ++currentID;
