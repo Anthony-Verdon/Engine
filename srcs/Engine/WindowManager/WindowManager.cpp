@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 #include <stdexcept>
 #include "Engine/macros.hpp"
+#include "Engine/Scenes/SceneManager/SceneManager.hpp"
 #ifdef HOTRELOAD
 #include <dlfcn.h>
 #include <chrono>
@@ -116,6 +117,8 @@ void WindowManager::StartUpdateLoop(AProgram *inProgram)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Time::updateTime();
+
+        SceneManager::SwitchScene();
 
         program->Run();
 

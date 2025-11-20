@@ -2,6 +2,7 @@
 #include "Engine/macros.hpp"
 
 std::unique_ptr<AScene> SceneManager::currentScene = NULL;
+std::unique_ptr<AScene> SceneManager::futureScene = NULL;
 
 void SceneManager::LoadScene(std::unique_ptr<AScene> newScene)
 {
@@ -14,9 +15,19 @@ void SceneManager::SwitchScene(std::unique_ptr<AScene> newScene)
 {
     CHECK_AND_RETURN_VOID((newScene != NULL), "new scene shouldn't be NULL");
 
+    if (newScene)
+        futureScene = std::move(newScene);
+}
+
+void SceneManager::SwitchScene()
+{
+    if (!futureScene)
+        return;
+
     if (currentScene)
         currentScene->Quit();
-    currentScene = std::move(newScene);
+    currentScene = std::move(futureScene);
+    futureScene = NULL;
     currentScene->Load();
 }
 
