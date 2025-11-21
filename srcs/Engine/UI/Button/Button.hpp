@@ -21,6 +21,8 @@ class Button : public AComponent
     Button(const std::string &text, const std::string &font, const ml::vec2 &pos, const ml::vec2 &size);
     ~Button();
 
+    void UpdateText(const std::string &text) { this->text = text; }
+
     void Update();
     void Draw();
 };
