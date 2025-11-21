@@ -4,8 +4,48 @@
 
 namespace UI
 {
-ACanvas *ACanvas::currentCanvas = NULL;
-unsigned int ACanvas::currentID = 0;
+
+ACanvas::ACanvas()
+{
+    ResetCanvas();
+}
+
+ComponentID ACanvas::AddComponent(std::unique_ptr<AComponent> component)
+{
+    component->ID = currentID++;
+    component->rootCanvas = this;
+    components.push_back(std::move(component));
+    return (components[components.size() - 1]->ID);
+}
+
+std::unique_ptr<AComponent> &ACanvas::GetComponent(ComponentID ID)
+{
+    for (auto &component : components)
+    {
+        if (component->ID == ID)
+            return (component);
+    }
+
+    throw(std::runtime_error("component not found"));
+}
+
+void ACanvas::DestroyComponent(ComponentID ID)
+{
+    for (size_t i = 0; i < components.size(); i++)
+    {
+        if (components[i]->ID == ID)
+        {
+            components.erase(components.begin() + i);
+            break;
+        }
+    }
+}
+
+void ACanvas::ResetCanvas()
+{
+    currentID = 0;
+    components.clear();
+}
 
 void ACanvas::Update()
 {
@@ -20,52 +60,8 @@ void ACanvas::Update()
     }
 }
 
-std::unique_ptr<AComponent> &ACanvas::GetComponent(ComponentID ID)
-{
-    for (auto &component : components)
-    {
-        if (component->GetID() == ID)
-            return (component);
-    }
-
-    throw(std::runtime_error("component not found"));
-}
-
 void ACanvas::HandleEvents([[maybe_unused]] EventData &data)
 {
-}
-
-void ACanvas::BeginCanvas(ACanvas *canvasPtr)
-{
-    CHECK_AND_RETURN_VOID((currentCanvas == NULL), "a canvas already exists");
-    currentCanvas = canvasPtr;
-    currentCanvas->components.clear();
-    currentID = 0;
-}
-
-ComponentID ACanvas::AddComponent(std::unique_ptr<AComponent> component)
-{
-    CHECK_AND_RETURN((currentCanvas != NULL), 0, "no current canvas");
-    currentCanvas->components.push_back(std::move(component));
-    return (currentCanvas->components[currentCanvas->components.size() - 1]->GetID());
-}
-
-void ACanvas::EndCanvas()
-{
-    CHECK_AND_RETURN_VOID((currentCanvas != NULL), "no current canvas");
-    currentCanvas = NULL;
-}
-
-ACanvas *ACanvas::GetCurrentCanvas()
-{
-    CHECK_AND_RETURN((currentCanvas != NULL), NULL, "no current canvas");
-    return currentCanvas;
-}
-
-ComponentID ACanvas::GenerateNewID()
-{
-    CHECK_AND_RETURN((currentCanvas != NULL), 0, "no current canvas");
-    return ++currentID;
 }
 
 } // namespace UI

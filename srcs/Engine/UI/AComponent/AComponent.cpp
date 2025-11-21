@@ -7,8 +7,6 @@ namespace UI
 {
 AComponent::AComponent()
 {
-    ID = ACanvas::GenerateNewID();
-    rootCanvas = ACanvas::GetCurrentCanvas();
 }
 
 void AComponent::SendEvent(EventData &data)

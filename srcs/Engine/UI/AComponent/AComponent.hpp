@@ -28,6 +28,6 @@ class AComponent
     virtual void Update() {}
     virtual void Draw() {}
 
-    ComponentID GetID() { return ID; }
+    friend ACanvas;
 };
 } // namespace UI
