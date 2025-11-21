@@ -19,6 +19,10 @@ void TextRenderer::Init()
     RessourceManager::AddShader("Text", PATH_TO_ENGINE "shaders/2D/text/text.vs", PATH_TO_ENGINE "shaders/2D/text/text.fs");
     std::shared_ptr<Shader> textShader = RessourceManager::GetShader("Text");
     textShader->use();
+    // for text to be rendered not upside down, the projection matrix is different
+    // 0 is at the bottom, WindowHeight() is at the top
+    // and later (see Draw function), we reverse given coordinate
+    // so 0 is at the top and WindowHeight() at the bottom
     textShader->setMat4("projection", ml::ortho(0.0f, (float)WindowManager::GetWindowWidth(), 0.0f, (float)WindowManager::GetWindowHeight(), -1.0f, 1.0f));
 
     CHECK_AND_RETURN_VOID(!FT_Init_FreeType(&ft), "FT_Init_FreeType failed");
@@ -105,6 +109,12 @@ void TextRenderer::Draw(const std::string &text, const std::string &font, float 
     textShader->setVec4("textColor", color);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
+
+    // for text to be rendered not upside down, the projection matrix is different
+    // 0 is at the bottom, WindowHeight() is at the top
+    // but we want to draw as 0 being at the top, and WindowHeight() at the bottom
+    // so we do this calculcus to reverse it here
+    y = -(y - WindowManager::GetWindowHeight() / 2) + WindowManager::GetWindowHeight() / 2;
 
     for (size_t i = 0; i < text.length(); i++)
     {

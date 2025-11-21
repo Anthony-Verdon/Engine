@@ -17,7 +17,7 @@ void LineRenderer2D::Init()
     RessourceManager::AddShader("Line", PATH_TO_ENGINE "shaders/2D/line/line.vs", PATH_TO_ENGINE "shaders/2D/line/line.fs");
     std::shared_ptr<Shader> lineShader = RessourceManager::GetShader("Line");
     lineShader->use();
-    projectionMatAbsolute = ml::ortho(0.0f, (float)WindowManager::GetWindowWidth(), 0.0f, (float)WindowManager::GetWindowHeight(), -1.0f, 1.0f);
+    projectionMatAbsolute = ml::ortho(0.0f, (float)WindowManager::GetWindowWidth(), (float)WindowManager::GetWindowHeight(), 0.0f, -1.0f, 1.0f);
     lineShader->setMat4("projection", projectionMatAbsolute);
 
     glGenVertexArrays(1, &VAO);

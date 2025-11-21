@@ -68,5 +68,5 @@ void UI::Button::Draw()
     LineRenderer2D::Draw(pos, pos + ml::vec2(0, size.y), ml::vec3(1, 1, 1), true);
     LineRenderer2D::Draw(pos + size, pos + ml::vec2(size.x, 0), ml::vec3(1, 1, 1), true);
     LineRenderer2D::Draw(pos + size, pos + ml::vec2(0, size.y), ml::vec3(1, 1, 1), true);
-    TextRenderer::Draw(text, font, pos.x, pos.y, 1, ml::vec4(1, 1, 1, 1));
+    TextRenderer::Draw(text, font, pos.x, pos.y + size.y / 2, 1, ml::vec4(1, 1, 1, 1));
 }
