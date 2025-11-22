@@ -1,6 +1,7 @@
 #include "Engine/UI/ACanvas/ACanvas.hpp"
 #include "Engine/macros.hpp"
 #include "Engine/UI/Events.hpp"
+#include <glad/glad.h>
 
 namespace UI
 {
@@ -49,6 +50,11 @@ void ACanvas::ResetCanvas()
 
 void ACanvas::Update()
 {
+    // I'm developping a 3D game so GL_DEPTH_TEST is enable by default in WindowManager
+    // for 2D/UI rendering, we need to disable it, and I re-enable it after
+    // but if I develop a 2D game, maybe we should have a parameter in WindowManager to tell us
+    // if is GL_DEPTH_TEST should be enable or not
+    glDisable(GL_DEPTH_TEST);
     for (const auto &component : components)
     {
         component->Draw();
@@ -58,6 +64,7 @@ void ACanvas::Update()
     {
         component->Update();
     }
+    glEnable(GL_DEPTH_TEST);
 }
 
 void ACanvas::HandleEvents([[maybe_unused]] EventData &data)

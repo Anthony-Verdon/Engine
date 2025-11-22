@@ -100,7 +100,7 @@ void TextRenderer::Destroy()
     isInit = false;
 }
 
-void TextRenderer::Draw(const std::string &text, const std::string &font, float x, float y, float scale, const ml::vec4 &color)
+void TextRenderer::Draw(const std::string &text, const std::string &font, float x, float y, float scale, const ml::vec4 &color, TextRenderer::TextAlign textAlign)
 {
     CHECK_AND_RETURN_VOID(isInit, "TextRenderer not initialized");
 
@@ -116,12 +116,24 @@ void TextRenderer::Draw(const std::string &text, const std::string &font, float 
     // so we do this calculcus to reverse it here
     y = -(y - WindowManager::GetWindowHeight() / 2) + WindowManager::GetWindowHeight() / 2;
 
+    float textWidth = TextWidth(text, font, scale);
     for (size_t i = 0; i < text.length(); i++)
     {
         unsigned char character = text[i];
         t_FreetypeCharacter freetypeCharacter = fonts[font][character];
 
         float xpos = x + freetypeCharacter.bearing.x * scale;
+        switch (textAlign)
+        {
+        case LEFT:
+            break;
+        case CENTER:
+            xpos -= textWidth / 2;
+            break;
+        case RIGHT:
+            xpos -= textWidth;
+            break;
+        }
         float ypos = y - (freetypeCharacter.size.y - freetypeCharacter.bearing.y) * scale;
 
         float w = freetypeCharacter.size.x * scale;
@@ -149,4 +161,13 @@ void TextRenderer::Draw(const std::string &text, const std::string &font, float 
     }
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+float TextRenderer::TextWidth(const std::string &text, const std::string &font, float scale)
+{
+    float width = 0;
+    for (size_t i = 0; i < text.length(); i++)
+        width += (fonts[font][text[i]].advance >> 6) * scale;
+
+    return (width);
 }

@@ -29,8 +29,17 @@ class TextRenderer
     ~TextRenderer() = delete;
 
   public:
+    enum TextAlign
+    {
+        LEFT,
+        CENTER,
+        RIGHT
+    };
+
     static void Init();
     static void LoadFont(const std::string &fontname, const std::string &path, int pixelSize);
     static void Destroy();
-    static void Draw(const std::string &text, const std::string &font, float x, float y, float scale, const ml::vec4 &color);
+    static void Draw(const std::string &text, const std::string &font, float x, float y, float scale, const ml::vec4 &color, TextAlign textAlign = LEFT);
+
+    static float TextWidth(const std::string &text, const std::string &font, float scale);
 };
