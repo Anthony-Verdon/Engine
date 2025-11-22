@@ -6,6 +6,7 @@ in vec3 WorldPos;
 in vec3 Normal;
 
 uniform vec3 uCamPos;
+uniform vec3 uColorArg;
 
 struct PointLight
 {
@@ -198,6 +199,7 @@ void main()
 
     color = color / (color + vec3(1.0));
     color = pow(color, vec3(1.0 / 2.2));
+    color = color * uColorArg;
     
     FragColor = vec4(color, 1.0);
 }

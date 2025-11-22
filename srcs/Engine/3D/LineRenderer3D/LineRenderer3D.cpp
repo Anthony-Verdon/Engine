@@ -13,7 +13,7 @@ void LineRenderer3D::Init()
 {
     CHECK_AND_RETURN_VOID(!isInit, "LineRenderer3D already initialized");
 
-    RessourceManager::AddShader("Line3D", PATH_TO_ENGINE "shaders/line3D.vs", PATH_TO_ENGINE "shaders/line3D.fs");
+    RessourceManager::AddShader("Line3D", PATH_TO_ENGINE "shaders/3D/line/line.vs", PATH_TO_ENGINE "shaders/3D/line/line.fs");
     std::shared_ptr<Shader> lineShader = RessourceManager::GetShader("Line3D");
     lineShader->use();
 

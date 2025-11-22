@@ -69,13 +69,13 @@ void Model::Destroy()
         meshes[i].Destroy();
 }
 
-void Model::Draw(const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, const ml::mat4 &initTransform, bool enableRootMotion)
+void Model::Draw(const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, const ml::mat4 &initTransform, bool enableRootMotion, const ml::vec3 &color)
 {
     animator.Update();
     auto nodesTransform = CalculateNodeTransform(nodeIndex, initTransform, enableRootMotion);
     for (size_t i = 0; i < meshes.size(); i++)
-        meshes[i].Draw(camPos, lights, projection, view, nodesTransform);
-    DrawSubModels(nodeIndex, camPos, lights, projection, view, nodesTransform);
+        meshes[i].Draw(camPos, lights, projection, view, nodesTransform, color);
+    DrawSubModels(nodeIndex, camPos, lights, projection, view, nodesTransform, color);
 }
 
 std::map<int, ml::mat4> Model::CalculateNodeTransform(size_t nodeIndex, const ml::mat4 &parentTransform, bool enableRootMotion)
@@ -105,11 +105,11 @@ std::map<int, ml::mat4> Model::CalculateNodeTransform(size_t nodeIndex, const ml
     return (nodesTransform);
 }
 
-void Model::DrawSubModels(size_t nodeIndex, const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform)
+void Model::DrawSubModels(size_t nodeIndex, const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform, const ml::vec3 &color)
 {
     auto node = nodes[nodeIndex];
     for (size_t i = 0; i < node.children.size(); i++)
-        DrawSubModels(node.children[i], camPos, lights, projection, view, nodesTransform);
+        DrawSubModels(node.children[i], camPos, lights, projection, view, nodesTransform, color);
     for (size_t i = 0; i < node.models.size(); i++)
-        ModelManager::Draw(node.models[i], camPos, lights, projection, view, nodesTransform[nodeIndex]);
+        ModelManager::Draw(node.models[i], camPos, lights, projection, view, nodesTransform[nodeIndex], true, color);
 }

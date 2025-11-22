@@ -10,7 +10,7 @@ Mesh::Mesh(const Glb::GltfData &data, size_t nodeIndex)
 {
     if (!shaderInitialized)
     {
-        RessourceManager::AddShader("mesh_shader", PATH_TO_ENGINE "shaders/meshShader.vs", PATH_TO_ENGINE "shaders/meshShader.fs");
+        RessourceManager::AddShader("mesh", PATH_TO_ENGINE "shaders/3D/mesh/mesh.vs", PATH_TO_ENGINE "shaders/3D/mesh/mesh.fs");
         shaderInitialized = true;
     }
 
@@ -102,9 +102,9 @@ void Mesh::Destroy()
     shaderInitialized = false;
 }
 
-void Mesh::Draw(const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform)
+void Mesh::Draw(const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform, const ml::vec3 &color)
 {
-    auto shader = RessourceManager::GetShader("mesh_shader");
+    auto shader = RessourceManager::GetShader("mesh");
     shader->use();
     // vs
     shader->setMat4("uProjection", projection);
@@ -116,6 +116,7 @@ void Mesh::Draw(const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight
 
     // fs
     shader->setVec3("uCamPos", camPos);
+    shader->setVec3("uColorArg", color);
     int nbPointLight = 0;
     int nbDirectionalLight = 0;
     int nbSpotLight = 0;

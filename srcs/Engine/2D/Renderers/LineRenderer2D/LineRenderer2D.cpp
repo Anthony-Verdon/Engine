@@ -14,8 +14,8 @@ void LineRenderer2D::Init()
 {
     CHECK_AND_RETURN_VOID(!isInit, "LineRenderer2D already initialized");
 
-    RessourceManager::AddShader("Line", PATH_TO_ENGINE "shaders/2D/line/line.vs", PATH_TO_ENGINE "shaders/2D/line/line.fs");
-    std::shared_ptr<Shader> lineShader = RessourceManager::GetShader("Line");
+    RessourceManager::AddShader("Line2D", PATH_TO_ENGINE "shaders/2D/line/line.vs", PATH_TO_ENGINE "shaders/2D/line/line.fs");
+    std::shared_ptr<Shader> lineShader = RessourceManager::GetShader("Line2D");
     lineShader->use();
     projectionMatAbsolute = ml::ortho(0.0f, (float)WindowManager::GetWindowWidth(), (float)WindowManager::GetWindowHeight(), 0.0f, -1.0f, 1.0f);
     lineShader->setMat4("projection", projectionMatAbsolute);
@@ -58,7 +58,7 @@ void LineRenderer2D::Draw(const ml::vec2 &va, const ml::vec2 &vb, const ml::vec4
 {
     CHECK_AND_RETURN_VOID(isInit, "LineRenderer2D not initialized");
 
-    std::shared_ptr<Shader> lineShader = RessourceManager::GetShader("Line");
+    std::shared_ptr<Shader> lineShader = RessourceManager::GetShader("Line2D");
     lineShader->use();
     lineShader->setVec4("color", color);
     if (drawAbsolute)

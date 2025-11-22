@@ -23,8 +23,8 @@ class Model
 
     void Init();
     void Destroy();
-    void Draw(const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, const ml::mat4 &initTransform, bool enableRootMotion = true);
-    void DrawSubModels(size_t nodeIndex, const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform);
+    void Draw(const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, const ml::mat4 &initTransform, bool enableRootMotion = true, const ml::vec3 &color = ml::vec3(1, 1, 1));
+    void DrawSubModels(size_t nodeIndex, const ml::vec3 &camPos, const std::vector<std::unique_ptr<ALight>> &lights, const ml::mat4 &projection, const ml::mat4 &view, std::map<int, ml::mat4> &nodesTransform, const ml::vec3 &color);
 
     std::vector<std::string> GetAnimationsName() const { return (animator.GetAnimationsName()); }
     void Play(const std::string &name, bool replayAnimation = true, float animationSpeed = 1.0f) { animator.Play(name, replayAnimation, animationSpeed); }
