@@ -57,12 +57,14 @@ void ACanvas::Update()
     glDisable(GL_DEPTH_TEST);
     for (const auto &component : components)
     {
-        component->Draw();
+        if (component->show)
+            component->Draw();
     }
 
     for (const auto &component : components)
     {
-        component->Update();
+        if (component->show)
+            component->Update();
     }
     glEnable(GL_DEPTH_TEST);
 }

@@ -1,12 +1,6 @@
 #include "Engine/UI/UIText/UIText.hpp"
 #include "Engine/2D/Renderers/TextRenderer/TextRenderer.hpp"
 
-UI::UIText::UIText()
-{
-    text = "";
-    font = "";
-}
-
 UI::UIText::UIText(const std::string &text, const std::string &font, const ml::vec2 &position)
 {
     this->text = text;

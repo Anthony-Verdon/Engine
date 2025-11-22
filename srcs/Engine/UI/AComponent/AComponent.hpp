@@ -15,6 +15,7 @@ class AComponent
   private:
     ComponentID ID;
     ACanvas *rootCanvas;
+    bool show;
 
   protected:
     ml::vec2 pos;
@@ -27,6 +28,9 @@ class AComponent
 
     virtual void Update() {}
     virtual void Draw() {}
+
+    void Show() { show = true; }
+    void Hide() { show = false; }
 
     friend ACanvas;
 };

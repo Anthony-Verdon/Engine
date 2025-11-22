@@ -18,7 +18,7 @@ class Button : public AComponent
     bool hover;
 
   public:
-    Button();
+    Button() = delete;
     Button(const std::string &text, const std::string &font, const ml::vec2 &pos, const ml::vec2 &size);
     ~Button();
 
@@ -34,7 +34,7 @@ class SpriteButton : public Button
     Sprite sprite;
 
   public:
-    SpriteButton();
+    SpriteButton() = delete;
     SpriteButton(const Sprite &sprite, const std::string &text, const std::string &font, const ml::vec2 &pos);
     ~SpriteButton();
 

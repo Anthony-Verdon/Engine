@@ -13,7 +13,7 @@ class UISprite : public AComponent
     ml::vec2 position;
 
   public:
-    UISprite();
+    UISprite() = delete;
     UISprite(const Sprite &sprite, const ml::vec2 &position);
     ~UISprite();
 

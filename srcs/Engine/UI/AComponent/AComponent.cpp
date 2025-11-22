@@ -7,6 +7,7 @@ namespace UI
 {
 AComponent::AComponent()
 {
+    show = true;
 }
 
 void AComponent::SendEvent(EventData &data)

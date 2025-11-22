@@ -12,7 +12,7 @@ class UIText : public AComponent
     std::string font;
 
   public:
-    UIText();
+    UIText() = delete;
     UIText(const std::string &text, const std::string &font, const ml::vec2 &position);
     ~UIText();
 
