@@ -72,10 +72,15 @@ void SpriteRenderer::Destroy()
 
 void SpriteRenderer::Draw(const SpriteRenderData &data)
 {
-    SpriteRenderer::Draw(data.position, data.size, data.rotation, data.color, data.sprite, data.flipHorizontally, data.flipVertically, data.opacity, data.drawAbsolute);
+    SpriteRenderer::Draw(data.position, data.size, data.rotation, data.color, data.sprite, data.flipHorizontally, data.flipVertically, data.drawAbsolute);
 }
 
-void SpriteRenderer::Draw(const ml::vec2 &position, const ml::vec2 &size, float rotation, const ml::vec3 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, float opacity, bool drawAbsolute)
+void SpriteRenderer::Draw(const ml::vec2 &position, const ml::vec2 &size, float rotation, const ml::vec3 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute)
+{
+    SpriteRenderer::Draw(position, size, rotation, ml::vec4(color, 1), sprite, flipHorizontally, flipVertically, drawAbsolute);
+}
+
+void SpriteRenderer::Draw(const ml::vec2 &position, const ml::vec2 &size, float rotation, const ml::vec4 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute)
 {
     CHECK_AND_RETURN_VOID(isInit, "SpriteRenderer not initialized");
 
@@ -121,8 +126,7 @@ void SpriteRenderer::Draw(const ml::vec2 &position, const ml::vec2 &size, float 
     model = ml::scale(model, ml::vec3(size, 1.0f));
 
     spriteShader->setMat4("model", model);
-    spriteShader->setVec3("spriteColor", color);
-    spriteShader->setFloat("opacity", opacity);
+    spriteShader->setVec4("spriteColor", color);
     if (drawAbsolute)
         spriteShader->setMat4("projection", projectionMatAbsolute);
     else

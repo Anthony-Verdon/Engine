@@ -15,6 +15,7 @@ UI::Button::Button(const std::string &text, const std::string &font, const ml::v
 
     hover = false;
     clicked = false;
+    disable = false;
 }
 
 UI::Button::~Button()
@@ -23,6 +24,9 @@ UI::Button::~Button()
 
 void UI::Button::Update()
 {
+    if (disable)
+        return;
+
     if (UI::PointInRectangle(WindowManager::GetMousePosition(), pos, size))
     {
         if (!hover)
@@ -59,13 +63,17 @@ void UI::Button::Update()
 
 void UI::Button::Draw()
 {
+    ml::vec4 color = ml::vec4(1, 1, 1, 1);
+    if (disable)
+        color = ml::vec4(0.5, 0.5, 0.5, 1);
+
     ml::vec2 leftCorner = pos - size / 2;
-    LineRenderer2D::Draw(leftCorner, leftCorner + ml::vec2(size.x, 0), ml::vec3(1, 1, 1), true);
-    LineRenderer2D::Draw(leftCorner, leftCorner + ml::vec2(0, size.y), ml::vec3(1, 1, 1), true);
-    LineRenderer2D::Draw(leftCorner + size, leftCorner + ml::vec2(size.x, 0), ml::vec3(1, 1, 1), true);
-    LineRenderer2D::Draw(leftCorner + size, leftCorner + ml::vec2(0, size.y), ml::vec3(1, 1, 1), true);
-    LineRenderer2D::Draw(leftCorner, leftCorner + size, ml::vec4(1, 1, 1, 1), true);
-    TextRenderer::Draw(text, font, leftCorner.x, leftCorner.y + size.y / 2, 1, ml::vec4(1, 1, 1, 1));
+    LineRenderer2D::Draw(leftCorner, leftCorner + ml::vec2(size.x, 0), color, true);
+    LineRenderer2D::Draw(leftCorner, leftCorner + ml::vec2(0, size.y), color, true);
+    LineRenderer2D::Draw(leftCorner + size, leftCorner + ml::vec2(size.x, 0), color, true);
+    LineRenderer2D::Draw(leftCorner + size, leftCorner + ml::vec2(0, size.y), color, true);
+    LineRenderer2D::Draw(leftCorner, leftCorner + size, color, true);
+    TextRenderer::Draw(text, font, leftCorner.x, leftCorner.y + size.y / 2, 1, color);
 }
 
 UI::SpriteButton::SpriteButton(const Sprite &sprite, const std::string &text, const std::string &font, const ml::vec2 &pos) : Button(text, font, pos, sprite.size), sprite(sprite)
@@ -78,6 +86,9 @@ UI::SpriteButton::~SpriteButton()
 
 void UI::SpriteButton::Draw()
 {
-    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(pos).SetSprite(sprite).SetSize(size).SetDrawAbsolute(true).Build());
-    TextRenderer::Draw(text, font, pos.x, pos.y, 1, ml::vec4(1, 1, 1, 1), TextRenderer::TextAlign::CENTER);
+    ml::vec4 color = ml::vec4(1, 1, 1, 1);
+    if (disable)
+        color = ml::vec4(0.5, 0.5, 0.5, 1);
+    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(pos).SetSprite(sprite).SetSize(size).SetDrawAbsolute(true).SetColor(color).Build());
+    TextRenderer::Draw(text, font, pos.x, pos.y, 1, color, TextRenderer::TextAlign::CENTER);
 }

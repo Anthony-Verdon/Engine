@@ -16,6 +16,7 @@ class Button : public AComponent
 
     bool clicked;
     bool hover;
+    bool disable;
 
   public:
     Button() = delete;
@@ -26,6 +27,9 @@ class Button : public AComponent
 
     void Update();
     void Draw();
+
+    void Enable() { disable = false; }
+    void Disable() { disable = true; }
 };
 
 class SpriteButton : public Button
