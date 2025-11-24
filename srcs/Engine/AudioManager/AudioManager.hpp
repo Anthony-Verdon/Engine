@@ -1,8 +1,6 @@
 #pragma once
 
 #include <string>
-#define MINIAUDIO_IMPLEMENTATION
-#define MA_ENABLE_VORBIS
 #include <miniaudio.h>
 
 class AudioManager
@@ -18,4 +16,5 @@ class AudioManager
     static void Destroy();
 
     static void Play(const std::string &sound);
+    static void SetVolume(float volume);
 };

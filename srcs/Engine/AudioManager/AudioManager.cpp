@@ -21,3 +21,10 @@ void AudioManager::Play(const std::string &sound)
     if (result != MA_SUCCESS)
         std::cerr << "failed to play " << sound << " : " << ma_result_description(result) << std::endl;
 }
+
+void AudioManager::SetVolume(float volume)
+{
+    ma_result result = ma_engine_set_volume(&engine, volume);
+    if (result != MA_SUCCESS)
+        std::cerr << "failed to set volume to " << volume << " : " << ma_result_description(result) << std::endl;
+}
