@@ -12,7 +12,7 @@ add_requires("glad")
 add_requires("box2d  3.0.0")
 add_requires("joltphysics", {configs = {rtti = true}})
 add_requires("freetype")
-add_requires("miniaudio", {configs = { headeronly = false, ogg = true}})
+add_requires("miniaudio", {configs = { headeronly = false}})
 
 option("HOTRELOAD")
     set_showmenu(true)
