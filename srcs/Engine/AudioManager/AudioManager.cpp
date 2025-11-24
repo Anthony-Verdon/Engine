@@ -19,5 +19,5 @@ void AudioManager::Play(const std::string &sound)
 {
     ma_result result = ma_engine_play_sound(&engine, sound.c_str(), NULL);
     if (result != MA_SUCCESS)
-        std::cout << "failed to play " << sound << " : " << ma_result_description(result) << std::endl;
+        std::cerr << "failed to play " << sound << " : " << ma_result_description(result) << std::endl;
 }
