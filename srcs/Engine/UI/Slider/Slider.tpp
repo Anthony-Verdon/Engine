@@ -15,7 +15,6 @@ UI::Slider<T>::Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, co
     this->boundarySprite = boundarySprite;
     this->pipeSprite = pipeSprite;
     this->thumbSprite = thumbSprite;
-    thumbPos = pos;
     clicked = false;
     leftBoundaryPos = pos + ml::vec2((-size.x + size.y) / 2, 0);
     rightBoundaryPos = pos + ml::vec2((size.x - size.y) / 2, 0);
@@ -23,6 +22,9 @@ UI::Slider<T>::Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, co
     CHECK((value >= min && value <= max), "value out of boundaries at init: value = " + std::to_string(value) + " | min = " + std::to_string(min) + " | max = " + std::to_string(max));
     value = std::clamp(value, min, max);
     textFadeTimer = 0;
+    thumbPos = pos;
+    CHECK_AND_RETURN_VOID((min != max), "slider min and max values are equals, value won't change");
+    thumbPos.x = (value - min) / (max - min) * (rightBoundaryPos.x - leftBoundaryPos.x) + leftBoundaryPos.x;
 }
 
 template <typename T>
