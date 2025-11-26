@@ -5,17 +5,18 @@
 #include "Engine/macros.hpp"
 
 template <typename T>
-UI::Slider<T>::Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, const Sprite &thumbSprite, T min, T max, T defaultValue, const ml::vec2 &pos, const ml::vec2 &size, const Sprite &keyValueSprite, const std::vector<T> &keyValues) : AComponent(pos), min(min), max(max), keyValues(keyValues), value(defaultValue), size(size)
+UI::Slider<T>::Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, const Sprite &thumbSprite, T min, T max, T defaultValue, const ml::vec2 &pos, const ml::vec2 &size) : AComponent(pos), min(min), max(max), value(defaultValue), size(size)
 {
     this->boundarySprite = boundarySprite;
     this->pipeSprite = pipeSprite;
     this->thumbSprite = thumbSprite;
-    this->keyValueSprite = keyValueSprite;
     thumbPos = pos;
     clicked = false;
     leftBoundaryPos = pos + ml::vec2((-size.x + size.y) / 2, 0);
     rightBoundaryPos = pos + ml::vec2((size.x - size.y) / 2, 0);
     CHECK((rightBoundaryPos.x != leftBoundaryPos.x), "slider left and right boundary are on the same position, value won't change");
+    CHECK((value >= min && value <= max), "value out of boundaries at init: value = " + std::to_string(value) + " | min = " + std::to_string(min) + " | max = " + std::to_string(max));
+    value = std::clamp(value, min, max);
 }
 
 template <typename T>

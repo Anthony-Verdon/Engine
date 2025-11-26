@@ -14,21 +14,19 @@ class Slider : public AComponent
 
     T min;
     T max;
-    std::vector<T> keyValues;
-    T value; // & ?
+    T value; // use reference ?
 
     ml::vec2 size;
     Sprite boundarySprite;
     ml::vec2 leftBoundaryPos, rightBoundaryPos;
     Sprite pipeSprite;
-    Sprite keyValueSprite;
     Sprite thumbSprite;
     ml::vec2 thumbPos;
 
     bool clicked;
 
   public:
-    Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, const Sprite &thumbSprite, T min, T max, T defaultValue, const ml::vec2 &pos, const ml::vec2 &size, const Sprite &keyValueSprite = Sprite::none, const std::vector<T> &keyValues = {});
+    Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, const Sprite &thumbSprite, T min, T max, T defaultValue, const ml::vec2 &pos, const ml::vec2 &size);
     ~Slider();
 
     void Update();
