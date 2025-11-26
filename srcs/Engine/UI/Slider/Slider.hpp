@@ -22,11 +22,13 @@ class Slider : public AComponent
     Sprite pipeSprite;
     Sprite thumbSprite;
     ml::vec2 thumbPos;
+    std::string font;
 
     bool clicked;
+    float textFadeTimer;
 
   public:
-    Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, const Sprite &thumbSprite, T min, T max, T defaultValue, const ml::vec2 &pos, const ml::vec2 &size);
+    Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, const Sprite &thumbSprite, T min, T max, T defaultValue, const ml::vec2 &pos, const ml::vec2 &size, const std::string &font);
     ~Slider();
 
     void Update();

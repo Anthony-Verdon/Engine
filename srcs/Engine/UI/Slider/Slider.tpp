@@ -1,11 +1,16 @@
 #include "Engine/UI/Slider/Slider.hpp"
 #include "Engine/2D/Renderers/SpriteRenderer/SpriteRenderer.hpp"
+#include "Engine/2D/Renderers/TextRenderer/TextRenderer.hpp"
 #include "Engine/UI/UI.hpp"
 #include "Engine/WindowManager/WindowManager.hpp"
 #include "Engine/macros.hpp"
+#include "Engine/Time/Time.hpp"
+#include <format>
+
+#define TEXT_FADE_TIME 1
 
 template <typename T>
-UI::Slider<T>::Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, const Sprite &thumbSprite, T min, T max, T defaultValue, const ml::vec2 &pos, const ml::vec2 &size) : AComponent(pos), min(min), max(max), value(defaultValue), size(size)
+UI::Slider<T>::Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, const Sprite &thumbSprite, T min, T max, T defaultValue, const ml::vec2 &pos, const ml::vec2 &size, const std::string &font) : AComponent(pos), min(min), max(max), value(defaultValue), size(size), font(font)
 {
     this->boundarySprite = boundarySprite;
     this->pipeSprite = pipeSprite;
@@ -17,6 +22,7 @@ UI::Slider<T>::Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, co
     CHECK((rightBoundaryPos.x != leftBoundaryPos.x), "slider left and right boundary are on the same position, value won't change");
     CHECK((value >= min && value <= max), "value out of boundaries at init: value = " + std::to_string(value) + " | min = " + std::to_string(min) + " | max = " + std::to_string(max));
     value = std::clamp(value, min, max);
+    textFadeTimer = 0;
 }
 
 template <typename T>
@@ -27,6 +33,7 @@ UI::Slider<T>::~Slider()
 template <typename T>
 void UI::Slider<T>::Update()
 {
+    textFadeTimer -= Time::getDeltaTime();
     if (UI::PointInRectangle(WindowManager::GetMousePosition(), pos, size))
     {
         if (WindowManager::IsInputPressed(GLFW_MOUSE_BUTTON_1))
@@ -44,6 +51,7 @@ void UI::Slider<T>::Update()
             CHECK((value >= min && value <= max), "value out of boundaries: value = " + std::to_string(value) + " | min = " + std::to_string(min) + " | max = " + std::to_string(max));
             UpdateValueEventData data(value);
             SendEvent(data);
+            textFadeTimer = TEXT_FADE_TIME;
         }
     }
 }
@@ -55,4 +63,5 @@ void UI::Slider<T>::Draw()
     SpriteRenderer::Draw(SpriteRenderDataBuilder().SetSprite(boundarySprite).SetSize(ml::vec2(size.y, size.y)).SetDrawAbsolute(true).SetPosition(rightBoundaryPos).FlipHorizontally(true).Build());
     SpriteRenderer::Draw(SpriteRenderDataBuilder().SetSprite(pipeSprite).SetSize(ml::vec2(size.x - size.y * 2, size.y)).SetDrawAbsolute(true).SetPosition(pos).Build());
     SpriteRenderer::Draw(SpriteRenderDataBuilder().SetSprite(thumbSprite).SetSize(thumbSprite.size).SetDrawAbsolute(true).SetPosition(thumbPos).Build());
+    TextRenderer::Draw(std::format("{:.2f}", value), font, thumbPos.x, thumbPos.y + thumbSprite.size.y, 0.5, ml::vec4(1, 1, 1, textFadeTimer / TEXT_FADE_TIME), TextRenderer::TextAlign::CENTER);
 }
