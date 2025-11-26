@@ -7,20 +7,17 @@
 namespace UI
 {
 class ACanvas;
-struct EventData;
+struct CallbackData;
 typedef unsigned int ComponentID;
 
 class AComponent
 {
   private:
     ComponentID ID;
-    ACanvas *rootCanvas;
     bool show;
 
   protected:
     ml::vec2 pos;
-
-    void SendEvent(EventData &data);
 
   public:
     AComponent();

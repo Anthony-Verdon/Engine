@@ -4,14 +4,15 @@
 #include "Engine/2D/Renderers/LineRenderer2D/LineRenderer2D.hpp"
 #include "Engine/WindowManager/WindowManager.hpp"
 #include "Engine/UI/UI.hpp"
-#include "Engine/UI/Events.hpp"
+#include "Engine/UI/Callbacks.hpp"
 
-UI::Button::Button(const std::string &text, const std::string &font, const ml::vec2 &pos, const ml::vec2 &size)
+UI::Button::Button(const std::string &text, const std::string &font, const ml::vec2 &pos, const ml::vec2 &size, const std::function<void(const UI::CallbackData &)> &callback)
 {
     this->text = text;
     this->font = font;
     this->pos = pos;
     this->size = size;
+    this->callback = callback;
 
     hover = false;
     clicked = false;
@@ -26,33 +27,31 @@ void UI::Button::Update()
 {
     if (disable)
         return;
+    if (!callback)
+        return;
 
     if (UI::PointInRectangle(WindowManager::GetMousePosition(), pos, size))
     {
         if (!hover)
         {
-            EventData data(CURSEUR_ON);
-            SendEvent(data);
+            callback(CallbackData(CURSEUR_ON));
             hover = true;
         }
 
         if (WindowManager::IsInputPressed(GLFW_MOUSE_BUTTON_1))
         {
-            EventData data(CLICK_ON);
-            SendEvent(data);
+            callback(CallbackData(CLICK_ON));
             clicked = true;
         }
         else if (clicked && WindowManager::IsInputReleased(GLFW_MOUSE_BUTTON_1))
         {
-            EventData data(CLICK_OFF);
-            SendEvent(data);
+            callback(CallbackData(CLICK_OFF));
             clicked = false;
         }
     }
     else if (hover)
     {
-        EventData data(CURSEUR_OFF);
-        SendEvent(data);
+        callback(CallbackData(CURSEUR_OFF));
         hover = false;
     }
 }
@@ -72,7 +71,7 @@ void UI::Button::Draw()
     TextRenderer::Draw(text, font, leftCorner.x, leftCorner.y + size.y / 2, 1, color);
 }
 
-UI::SpriteButton::SpriteButton(const Sprite &sprite, const std::string &text, const std::string &font, const ml::vec2 &pos) : Button(text, font, pos, sprite.size), sprite(sprite)
+UI::SpriteButton::SpriteButton(const Sprite &sprite, const std::string &text, const std::string &font, const ml::vec2 &pos, const std::function<void(const UI::CallbackData &)> &callback) : Button(text, font, pos, sprite.size, callback), sprite(sprite)
 {
 }
 

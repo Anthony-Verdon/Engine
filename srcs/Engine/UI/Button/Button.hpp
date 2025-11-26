@@ -3,6 +3,7 @@
 #include "Engine/UI/AComponent/AComponent.hpp"
 #include "Engine/2D/Sprite/Sprite.hpp"
 #include <string>
+#include <functional>
 
 namespace UI
 {
@@ -13,6 +14,7 @@ class Button : public AComponent
     std::string font;
     ml::vec2 size;
     ml::vec4 color;
+    std::function<void(const CallbackData &)> callback;
 
     bool clicked;
     bool hover;
@@ -20,7 +22,7 @@ class Button : public AComponent
 
   public:
     Button() = delete;
-    Button(const std::string &text, const std::string &font, const ml::vec2 &pos, const ml::vec2 &size);
+    Button(const std::string &text, const std::string &font, const ml::vec2 &pos, const ml::vec2 &size, const std::function<void(const CallbackData &)> &callback);
     ~Button();
 
     void UpdateText(const std::string &text) { this->text = text; }
@@ -39,7 +41,7 @@ class SpriteButton : public Button
 
   public:
     SpriteButton() = delete;
-    SpriteButton(const Sprite &sprite, const std::string &text, const std::string &font, const ml::vec2 &pos);
+    SpriteButton(const Sprite &sprite, const std::string &text, const std::string &font, const ml::vec2 &pos, const std::function<void(const CallbackData &)> &callback);
     ~SpriteButton();
 
     void UpdateSprite(const Sprite &sprite) { this->sprite = sprite; }

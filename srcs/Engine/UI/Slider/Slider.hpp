@@ -3,6 +3,8 @@
 #include <vector>
 #include "Engine/UI/AComponent/AComponent.hpp"
 #include "Engine/2D/Sprite/Sprite.hpp"
+#include "Engine/UI/Callbacks.hpp"
+#include <functional>
 
 namespace UI
 {
@@ -27,18 +29,20 @@ class Slider : public AComponent
     bool clicked;
     float textFadeTimer;
 
+    std::function<void(const CallbackData &)> callback;
+
   public:
-    Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, const Sprite &thumbSprite, T min, T max, T defaultValue, const ml::vec2 &pos, const ml::vec2 &size, const std::string &font);
+    Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, const Sprite &thumbSprite, T min, T max, T defaultValue, const ml::vec2 &pos, const ml::vec2 &size, const std::string &font, const std::function<void(const UI::CallbackData &)> &callback);
     ~Slider();
 
     void Update();
     void Draw();
 
-    struct UpdateValueEventData : public EventData
+    struct UpdateValueEventData : public CallbackData
     {
         T newValue;
 
-        UpdateValueEventData(T newValue) : EventData(UPDATE_VALUE), newValue(newValue) {}
+        UpdateValueEventData(T newValue) : CallbackData(UPDATE_VALUE), newValue(newValue) {}
     };
 };
 

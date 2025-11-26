@@ -7,8 +7,6 @@
 namespace UI
 {
 
-struct EventData;
-
 class ACanvas
 {
   private:
@@ -26,6 +24,5 @@ class ACanvas
     virtual ~ACanvas() {}
 
     void Update();
-    virtual void HandleEvents([[maybe_unused]] EventData &data);
 };
 }; // namespace UI

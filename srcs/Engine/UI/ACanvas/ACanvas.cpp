@@ -1,6 +1,6 @@
 #include "Engine/UI/ACanvas/ACanvas.hpp"
 #include "Engine/macros.hpp"
-#include "Engine/UI/Events.hpp"
+#include "Engine/UI/Callbacks.hpp"
 #include <glad/glad.h>
 
 namespace UI
@@ -14,7 +14,6 @@ ACanvas::ACanvas()
 ComponentID ACanvas::AddComponent(std::unique_ptr<AComponent> component)
 {
     component->ID = currentID++;
-    component->rootCanvas = this;
     components.push_back(std::move(component));
     return (components[components.size() - 1]->ID);
 }
@@ -67,10 +66,6 @@ void ACanvas::Update()
             component->Update();
     }
     glEnable(GL_DEPTH_TEST);
-}
-
-void ACanvas::HandleEvents([[maybe_unused]] EventData &data)
-{
 }
 
 } // namespace UI

@@ -10,7 +10,7 @@
 #define TEXT_FADE_TIME 1
 
 template <typename T>
-UI::Slider<T>::Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, const Sprite &thumbSprite, T min, T max, T defaultValue, const ml::vec2 &pos, const ml::vec2 &size, const std::string &font) : AComponent(pos), min(min), max(max), value(defaultValue), size(size), font(font)
+UI::Slider<T>::Slider(const Sprite &boundarySprite, const Sprite &pipeSprite, const Sprite &thumbSprite, T min, T max, T defaultValue, const ml::vec2 &pos, const ml::vec2 &size, const std::string &font, const std::function<void(const UI::CallbackData &)> &callback) : AComponent(pos), min(min), max(max), value(defaultValue), size(size), font(font), callback(callback)
 {
     this->boundarySprite = boundarySprite;
     this->pipeSprite = pipeSprite;
@@ -49,8 +49,8 @@ void UI::Slider<T>::Update()
         {
             value = (thumbPos.x - leftBoundaryPos.x) / (rightBoundaryPos.x - leftBoundaryPos.x) * (max - min) + min;
             CHECK((value >= min && value <= max), "value out of boundaries: value = " + std::to_string(value) + " | min = " + std::to_string(min) + " | max = " + std::to_string(max));
-            UpdateValueEventData data(value);
-            SendEvent(data);
+            if (callback)
+                callback(UpdateValueEventData(value));
             textFadeTimer = TEXT_FADE_TIME;
         }
     }
