@@ -24,6 +24,7 @@ class AComponent
 
   public:
     AComponent();
+    AComponent(const ml::vec2 &pos);
     virtual ~AComponent() {}
 
     virtual void Update() {}

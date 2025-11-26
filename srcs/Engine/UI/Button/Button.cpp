@@ -31,31 +31,27 @@ void UI::Button::Update()
     {
         if (!hover)
         {
-            EventData data;
-            data.event = CURSEUR_ON;
+            EventData data(CURSEUR_ON);
             SendEvent(data);
             hover = true;
         }
 
         if (WindowManager::IsInputPressed(GLFW_MOUSE_BUTTON_1))
         {
-            EventData data;
-            data.event = CLICK_ON;
+            EventData data(CLICK_ON);
             SendEvent(data);
             clicked = true;
         }
         else if (clicked && WindowManager::IsInputReleased(GLFW_MOUSE_BUTTON_1))
         {
-            EventData data;
-            data.event = CLICK_OFF;
+            EventData data(CLICK_OFF);
             SendEvent(data);
             clicked = false;
         }
     }
     else if (hover)
     {
-        EventData data;
-        data.event = CURSEUR_OFF;
+        EventData data(CURSEUR_OFF);
         SendEvent(data);
         hover = false;
     }

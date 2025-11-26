@@ -10,6 +10,11 @@ AComponent::AComponent()
     show = true;
 }
 
+AComponent::AComponent(const ml::vec2 &pos) : pos(pos)
+{
+    show = true;
+}
+
 void AComponent::SendEvent(EventData &data)
 {
     CHECK_AND_RETURN_VOID(rootCanvas, "rootCanvas is NULL");
