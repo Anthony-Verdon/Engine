@@ -15,11 +15,29 @@ void AudioManager::Destroy()
     ma_engine_uninit(&engine);
 }
 
-void AudioManager::Play(const std::string &sound)
+Audio AudioManager::InitSound(const std::string &path)
 {
-    ma_result result = ma_engine_play_sound(&engine, sound.c_str(), NULL);
+    Audio audio;
+
+    InitSound(audio, path);
+
+    return audio;
+}
+
+void AudioManager::InitSound(Audio &audio, const std::string &path)
+{
+    ma_result result = ma_sound_init_from_file(&engine, path.c_str(), 0, NULL, NULL, &audio.sound);
     if (result != MA_SUCCESS)
-        std::cerr << "failed to play " << sound << " : " << ma_result_description(result) << std::endl;
+        std::cerr << "failed to init sound " << path << " : " << ma_result_description(result) << std::endl;
+    else
+        audio.init = true;
+}
+
+void AudioManager::Play(const std::string &path)
+{
+    ma_result result = ma_engine_play_sound(&engine, path.c_str(), NULL);
+    if (result != MA_SUCCESS)
+        std::cerr << "failed to play " << path << " : " << ma_result_description(result) << std::endl;
 }
 
 void AudioManager::SetVolume(float volume)
