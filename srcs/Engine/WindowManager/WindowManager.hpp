@@ -11,12 +11,9 @@
 #include <filesystem>
 #endif
 
-#if FULL_SCREEN
-constexpr int WINDOW_WIDTH = 1920;
-constexpr int WINDOW_HEIGHT = 1080;
-#else
-constexpr int WINDOW_WIDTH = 1080;
-constexpr int WINDOW_HEIGHT = 720;
+#if FULL_SCREEN == 0
+constexpr int SMALL_WINDOW_WIDTH = 1280;
+constexpr int SMALL_WINDOW_HEIGHT = 720;
 #endif
 
 struct InputMode
@@ -42,7 +39,7 @@ class WindowManager
     ~WindowManager() = delete;
 
   public:
-    static void InitWindow(const std::string &name, unsigned int width, unsigned int height);
+    static void InitWindow(const std::string &name);
     static void StartUpdateLoop(AProgram *program);
     static void StopUpdateLoop();
     static void DestructWindowManager();
@@ -63,6 +60,7 @@ class WindowManager
     static ml::vec2 GetWindowSize();
     static unsigned int GetWindowWidth();
     static unsigned int GetWindowHeight();
+    static float GetWindowAspectRatio() { return windowSize.x / windowSize.y; }
 
     static ml::vec2 GetMousePosition();
     static void SetMousePosition(double xPos, double yPos);

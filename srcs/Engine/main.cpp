@@ -3,7 +3,7 @@
 
 int main()
 {
-    WindowManager::InitWindow("new game", WINDOW_WIDTH, WINDOW_HEIGHT);
+    WindowManager::InitWindow("new game");
     WindowManager::StartUpdateLoop(NULL);
     WindowManager::DestructWindowManager();
 

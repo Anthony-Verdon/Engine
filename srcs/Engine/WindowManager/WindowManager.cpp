@@ -27,7 +27,7 @@ void mouse_position_callback(GLFWwindow *window, double xPos, double yPos);
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 
-void WindowManager::InitWindow(const std::string &name, unsigned int width, unsigned int height)
+void WindowManager::InitWindow(const std::string &name)
 {
     if (glfwInit() == GL_FALSE)
         throw(std::runtime_error("INIT_GLFW::INITIALIZATION_FAILED"));
@@ -37,9 +37,13 @@ void WindowManager::InitWindow(const std::string &name, unsigned int width, unsi
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #if FULL_SCREEN
-    window = glfwCreateWindow(width, height, name.c_str(), glfwGetPrimaryMonitor(), NULL);
+    glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+    window = glfwCreateWindow(mode->width, mode->height, name.c_str(), monitor, NULL);
 #else
-    window = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
+    window = glfwCreateWindow(SMALL_WINDOW_WIDTH, SMALL_WINDOW_HEIGHT, name.c_str(), NULL, NULL);
 #endif
 
     if (!window)
@@ -52,6 +56,7 @@ void WindowManager::InitWindow(const std::string &name, unsigned int width, unsi
     int viewPortWidth, viewportHeight;
     glfwGetFramebufferSize(window, &viewPortWidth, &viewportHeight);
     glViewport(0, 0, viewPortWidth, viewportHeight);
+    windowSize = ml::vec2(viewPortWidth, viewportHeight);
 
     // region to move in specific function
     glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
@@ -69,8 +74,6 @@ void WindowManager::InitWindow(const std::string &name, unsigned int width, unsi
     glfwSetCursorPosCallback(window, mouse_position_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, key_callback);
-
-    windowSize = ml::vec2(width, height);
 }
 
 void WindowManager::DestructWindowManager()
