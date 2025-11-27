@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include "Engine/macros.hpp"
 #include "Engine/Scenes/SceneManager/SceneManager.hpp"
-#include <stb/stb_image.h>
+#include "Engine/Texture/Texture.hpp"
 #ifdef HOTRELOAD
 #include <dlfcn.h>
 #include <chrono>
@@ -149,9 +149,9 @@ void WindowManager::StopUpdateLoop()
 void WindowManager::SetWindowIcon(const std::string &path)
 {
     GLFWimage images[1];
-    images[0].pixels = stbi_load(path.c_str(), &images[0].width, &images[0].height, 0, 4); // rgba channels
+    images[0].pixels = Texture::LoadTextureFromFile(path);
     glfwSetWindowIcon(window, 1, images);
-    stbi_image_free(images[0].pixels);
+    Texture::UnloadTexture(images[0].pixels);
 }
 
 bool WindowManager::IsInputPressed(int input)
