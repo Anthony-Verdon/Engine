@@ -44,6 +44,8 @@ class WindowManager
     static void StopUpdateLoop();
     static void DestructWindowManager();
 
+    static void SetWindowIcon(const std::string &path);
+
     static bool IsInputPressed(int input);
     static bool IsInputPressedOrMaintain(int input, float time = 0);
     static bool IsInputReleased(int input, float time = 0);

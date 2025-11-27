@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include "Engine/macros.hpp"
 #include "Engine/Scenes/SceneManager/SceneManager.hpp"
+#include <stb/stb_image.h>
 #ifdef HOTRELOAD
 #include <dlfcn.h>
 #include <chrono>
@@ -26,11 +27,14 @@ std::filesystem::file_time_type WindowManager::DLLtimestamp;
 void mouse_position_callback(GLFWwindow *window, double xPos, double yPos);
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
+void error_callback(int error, const char *str);
 
 void WindowManager::InitWindow(const std::string &name)
 {
     if (glfwInit() == GL_FALSE)
         throw(std::runtime_error("INIT_GLFW::INITIALIZATION_FAILED"));
+
+    glfwSetErrorCallback(error_callback);
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -140,6 +144,14 @@ void WindowManager::StartUpdateLoop(AProgram *inProgram)
 void WindowManager::StopUpdateLoop()
 {
     glfwSetWindowShouldClose(window, true);
+}
+
+void WindowManager::SetWindowIcon(const std::string &path)
+{
+    GLFWimage images[1];
+    images[0].pixels = stbi_load(path.c_str(), &images[0].width, &images[0].height, 0, 4); // rgba channels
+    glfwSetWindowIcon(window, 1, images);
+    stbi_image_free(images[0].pixels);
 }
 
 bool WindowManager::IsInputPressed(int input)
@@ -361,4 +373,9 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         return;
 
     WindowManager::SetInputAction(key, action);
+}
+
+void error_callback(int error, const char *str)
+{
+    std::cerr << "glfw error " << error << ":" << str << std::endl;
 }
