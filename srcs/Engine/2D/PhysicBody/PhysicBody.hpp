@@ -8,67 +8,68 @@
 
 class PhysicBody
 {
-    private:
-        std::shared_ptr<b2BodyId> id;
-        std::map<std::string, b2ShapeId> shapes;
+  private:
+    std::shared_ptr<b2BodyId> id;
+    std::map<std::string, b2ShapeId> shapes;
 
-    public:
-        PhysicBody();
-        PhysicBody(const b2WorldId& worldId, const b2BodyDef& bodyDef);
-        ~PhysicBody();
+  public:
+    PhysicBody();
+    PhysicBody(const b2WorldId &worldId, const b2BodyDef &bodyDef);
+    ~PhysicBody();
 
-        void AddShape(const std::string &name, const b2ShapeDef& shapeDef, const b2Polygon& polygon);
+    void AddShape(const std::string &name, const b2ShapeDef &shapeDef, const b2Polygon &polygon);
 
-        b2BodyId GetBodyId() const;
-        b2ShapeId GetShape(const std::string &name) const;
-        ml::vec2 GetPosition() const;
-        float GetAngle() const;
+    b2BodyId GetBodyId() const;
+    b2ShapeId GetShape(const std::string &name) const;
+    ml::vec2 GetPosition() const;
+    float GetAngle() const;
 
+    static float WorldToPixel(float value);
+    static float PixelToWorld(float value);
 
-        static float WorldToPixel(float value);
-        static float PixelToWorld(float value);
+    void SetLinearVelocity(const ml::vec2 &velocity);
 
-        class BodyBuilder
-        {
-            private:
-                b2BodyDef bodyDef;
-            
-            public:
-                BodyBuilder();
-                ~BodyBuilder();
+    class BodyBuilder
+    {
+      private:
+        b2BodyDef bodyDef;
 
-                BodyBuilder& SetPosition(const ml::vec2 &position);
-                BodyBuilder& SetEnable(bool enable);
-                BodyBuilder& SetType(b2BodyType type);
-                BodyBuilder& SetFixedRotation(bool fixedRotation);
+      public:
+        BodyBuilder();
+        ~BodyBuilder();
 
-                PhysicBody Build(const b2WorldId &worldId);
-        };
+        BodyBuilder &SetPosition(const ml::vec2 &position);
+        BodyBuilder &SetEnable(bool enable);
+        BodyBuilder &SetType(b2BodyType type);
+        BodyBuilder &SetFixedRotation(bool fixedRotation);
 
-        class ShapeBuilder
-        {
-            private:
-                b2ShapeDef shapeDef;
-            
-            public:
-                ShapeBuilder();
-                ~ShapeBuilder();
+        PhysicBody Build(const b2WorldId &worldId);
+    };
 
-                ShapeBuilder& SetDensity(float density);
-                ShapeBuilder& SetFriction(float friction);
-                ShapeBuilder& SetFilter(const b2Filter &filter);
-                ShapeBuilder& IsSensor(bool isSensor);
-                ShapeBuilder& SetUserData(void *ptr);
+    class ShapeBuilder
+    {
+      private:
+        b2ShapeDef shapeDef;
 
-                b2ShapeDef Build();
-        };
+      public:
+        ShapeBuilder();
+        ~ShapeBuilder();
 
-        class PolygonBuilder
-        {
-            public:
-                PolygonBuilder() = delete;
-                ~PolygonBuilder() = delete;
+        ShapeBuilder &SetDensity(float density);
+        ShapeBuilder &SetFriction(float friction);
+        ShapeBuilder &SetFilter(const b2Filter &filter);
+        ShapeBuilder &IsSensor(bool isSensor);
+        ShapeBuilder &SetUserData(void *ptr);
 
-                static b2Polygon Build(const ml::vec2 &size, const ml::vec2 &position = ml::vec2(0, 0), float rotation = 0);
-        };
+        b2ShapeDef Build();
+    };
+
+    class PolygonBuilder
+    {
+      public:
+        PolygonBuilder() = delete;
+        ~PolygonBuilder() = delete;
+
+        static b2Polygon Build(const ml::vec2 &size, const ml::vec2 &position = ml::vec2(0, 0), float rotation = 0);
+    };
 };

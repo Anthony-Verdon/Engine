@@ -2,7 +2,6 @@
 #include <iostream>
 #include "Engine/defines.hpp"
 
-
 //***************************************
 // PHYSICBODY
 //***************************************
@@ -12,19 +11,20 @@ PhysicBody::PhysicBody()
     id = std::make_shared<b2BodyId>(b2_nullBodyId);
 }
 
-PhysicBody::PhysicBody(const b2WorldId& worldId, const b2BodyDef& bodyDef)
+PhysicBody::PhysicBody(const b2WorldId &worldId, const b2BodyDef &bodyDef)
 {
     id = std::make_shared<b2BodyId>(b2CreateBody(worldId, &bodyDef));
 }
 
-
 PhysicBody::~PhysicBody()
 {
     if (id.use_count() == 1 && b2Body_IsValid(*id))
+    {
         b2DestroyBody(*id);
+    }
 }
 
-void PhysicBody::AddShape(const std::string &name, const b2ShapeDef& shapeDef, const b2Polygon& polygon)
+void PhysicBody::AddShape(const std::string &name, const b2ShapeDef &shapeDef, const b2Polygon &polygon)
 {
     shapes[name] = b2CreatePolygonShape(*id, &shapeDef, &polygon);
 }
@@ -64,6 +64,11 @@ float PhysicBody::GetAngle() const
     return (ml::degrees(b2Rot_GetAngle(b2Body_GetRotation(*id))));
 }
 
+void PhysicBody::SetLinearVelocity(const ml::vec2 &velocity)
+{
+    b2Body_SetLinearVelocity(*id, {velocity.x, velocity.y});
+}
+
 //***************************************
 // BODYBUILDER
 //***************************************
@@ -75,28 +80,28 @@ PhysicBody::BodyBuilder::BodyBuilder()
 
 PhysicBody::BodyBuilder::~BodyBuilder()
 {
-
 }
 
-PhysicBody::BodyBuilder& PhysicBody::BodyBuilder::SetPosition(const ml::vec2 &position)
+PhysicBody::BodyBuilder &PhysicBody::BodyBuilder::SetPosition(const ml::vec2 &position)
 {
     bodyDef.position = (b2Vec2){PixelToWorld(position.x), PixelToWorld(position.y)};
     return (*this);
 }
 
-PhysicBody::BodyBuilder& PhysicBody::BodyBuilder::SetEnable(bool enable)
+PhysicBody::BodyBuilder &PhysicBody::BodyBuilder::SetEnable(bool enable)
 {
     bodyDef.isEnabled = enable;
+
     return (*this);
 }
 
-PhysicBody::BodyBuilder& PhysicBody::BodyBuilder::SetType(b2BodyType type)
+PhysicBody::BodyBuilder &PhysicBody::BodyBuilder::SetType(b2BodyType type)
 {
     bodyDef.type = type;
     return (*this);
 }
 
-PhysicBody::BodyBuilder& PhysicBody::BodyBuilder::SetFixedRotation(bool fixedRotation)
+PhysicBody::BodyBuilder &PhysicBody::BodyBuilder::SetFixedRotation(bool fixedRotation)
 {
     bodyDef.fixedRotation = fixedRotation;
     return (*this);
@@ -119,31 +124,33 @@ PhysicBody::ShapeBuilder::~ShapeBuilder()
 {
 }
 
-PhysicBody::ShapeBuilder& PhysicBody::ShapeBuilder::SetDensity(float density)
+PhysicBody::ShapeBuilder &PhysicBody::ShapeBuilder::SetDensity(float density)
 {
     shapeDef.density = density;
     return (*this);
 }
 
-PhysicBody::ShapeBuilder& PhysicBody::ShapeBuilder::SetFriction(float friction)
+PhysicBody::ShapeBuilder &PhysicBody::ShapeBuilder::SetFriction(float friction)
 {
-    shapeDef.friction = friction;
+    // @PROBLEM
+    (void)friction;
+    // shapeDef.friction = friction;
     return (*this);
 }
 
-PhysicBody::ShapeBuilder& PhysicBody::ShapeBuilder::SetFilter(const b2Filter &filter)
+PhysicBody::ShapeBuilder &PhysicBody::ShapeBuilder::SetFilter(const b2Filter &filter)
 {
     shapeDef.filter = filter;
     return (*this);
 }
 
-PhysicBody::ShapeBuilder& PhysicBody::ShapeBuilder::IsSensor(bool isSensor)
+PhysicBody::ShapeBuilder &PhysicBody::ShapeBuilder::IsSensor(bool isSensor)
 {
     shapeDef.isSensor = isSensor;
     return (*this);
 }
 
-PhysicBody::ShapeBuilder& PhysicBody::ShapeBuilder::SetUserData(void *ptr)
+PhysicBody::ShapeBuilder &PhysicBody::ShapeBuilder::SetUserData(void *ptr)
 {
     shapeDef.userData = ptr;
     return (*this);
@@ -177,6 +184,7 @@ b2Polygon PhysicBody::PolygonBuilder::Build(const ml::vec2 &size, const ml::vec2
         transform.p = (b2Vec2){PixelToWorld(position.x), PixelToWorld(position.y)};
         transform.q = b2MakeRot(ml::radians(rotation));
 
-        return (b2MakeOffsetPolygon(&hull, 0, transform));
+        // @PROBLEM
+        return (b2MakeOffsetPolygon(&hull, transform.p, transform.q));
     }
 }

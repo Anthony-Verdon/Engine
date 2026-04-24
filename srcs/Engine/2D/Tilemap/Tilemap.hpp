@@ -6,9 +6,12 @@
 #include <box2d/box2d.h>
 #include <vector>
 
-struct Vec2Comparator {
-    bool operator()(const ml::vec2& lhs, const ml::vec2& rhs) const {
-        if (lhs.x != rhs.x) {
+struct Vec2Comparator
+{
+    bool operator()(const ml::vec2 &lhs, const ml::vec2 &rhs) const
+    {
+        if (lhs.x != rhs.x)
+        {
             return lhs.x < rhs.x;
         }
         return lhs.y < rhs.y;
@@ -17,32 +20,33 @@ struct Vec2Comparator {
 
 class Tilemap
 {
-    private:
-        std::map<ml::vec2, size_t, Vec2Comparator> tiles;
-        std::vector<b2ChainId> chainsId;
-        bool buildCollision;
+  private:
+    std::map<ml::vec2, size_t, Vec2Comparator> tiles;
+    std::vector<b2ChainId> chainsId;
+    bool buildCollision;
 
-        std::vector<ml::vec2> DetermineChainPath(std::multimap<ml::vec2, ml::vec2, Vec2Comparator> &lines) const;
-        void BuildChain(b2WorldId worldId, const std::vector<ml::vec2> &points);
+    std::vector<ml::vec2> DetermineChainPath(std::multimap<ml::vec2, ml::vec2, Vec2Comparator> &lines) const;
+    void BuildChain(b2WorldId worldId, const std::vector<ml::vec2> &points);
 
-        void DeleteCollision();
-    public:
-        Tilemap();
-        ~Tilemap();
+    void DeleteCollision();
 
-        void AddTile(const ml::vec2 &position, size_t tileIndex);
-        void SuppressTile(const ml::vec2 &position);
+  public:
+    Tilemap();
+    ~Tilemap();
 
-        bool TileExist(const ml::vec2 &position) const;
-        Tile GetTile(const ml::vec2 &position) const;
+    void AddTile(const ml::vec2 &position, size_t tileIndex);
+    void SuppressTile(const ml::vec2 &position);
 
-        bool GetBuildCollision() const { return (buildCollision); }
-        void SetBuildCollision(bool buildCollision) {this->buildCollision = buildCollision; }
-        
-        void Draw();
+    bool TileExist(const ml::vec2 &position) const;
+    Tile GetTile(const ml::vec2 &position) const;
 
-        void CreateCollision(b2WorldId worldId);
-        void UpdateCollision(b2WorldId worldId);
+    bool GetBuildCollision() const { return (buildCollision); }
+    void SetBuildCollision(bool buildCollision) { this->buildCollision = buildCollision; }
 
-        const std::map<ml::vec2, size_t, Vec2Comparator>& GetTiles() const { return (tiles); }
+    void Draw();
+
+    void CreateCollision(b2WorldId worldId);
+    void UpdateCollision(b2WorldId worldId);
+
+    const std::map<ml::vec2, size_t, Vec2Comparator> &GetTiles() const { return (tiles); }
 };
