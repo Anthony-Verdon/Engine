@@ -83,9 +83,12 @@ void TilemapManager::Load()
 
     Json::Node file = Json::ParseFile("saves/map.json");
 
-    for (auto it : file["textures"]) //@todo error check
+    if (file.KeyExist("textures") && file["textures"] != nullptr)
     {
-        RessourceManager::AddTexture(it["name"], it["path"]);
+        for (auto it : file["textures"])
+        {
+            RessourceManager::AddTexture(it["name"], it["path"]);
+        }
     }
 
     if (file.KeyExist("tiles") && file["tiles"] != nullptr)
@@ -107,20 +110,23 @@ void TilemapManager::Load()
         }
     }
 
-    Json::Node tilemapsNode = file["tilemaps"]; //@todo error check
-    for (auto itTilemap = tilemapsNode.begin(); itTilemap != tilemapsNode.end(); ++itTilemap)
+    if (file.KeyExist("tilemaps") && file["tilemaps"] != nullptr)
     {
-        std::string tilemapName = itTilemap.key();
-
-        tilemaps[tilemapName] = Tilemap();
-        tilemapOrder.push_back(tilemapName);
-
-        Json::Node value = itTilemap.value();
-        tilemaps[tilemapName].SetBuildCollision(value["build collision"]);
-
-        for (auto it : value["tiles"])
+        Json::Node tilemapsNode = file["tilemaps"];
+        for (auto itTilemap = tilemapsNode.begin(); itTilemap != tilemapsNode.end(); ++itTilemap)
         {
-            tilemaps[tilemapName].AddTile(ml::vec2(it["position"][0], it["position"][1]), it["index"]);
+            std::string tilemapName = itTilemap.key();
+
+            tilemaps[tilemapName] = Tilemap();
+            tilemapOrder.push_back(tilemapName);
+
+            Json::Node value = itTilemap.value();
+            tilemaps[tilemapName].SetBuildCollision(value["build collision"]);
+
+            for (auto it : value["tiles"])
+            {
+                tilemaps[tilemapName].AddTile(ml::vec2(it["position"][0], it["position"][1]), it["index"]);
+            }
         }
     }
 }
