@@ -77,6 +77,10 @@ target("Exe")
         set_basename(targetName)
     end
 
+namespace("Json")
+includes("submodules/Json")
+namespace_end()
+
 target("Engine")
     set_targetdir("./")
     set_kind("shared")
