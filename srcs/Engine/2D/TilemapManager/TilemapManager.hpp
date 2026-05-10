@@ -8,35 +8,33 @@
 
 class TilemapManager
 {
-    private:
-        static std::map<std::string, Tilemap> tilemaps;
-        static std::vector<std::string> tilemapOrder;
+  private:
+    static std::map<std::string, Tilemap> tilemaps;
+    static std::vector<std::string> tilemapOrder;
 
-        TilemapManager() = delete;
-        ~TilemapManager() = delete;
-    public:
+    TilemapManager() = delete;
+    ~TilemapManager() = delete;
 
-        static void AddTile(const std::string &tilemapName, const ml::vec2 &position, const Tile &tile);
-        static void AddTile(const std::string &tilemapName, const ml::vec2 &position, const Sprite &sprite, const ml::vec2 &spriteOffset);
-        static void SuppressTile(const std::string &tilemapName, const ml::vec2 &position);
-        
-        static bool TileExist(const std::string &tilemapName, const ml::vec2 &position);
-        static Tile GetTile(const std::string &tilemapName, const ml::vec2 &position);
+  public:
+    static void AddTile(const std::string &tilemapName, const ml::vec2 &position, const Tile &tile);
+    static void AddTile(const std::string &tilemapName, const ml::vec2 &position, size_t tileIndex);
+    static void AddTile(const std::string &tilemapName, const ml::vec2 &position, const Sprite &sprite, const ml::vec2 &spriteOffset);
+    static void SuppressTile(const std::string &tilemapName, const ml::vec2 &position);
 
-        static bool GetBuildCollision(const std::string &tilemapName);
-        static void SetBuildCollision(const std::string &tilemapName, bool buildCollision);
+    static bool TileExist(const std::string &tilemapName, const ml::vec2 &position);
+    static Tile GetTile(const std::string &tilemapName, const ml::vec2 &position);
+    static std::map<ml::vec2, size_t, Vec2Comparator> GetTiles(const std::string &tilemapName);
 
-        static void AddTilemap(const std::string &name, const Tilemap &tilemap = Tilemap());
+    static bool GetBuildCollision(const std::string &tilemapName);
+    static void SetBuildCollision(const std::string &tilemapName, bool buildCollision);
 
-        static std::vector<std::string> GetTilemapOrder() { return tilemapOrder; }
-        static void SetTilemapOrder(const std::vector<std::string> &tilemapOrder) { TilemapManager::tilemapOrder = tilemapOrder; }
-        
-        static void Save();
-        static void Load();
+    static void AddTilemap(const std::string &name, const Tilemap &tilemap = Tilemap());
 
-        static void Draw();
+    static std::vector<std::string> GetTilemapOrder() { return tilemapOrder; }
+    static void SetTilemapOrder(const std::vector<std::string> &tilemapOrder) { TilemapManager::tilemapOrder = tilemapOrder; }
 
-        static void AddCollisions(b2WorldId worldId);
-        static void UpdateCollision(const std::string &tilemapName, b2WorldId worldId);
+    static void Draw();
 
+    static void AddCollisions(b2WorldId worldId);
+    static void UpdateCollision(const std::string &tilemapName, b2WorldId worldId);
 };
