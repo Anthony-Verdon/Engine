@@ -10,11 +10,12 @@ struct Tile
 {
     Sprite sprite;
     ml::vec2 spriteOffset;
+    ml::vec2 boundingBox;
     std::vector<TileBehaviorType> behaviors;
 
-    bool operator==(const Tile& other) const
+    bool operator==(const Tile &other) const
     {
-        return (sprite == other.sprite && spriteOffset == other.spriteOffset);
+        return (sprite == other.sprite && spriteOffset == other.spriteOffset && boundingBox == other.boundingBox);
     }
 
     static Tile none;

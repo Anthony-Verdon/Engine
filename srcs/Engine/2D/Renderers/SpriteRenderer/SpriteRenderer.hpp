@@ -1,13 +1,15 @@
 #pragma once
 
 #include "Matrix/Matrix.hpp"
-
 #include <string>
+#include <vector>
 #include "Engine/2D/Sprite/Sprite.hpp"
 
 struct SpriteRenderData
 {
-    ml::vec2 position;
+    ml::vec3 position;
+    ml::vec2 spriteOffset;
+    ml::vec2 boundingBox;
     ml::vec2 size;
     float rotation;
     ml::vec4 color;
@@ -18,7 +20,9 @@ struct SpriteRenderData
 
     SpriteRenderData()
     {
-        position = ml::vec2(0, 0);
+        position = ml::vec3(0, 0, 0);
+        spriteOffset = ml::vec2(0, 0);
+        boundingBox = ml::vec2(0, 0);
         size = ml::vec2(0, 0);
         rotation = 0;
         color = ml::vec4(1, 1, 1, 1);
@@ -38,9 +42,19 @@ class SpriteRenderDataBuilder
     SpriteRenderDataBuilder() {}
     ~SpriteRenderDataBuilder() {}
 
-    SpriteRenderDataBuilder &SetPosition(const ml::vec2 &position)
+    SpriteRenderDataBuilder &SetPosition(const ml::vec3 &position)
     {
         data.position = position;
+        return *this;
+    }
+    SpriteRenderDataBuilder &SetSpriteOffset(const ml::vec2 &spriteOffset)
+    {
+        data.spriteOffset = spriteOffset;
+        return *this;
+    }
+    SpriteRenderDataBuilder &SetBoundingBox(const ml::vec2 &boundingBox)
+    {
+        data.boundingBox = boundingBox;
         return *this;
     }
     SpriteRenderDataBuilder &SetSize(const ml::vec2 &size)
@@ -98,15 +112,18 @@ class SpriteRenderer
     static ml::mat4 projectionMatAbsolute;
     static ml::mat4 projectionMatRelative;
 
+    static std::vector<SpriteRenderData> spritesToDraw;
+
     SpriteRenderer() = delete;
     ~SpriteRenderer() = delete;
 
   public:
     static void Init();
     static void Destroy();
+    static void Draw(const ml::vec3 &position, const ml::vec2 &spriteOffset, const ml::vec2 &boundingBox, const ml::vec2 &size, float rotation, const ml::vec3 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute = false);
+    static void Draw(const ml::vec3 &position, const ml::vec2 &spriteOffset, const ml::vec2 &boundingBox, const ml::vec2 &size, float rotation, const ml::vec4 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute = false);
     static void Draw(const SpriteRenderData &data);
-    static void Draw(const ml::vec2 &position, const ml::vec2 &size, float rotation, const ml::vec3 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute = false);
-    static void Draw(const ml::vec2 &position, const ml::vec2 &size, float rotation, const ml::vec4 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute = false);
+    static void Draw();
 
     static void SetProjectionMatRelative(const ml::mat4 &projectionMatRelative) { SpriteRenderer::projectionMatRelative = projectionMatRelative; }
 };

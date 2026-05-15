@@ -14,5 +14,6 @@ UI::UISprite::~UISprite()
 
 void UI::UISprite::Draw()
 {
-    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetColor(color).SetSprite(sprite).SetPosition(pos).SetSize(sprite.size).SetDrawAbsolute(true).Build());
+    //@todo check pos z value
+    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetColor(color).SetSprite(sprite).SetPosition(ml::vec3(pos, 0)).SetSize(sprite.size).SetDrawAbsolute(true).Build());
 }

@@ -84,6 +84,7 @@ void UI::SpriteButton::Draw()
     ml::vec4 color = ml::vec4(1, 1, 1, 1);
     if (disable)
         color = ml::vec4(0.5, 0.5, 0.5, 1);
-    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(pos).SetSprite(sprite).SetSize(size).SetDrawAbsolute(true).SetColor(color).Build());
+    //@todo check pos z value
+    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(ml::vec3(pos, 0)).SetSprite(sprite).SetSize(size).SetDrawAbsolute(true).SetColor(color).Build());
     TextRenderer::Draw(text, font, pos.x, pos.y, 1, color, TextRenderer::TextAlign::CENTER);
 }

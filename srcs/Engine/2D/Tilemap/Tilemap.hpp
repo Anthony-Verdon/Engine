@@ -43,7 +43,7 @@ class Tilemap
     bool GetBuildCollision() const { return (buildCollision); }
     void SetBuildCollision(bool buildCollision) { this->buildCollision = buildCollision; }
 
-    void Draw();
+    void Draw(int index);
 
     void CreateCollision(b2WorldId worldId);
     void UpdateCollision(b2WorldId worldId);

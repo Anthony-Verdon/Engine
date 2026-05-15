@@ -26,11 +26,12 @@ void TilemapManager::AddTile(const std::string &tilemapName, const ml::vec2 &pos
         it->second.AddTile(position, index);
 }
 
-void TilemapManager::AddTile(const std::string &tilemapName, const ml::vec2 &position, const Sprite &sprite, const ml::vec2 &spriteOffset)
+void TilemapManager::AddTile(const std::string &tilemapName, const ml::vec2 &position, const Sprite &sprite, const ml::vec2 &spriteOffset, const ml::vec2 &boundingBox)
 {
     Tile newTile;
     newTile.sprite = sprite;
     newTile.spriteOffset = spriteOffset;
+    newTile.boundingBox = boundingBox;
     AddTile(tilemapName, position, newTile);
 }
 
@@ -95,7 +96,7 @@ void TilemapManager::AddTilemap(const std::string &name, const Tilemap &tilemap)
 void TilemapManager::Draw()
 {
     for (size_t i = 0; i < tilemapOrder.size(); i++)
-        tilemaps[tilemapOrder[i]].Draw();
+        tilemaps[tilemapOrder[i]].Draw(i);
 }
 
 void TilemapManager::AddCollisions(b2WorldId worldId)

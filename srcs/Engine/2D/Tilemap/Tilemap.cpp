@@ -9,20 +9,20 @@
 #include <vector>
 #include <algorithm>
 
-const std::array<ml::vec2, 4> directions {
+const std::array<ml::vec2, 4> directions{
     ml::vec2(0, -SPRITE_SIZE), // top
     ml::vec2(SPRITE_SIZE, 0),  // right
     ml::vec2(0, SPRITE_SIZE),  // bottom
     ml::vec2(-SPRITE_SIZE, 0)  // left
 };
 
-const std::array<std::pair<ml::vec2, ml::vec2>, 4> points {
-    std::make_pair(ml::vec2(-SPRITE_SIZE, -SPRITE_SIZE) / 2.0f, ml::vec2(SPRITE_SIZE, -SPRITE_SIZE) / 2.0f),  // top
-    std::make_pair(ml::vec2(SPRITE_SIZE, -SPRITE_SIZE) / 2.0f, ml::vec2(SPRITE_SIZE, SPRITE_SIZE) / 2.0f),    // right
-    std::make_pair(ml::vec2(-SPRITE_SIZE, SPRITE_SIZE) / 2.0f, ml::vec2(SPRITE_SIZE, SPRITE_SIZE) / 2.0f),    // bottom
-    std::make_pair(ml::vec2(-SPRITE_SIZE, -SPRITE_SIZE) / 2.0f, ml::vec2(-SPRITE_SIZE, SPRITE_SIZE) / 2.0f)   // left
+const std::array<std::pair<ml::vec2, ml::vec2>, 4> points{
+    std::make_pair(ml::vec2(-SPRITE_SIZE, -SPRITE_SIZE) / 2.0f, ml::vec2(SPRITE_SIZE, -SPRITE_SIZE) / 2.0f), // top
+    std::make_pair(ml::vec2(SPRITE_SIZE, -SPRITE_SIZE) / 2.0f, ml::vec2(SPRITE_SIZE, SPRITE_SIZE) / 2.0f),   // right
+    std::make_pair(ml::vec2(-SPRITE_SIZE, SPRITE_SIZE) / 2.0f, ml::vec2(SPRITE_SIZE, SPRITE_SIZE) / 2.0f),   // bottom
+    std::make_pair(ml::vec2(-SPRITE_SIZE, -SPRITE_SIZE) / 2.0f, ml::vec2(-SPRITE_SIZE, SPRITE_SIZE) / 2.0f)  // left
 };
-        
+
 Tilemap::Tilemap()
 {
     buildCollision = false;
@@ -30,7 +30,6 @@ Tilemap::Tilemap()
 
 Tilemap::~Tilemap()
 {
-
 }
 
 void Tilemap::AddTile(const ml::vec2 &position, size_t tileIndex)
@@ -61,12 +60,13 @@ Tile Tilemap::GetTile(const ml::vec2 &position) const
     return (TileDictionnary::GetTile(it->second));
 }
 
-void Tilemap::Draw()
+void Tilemap::Draw(int index)
 {
     for (auto it = tiles.begin(); it != tiles.end(); it++)
     {
         Tile tile = TileDictionnary::GetTile(it->second);
-        SpriteRenderer::Draw(it->first - tile.spriteOffset, tile.sprite.size, 0, ml::vec3(1, 1, 1), tile.sprite, false, false, 1);
+        //@todo z should be tilemap index
+        SpriteRenderer::Draw(ml::vec3(it->first, index), tile.spriteOffset, tile.boundingBox, tile.sprite.size, 0, ml::vec3(1, 1, 1), tile.sprite, false, false, true);
     }
 }
 
@@ -74,7 +74,7 @@ void Tilemap::CreateCollision(b2WorldId worldId)
 {
     if (!buildCollision)
         return;
-    
+
     // store each line in a multimap, in both sense (A -> B, A <- B)
     std::multimap<ml::vec2, ml::vec2, Vec2Comparator> lines;
     for (auto it = tiles.begin(); it != tiles.end(); it++)
@@ -109,7 +109,7 @@ std::vector<ml::vec2> Tilemap::DetermineChainPath(std::multimap<ml::vec2, ml::ve
         chainPoints.push_back(point);
 
         bool pointChanged = false;
-        for (auto[it, rangeEnd] = lines.equal_range(point); it != rangeEnd; ++it)
+        for (auto [it, rangeEnd] = lines.equal_range(point); it != rangeEnd; ++it)
         {
             if (std::find(chainPoints.begin(), chainPoints.end(), it->second) == chainPoints.end())
             {
@@ -129,14 +129,14 @@ std::vector<ml::vec2> Tilemap::DetermineChainPath(std::multimap<ml::vec2, ml::ve
     {
         ml::vec2 p1 = chainPoints[i];
         ml::vec2 p2 = chainPoints[(i + 1) % nbPoints];
-        for (auto[it, rangeEnd] = lines.equal_range(p1); it != rangeEnd;)
+        for (auto [it, rangeEnd] = lines.equal_range(p1); it != rangeEnd;)
         {
             if (it->second == p2)
                 it = lines.erase(it);
             else
                 it++;
         }
-        for (auto[it, rangeEnd] = lines.equal_range(p2); it != rangeEnd;)
+        for (auto [it, rangeEnd] = lines.equal_range(p2); it != rangeEnd;)
         {
             if (it->second == p1)
                 it = lines.erase(it);
@@ -162,7 +162,7 @@ void Tilemap::BuildChain(b2WorldId worldId, const std::vector<ml::vec2> &chain)
     chainDef.points = b2Chain.data();
     chainDef.count = b2Chain.size();
     chainDef.isLoop = true;
-    
+
     chainsId.push_back(b2CreateChain(myBodyId, &chainDef));
 }
 

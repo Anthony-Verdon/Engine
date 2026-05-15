@@ -2,14 +2,16 @@
 #include "Engine/RessourceManager/RessourceManager.hpp"
 #include "Engine/WindowManager/WindowManager.hpp"
 #include <glad/glad.h>
-
+#include <numeric>
+#include <algorithm>
 #include "Engine/macros.hpp"
-
+#include "Engine/2D/Renderers/LineRenderer2D/LineRenderer2D.hpp"
 unsigned int SpriteRenderer::VAO = -1;
 unsigned int SpriteRenderer::VBO = -1;
 bool SpriteRenderer::isInit = false;
 ml::mat4 SpriteRenderer::projectionMatAbsolute;
 ml::mat4 SpriteRenderer::projectionMatRelative;
+std::vector<SpriteRenderData> SpriteRenderer::spritesToDraw = {};
 
 void SpriteRenderer::Init()
 {
@@ -70,72 +72,102 @@ void SpriteRenderer::Destroy()
     glDeleteBuffers(1, &VBO);
 }
 
+void SpriteRenderer::Draw(const ml::vec3 &position, const ml::vec2 &spriteOffset, const ml::vec2 &boundingBox, const ml::vec2 &size, float rotation, const ml::vec3 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute)
+{
+    SpriteRenderer::Draw(position, spriteOffset, boundingBox, size, rotation, ml::vec4(color, 1), sprite, flipHorizontally, flipVertically, drawAbsolute);
+}
+
+void SpriteRenderer::Draw(const ml::vec3 &position, const ml::vec2 &spriteOffset, const ml::vec2 &boundingBox, const ml::vec2 &size, float rotation, const ml::vec4 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute)
+{
+    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(position).SetSpriteOffset(spriteOffset).SetBoundingBox(boundingBox).SetSize(size).SetRotation(rotation).SetColor(color).SetSprite(sprite).FlipHorizontally(flipHorizontally).FlipVertically(flipVertically).SetDrawAbsolute(drawAbsolute).Build());
+}
+
 void SpriteRenderer::Draw(const SpriteRenderData &data)
 {
-    SpriteRenderer::Draw(data.position, data.size, data.rotation, data.color, data.sprite, data.flipHorizontally, data.flipVertically, data.drawAbsolute);
+    spritesToDraw.push_back(data);
 }
 
-void SpriteRenderer::Draw(const ml::vec2 &position, const ml::vec2 &size, float rotation, const ml::vec3 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute)
-{
-    SpriteRenderer::Draw(position, size, rotation, ml::vec4(color, 1), sprite, flipHorizontally, flipVertically, drawAbsolute);
-}
-
-void SpriteRenderer::Draw(const ml::vec2 &position, const ml::vec2 &size, float rotation, const ml::vec4 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute)
+void SpriteRenderer::Draw()
 {
     CHECK_AND_RETURN_VOID(isInit, "SpriteRenderer not initialized");
 
-    ml::vec2 TopLeftCoords;
-    ml::vec2 BotomRightCoords;
-    TopLeftCoords.x = 1.0f / sprite.textureSize.x * sprite.spriteCoords.x;
-    TopLeftCoords.y = 1.0f / sprite.textureSize.y * sprite.spriteCoords.y;
-    BotomRightCoords.x = 1.0f / sprite.textureSize.x * (sprite.spriteCoords.x + 1);
-    BotomRightCoords.y = 1.0f / sprite.textureSize.y * (sprite.spriteCoords.y + 1);
+    std::vector<int> index(spritesToDraw.size());
+    std::iota(index.begin(), index.end(), 0);
 
-    if (flipHorizontally)
-        std::swap(TopLeftCoords.x, BotomRightCoords.x);
-    if (flipVertically)
-        std::swap(TopLeftCoords.y, BotomRightCoords.y);
+    std::sort(index.begin(), index.end(),
+              [](int a, int b) {
+                  ml::vec3 positionSpriteA = spritesToDraw[a].position - ml::vec3(spritesToDraw[a].boundingBox / 2, 0);
+                  ml::vec3 positionSpriteB = spritesToDraw[b].position - ml::vec3(spritesToDraw[b].boundingBox / 2, 0);
+                  if (positionSpriteA.z != positionSpriteB.z)
+                      return positionSpriteA.z < positionSpriteB.z;
+                  else if (positionSpriteA.y != positionSpriteB.y)
+                      return positionSpriteA.y < positionSpriteB.y;
+                  else
+                      return positionSpriteA.x < positionSpriteB.x;
+              });
 
-    float positions[] = {
-        -0.5f, 0.5f,
-        0.5f, -0.5f,
-        -0.5f, -0.5f,
+    for (size_t i = 0; i < index.size(); i++)
+    {
+        ml::vec2 TopLeftCoords;
+        ml::vec2 BotomRightCoords;
+        TopLeftCoords.x = 1.0f / spritesToDraw[index[i]].sprite.textureSize.x * spritesToDraw[index[i]].sprite.spriteCoords.x;
+        TopLeftCoords.y = 1.0f / spritesToDraw[index[i]].sprite.textureSize.y * spritesToDraw[index[i]].sprite.spriteCoords.y;
+        BotomRightCoords.x = 1.0f / spritesToDraw[index[i]].sprite.textureSize.x * (spritesToDraw[index[i]].sprite.spriteCoords.x + 1);
+        BotomRightCoords.y = 1.0f / spritesToDraw[index[i]].sprite.textureSize.y * (spritesToDraw[index[i]].sprite.spriteCoords.y + 1);
 
-        -0.5f, 0.5f,
-        0.5f, 0.5f,
-        0.5f, -0.5f};
+        if (spritesToDraw[index[i]].flipHorizontally)
+            std::swap(TopLeftCoords.x, BotomRightCoords.x);
+        if (spritesToDraw[index[i]].flipVertically)
+            std::swap(TopLeftCoords.y, BotomRightCoords.y);
 
-    float textures[] = {
-        TopLeftCoords.x, BotomRightCoords.y,
-        BotomRightCoords.x, TopLeftCoords.y,
-        TopLeftCoords.x, TopLeftCoords.y,
+        float positions[] = {
+            -0.5f, 0.5f,
+            0.5f, -0.5f,
+            -0.5f, -0.5f,
 
-        TopLeftCoords.x, BotomRightCoords.y,
-        BotomRightCoords.x, BotomRightCoords.y,
-        BotomRightCoords.x, TopLeftCoords.y};
+            -0.5f, 0.5f,
+            0.5f, 0.5f,
+            0.5f, -0.5f};
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferSubData(GL_ARRAY_BUFFER, sizeof(positions), sizeof(textures), textures);
+        float textures[] = {
+            TopLeftCoords.x, BotomRightCoords.y,
+            BotomRightCoords.x, TopLeftCoords.y,
+            TopLeftCoords.x, TopLeftCoords.y,
 
-    std::shared_ptr<Shader> spriteShader = RessourceManager::GetShader("Sprite");
-    spriteShader->use();
+            TopLeftCoords.x, BotomRightCoords.y,
+            BotomRightCoords.x, BotomRightCoords.y,
+            BotomRightCoords.x, TopLeftCoords.y};
 
-    ml::mat4 model = ml::mat4(1.0f);
-    model = ml::translate(model, ml::vec3(position, 0.0f));
-    model = ml::rotate(model, ml::radians(rotation), ml::vec3(0.0f, 0.0f, 1.0f));
-    model = ml::scale(model, ml::vec3(size, 1.0f));
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferSubData(GL_ARRAY_BUFFER, sizeof(positions), sizeof(textures), textures);
 
-    spriteShader->setMat4("model", model);
-    spriteShader->setVec4("spriteColor", color);
-    if (drawAbsolute)
-        spriteShader->setMat4("projection", projectionMatAbsolute);
-    else
-        spriteShader->setMat4("projection", projectionMatRelative);
+        std::shared_ptr<Shader> spriteShader = RessourceManager::GetShader("Sprite");
+        spriteShader->use();
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, RessourceManager::GetTexture(sprite.textureName)->getID()); //@todo check
+        ml::mat4 model = ml::mat4(1.0f);
+        model = ml::translate(model, spritesToDraw[index[i]].position - ml::vec3(spritesToDraw[index[i]].spriteOffset, 0));
+        model = ml::rotate(model, ml::radians(spritesToDraw[index[i]].rotation), ml::vec3(0.0f, 0.0f, 1.0f));
+        model = ml::scale(model, ml::vec3(spritesToDraw[index[i]].size, 1.0f));
 
-    glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+        spriteShader->setMat4("model", model);
+        spriteShader->setVec4("spriteColor", spritesToDraw[index[i]].color);
+        if (spritesToDraw[index[i]].drawAbsolute)
+            spriteShader->setMat4("projection", projectionMatAbsolute);
+        else
+            spriteShader->setMat4("projection", projectionMatRelative);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, RessourceManager::GetTexture(spritesToDraw[index[i]].sprite.textureName)->getID()); //@todo check
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        LineRenderer2D::Draw(ml::vec2(spritesToDraw[index[i]].position.x - spritesToDraw[index[i]].boundingBox.x / 2, spritesToDraw[index[i]].position.y - spritesToDraw[index[i]].boundingBox.y / 2), ml::vec2(spritesToDraw[index[i]].position.x + spritesToDraw[index[i]].boundingBox.x / 2, spritesToDraw[index[i]].position.y - spritesToDraw[index[i]].boundingBox.y / 2), ml::vec3(1, 0, 0), true);
+        LineRenderer2D::Draw(ml::vec2(spritesToDraw[index[i]].position.x - spritesToDraw[index[i]].boundingBox.x / 2, spritesToDraw[index[i]].position.y - spritesToDraw[index[i]].boundingBox.y / 2), ml::vec2(spritesToDraw[index[i]].position.x - spritesToDraw[index[i]].boundingBox.x / 2, spritesToDraw[index[i]].position.y + spritesToDraw[index[i]].boundingBox.y / 2), ml::vec3(1, 0, 0), true);
+        LineRenderer2D::Draw(ml::vec2(spritesToDraw[index[i]].position.x - spritesToDraw[index[i]].boundingBox.x / 2, spritesToDraw[index[i]].position.y + spritesToDraw[index[i]].boundingBox.y / 2), ml::vec2(spritesToDraw[index[i]].position.x + spritesToDraw[index[i]].boundingBox.x / 2, spritesToDraw[index[i]].position.y + spritesToDraw[index[i]].boundingBox.y / 2), ml::vec3(1, 0, 0), true);
+        LineRenderer2D::Draw(ml::vec2(spritesToDraw[index[i]].position.x + spritesToDraw[index[i]].boundingBox.x / 2, spritesToDraw[index[i]].position.y - spritesToDraw[index[i]].boundingBox.y / 2), ml::vec2(spritesToDraw[index[i]].position.x + spritesToDraw[index[i]].boundingBox.x / 2, spritesToDraw[index[i]].position.y + spritesToDraw[index[i]].boundingBox.y / 2), ml::vec3(1, 0, 0), true);
+    }
+
+    spritesToDraw.clear();
+
     glBindVertexArray(0);
 }

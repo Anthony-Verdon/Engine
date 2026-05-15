@@ -61,9 +61,10 @@ void UI::Slider<T>::Update()
 template <typename T>
 void UI::Slider<T>::Draw()
 {
-    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetSprite(boundarySprite).SetSize(ml::vec2(size.y, size.y)).SetDrawAbsolute(true).SetPosition(leftBoundaryPos).Build());
-    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetSprite(boundarySprite).SetSize(ml::vec2(size.y, size.y)).SetDrawAbsolute(true).SetPosition(rightBoundaryPos).FlipHorizontally(true).Build());
-    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetSprite(pipeSprite).SetSize(ml::vec2(size.x - size.y * 2, size.y)).SetDrawAbsolute(true).SetPosition(pos).Build());
-    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetSprite(thumbSprite).SetSize(thumbSprite.size).SetDrawAbsolute(true).SetPosition(thumbPos).Build());
+    //@todo check pos z value
+    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetSprite(boundarySprite).SetSize(ml::vec2(size.y, size.y)).SetDrawAbsolute(true).SetPosition(ml::vec3(leftBoundaryPos, 0)).Build());
+    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetSprite(boundarySprite).SetSize(ml::vec2(size.y, size.y)).SetDrawAbsolute(true).SetPosition(ml::vec3(rightBoundaryPos, 0)).FlipHorizontally(true).Build());
+    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetSprite(pipeSprite).SetSize(ml::vec2(size.x - size.y * 2, size.y)).SetDrawAbsolute(true).SetPosition(ml::vec3(pos, 0)).Build());
+    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetSprite(thumbSprite).SetSize(thumbSprite.size).SetDrawAbsolute(true).SetPosition(ml::vec3(thumbPos, 0)).Build());
     TextRenderer::Draw(std::format("{:.2f}", value), font, thumbPos.x, thumbPos.y + thumbSprite.size.y, 0.5, ml::vec4(1, 1, 1, textFadeTimer / TEXT_FADE_TIME), TextRenderer::TextAlign::CENTER);
 }

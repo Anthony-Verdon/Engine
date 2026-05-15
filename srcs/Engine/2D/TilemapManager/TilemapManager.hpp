@@ -18,7 +18,7 @@ class TilemapManager
   public:
     static void AddTile(const std::string &tilemapName, const ml::vec2 &position, const Tile &tile);
     static void AddTile(const std::string &tilemapName, const ml::vec2 &position, size_t tileIndex);
-    static void AddTile(const std::string &tilemapName, const ml::vec2 &position, const Sprite &sprite, const ml::vec2 &spriteOffset);
+    static void AddTile(const std::string &tilemapName, const ml::vec2 &position, const Sprite &sprite, const ml::vec2 &spriteOffset, const ml::vec2 &boundingBox);
     static void SuppressTile(const std::string &tilemapName, const ml::vec2 &position);
 
     static bool TileExist(const std::string &tilemapName, const ml::vec2 &position);
