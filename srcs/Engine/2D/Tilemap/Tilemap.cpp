@@ -65,8 +65,7 @@ void Tilemap::Draw(int index)
     for (auto it = tiles.begin(); it != tiles.end(); it++)
     {
         Tile tile = TileDictionnary::GetTile(it->second);
-        //@todo z should be tilemap index
-        SpriteRenderer::Draw(ml::vec3(it->first, index), tile.spriteOffset, tile.boundingBox, tile.sprite.size, 0, ml::vec3(1, 1, 1), tile.sprite, false, false, true);
+        SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(ml::vec3(it->first, index)).SetSpriteOffset(tile.spriteOffset).SetBoundingBox(tile.boundingBox).SetSize(tile.sprite.size).SetSprite(tile.sprite).SetDrawAbsolute(true).Build());
     }
 }
 

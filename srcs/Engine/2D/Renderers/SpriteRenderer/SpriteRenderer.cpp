@@ -72,16 +72,6 @@ void SpriteRenderer::Destroy()
     glDeleteBuffers(1, &VBO);
 }
 
-void SpriteRenderer::Draw(const ml::vec3 &position, const ml::vec2 &spriteOffset, const ml::vec2 &boundingBox, const ml::vec2 &size, float rotation, const ml::vec3 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute)
-{
-    SpriteRenderer::Draw(position, spriteOffset, boundingBox, size, rotation, ml::vec4(color, 1), sprite, flipHorizontally, flipVertically, drawAbsolute);
-}
-
-void SpriteRenderer::Draw(const ml::vec3 &position, const ml::vec2 &spriteOffset, const ml::vec2 &boundingBox, const ml::vec2 &size, float rotation, const ml::vec4 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute)
-{
-    SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(position).SetSpriteOffset(spriteOffset).SetBoundingBox(boundingBox).SetSize(size).SetRotation(rotation).SetColor(color).SetSprite(sprite).FlipHorizontally(flipHorizontally).FlipVertically(flipVertically).SetDrawAbsolute(drawAbsolute).Build());
-}
-
 void SpriteRenderer::Draw(const SpriteRenderData &data)
 {
     spritesToDraw.push_back(data);

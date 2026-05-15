@@ -120,8 +120,6 @@ class SpriteRenderer
   public:
     static void Init();
     static void Destroy();
-    static void Draw(const ml::vec3 &position, const ml::vec2 &spriteOffset, const ml::vec2 &boundingBox, const ml::vec2 &size, float rotation, const ml::vec3 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute = false);
-    static void Draw(const ml::vec3 &position, const ml::vec2 &spriteOffset, const ml::vec2 &boundingBox, const ml::vec2 &size, float rotation, const ml::vec4 &color, const Sprite &sprite, bool flipHorizontally, bool flipVertically, bool drawAbsolute = false);
     static void Draw(const SpriteRenderData &data);
     static void Draw();
 
