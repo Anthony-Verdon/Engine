@@ -40,12 +40,25 @@ class WindowManager
 
   public:
     static void InitWindow(const std::string &name);
+    static void DestructWindowManager();
+
     static void StartUpdateLoop(AProgram *program);
     static void StopUpdateLoop();
-    static void DestructWindowManager();
+
+    static void SetClearColor(float r, float g, float b, float a);
+    // @todo: if we want to avoid using OpenGL and/or GLFW #define
+    // I should create my own #define for this arg
+    static void EnableDepthTest();
+    static void DisableDepthTest();
+    static void EnableCullFace(GLenum cullFaceMode, GLenum frontFaceMode);
+    static void DisableCullFace();
+    static void EnableBlend(GLenum sfactor, GLenum dfactor);
+    static void DisableBlend();
 
     static void SetWindowIcon(const std::string &path);
 
+    // @todo: if we want to avoid using OpenGL and/or GLFW #define
+    // I should create my own #define for input
     static bool IsInputPressed(int input);
     static bool IsInputPressedOrMaintain(int input, float time = 0);
     static bool IsInputReleased(int input, float time = 0);

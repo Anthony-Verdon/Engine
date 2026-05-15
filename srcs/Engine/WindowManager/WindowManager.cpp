@@ -62,19 +62,6 @@ void WindowManager::InitWindow(const std::string &name)
     glViewport(0, 0, viewPortWidth, viewportHeight);
     windowSize = ml::vec2(viewPortWidth, viewportHeight);
 
-    // region to move in specific function
-    glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
-    // cull face enabled make openGL draw only on one side
-    // glEnable(GL_CULL_FACE);
-    // glCullFace(GL_FRONT);
-    // glFrontFace(GL_CW);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glEnable(GL_DEPTH_TEST);
-    // end region
-
     glfwSetCursorPosCallback(window, mouse_position_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, key_callback);
@@ -144,6 +131,43 @@ void WindowManager::StartUpdateLoop(AProgram *inProgram)
 void WindowManager::StopUpdateLoop()
 {
     glfwSetWindowShouldClose(window, true);
+}
+
+void WindowManager::SetClearColor(float r, float g, float b, float a)
+{
+    glClearColor(r, g, b, a);
+}
+
+void WindowManager::EnableDepthTest()
+{
+    glEnable(GL_DEPTH_TEST);
+}
+
+void WindowManager::DisableDepthTest()
+{
+    glDisable(GL_DEPTH_TEST);
+}
+
+void WindowManager::EnableCullFace(GLenum cullFaceMode, GLenum frontFaceMode)
+{
+    glEnable(GL_CULL_FACE);
+    glCullFace(cullFaceMode);
+    glFrontFace(frontFaceMode);
+}
+
+void WindowManager::DisableCullFace()
+{
+    glDisable(GL_CULL_FACE);
+}
+void WindowManager::EnableBlend(GLenum sfactor, GLenum dfactor)
+{
+    glEnable(GL_BLEND);
+    glBlendFunc(sfactor, dfactor);
+}
+
+void WindowManager::DisableBlend()
+{
+    glDisable(GL_BLEND);
 }
 
 void WindowManager::SetWindowIcon(const std::string &path)
