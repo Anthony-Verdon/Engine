@@ -49,3 +49,8 @@ size_t TileDictionnary::GetDictionnarySize()
 {
     return (tiles.size());
 }
+
+void TileDictionnary::UpdateTile(size_t index, const Tile &tile)
+{
+    tiles[index] = tile;
+}

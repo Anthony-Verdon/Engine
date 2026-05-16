@@ -98,6 +98,11 @@ void SpriteRenderer::Draw()
 
     for (size_t i = 0; i < index.size(); i++)
     {
+        if (!RessourceManager::TextureExist(spritesToDraw[index[i]].sprite.textureName))
+        {
+            std::cerr << "texture " << spritesToDraw[index[i]].sprite.textureName << " not loaded" << std::endl;
+            continue;
+        }
         ml::vec2 TopLeftCoords;
         ml::vec2 BotomRightCoords;
         TopLeftCoords.x = 1.0f / spritesToDraw[index[i]].sprite.textureSize.x * spritesToDraw[index[i]].sprite.spriteCoords.x;
