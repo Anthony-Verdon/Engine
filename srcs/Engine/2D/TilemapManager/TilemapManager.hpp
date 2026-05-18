@@ -10,7 +10,6 @@ class TilemapManager
 {
   private:
     static std::map<std::string, Tilemap> tilemaps;
-    static std::vector<std::string> tilemapOrder;
 
     TilemapManager() = delete;
     ~TilemapManager() = delete;
@@ -24,14 +23,12 @@ class TilemapManager
     static bool TileExist(const std::string &tilemapName, const ml::vec2 &position);
     static Tile GetTile(const std::string &tilemapName, const ml::vec2 &position);
     static std::map<ml::vec2, size_t, Vec2Comparator> GetTiles(const std::string &tilemapName);
+    static std::map<std::string, Tilemap> GetTilemaps() { return tilemaps; }
 
     static bool GetBuildCollision(const std::string &tilemapName);
     static void SetBuildCollision(const std::string &tilemapName, bool buildCollision);
 
     static void AddTilemap(const std::string &name, const Tilemap &tilemap = Tilemap());
-
-    static std::vector<std::string> GetTilemapOrder() { return tilemapOrder; }
-    static void SetTilemapOrder(const std::vector<std::string> &tilemapOrder) { TilemapManager::tilemapOrder = tilemapOrder; }
 
     static void Draw();
 
