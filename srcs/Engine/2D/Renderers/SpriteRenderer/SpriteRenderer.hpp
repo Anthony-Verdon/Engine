@@ -17,6 +17,7 @@ struct SpriteRenderData
     bool flipHorizontally;
     bool flipVertically;
     bool drawAbsolute;
+    bool depthZ;
 
     SpriteRenderData()
     {
@@ -30,6 +31,7 @@ struct SpriteRenderData
         flipHorizontally = false;
         flipVertically = false;
         drawAbsolute = false;
+        depthZ = true;
     }
 };
 
@@ -92,13 +94,16 @@ class SpriteRenderDataBuilder
         data.flipVertically = flip;
         return *this;
     }
-
     SpriteRenderDataBuilder &SetDrawAbsolute(bool drawAbsolute)
     {
         data.drawAbsolute = drawAbsolute;
         return *this;
     }
-
+    SpriteRenderDataBuilder &SetDepthZ(bool depthZ)
+    {
+        data.depthZ = depthZ;
+        return *this;
+    }
     SpriteRenderData Build() { return data; }
 };
 

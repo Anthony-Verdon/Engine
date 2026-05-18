@@ -86,14 +86,24 @@ void SpriteRenderer::Draw()
 
     std::sort(index.begin(), index.end(),
               [](int a, int b) {
-                  ml::vec3 positionSpriteA = spritesToDraw[a].position - ml::vec3(spritesToDraw[a].boundingBox / 2, 0);
-                  ml::vec3 positionSpriteB = spritesToDraw[b].position - ml::vec3(spritesToDraw[b].boundingBox / 2, 0);
-                  if (positionSpriteA.z != positionSpriteB.z)
-                      return positionSpriteA.z < positionSpriteB.z;
-                  else if (positionSpriteA.y != positionSpriteB.y)
-                      return positionSpriteA.y < positionSpriteB.y;
+                  if (spritesToDraw[a].depthZ && spritesToDraw[b].depthZ)
+                  {
+
+                      ml::vec3 positionSpriteA = spritesToDraw[a].position - ml::vec3(spritesToDraw[a].boundingBox / 2, 0);
+                      ml::vec3 positionSpriteB = spritesToDraw[b].position - ml::vec3(spritesToDraw[b].boundingBox / 2, 0);
+                      if (positionSpriteA.z != positionSpriteB.z)
+                          return positionSpriteA.z < positionSpriteB.z;
+                      else if (positionSpriteA.y != positionSpriteB.y)
+                          return positionSpriteA.y < positionSpriteB.y;
+                      else
+                          return positionSpriteA.x < positionSpriteB.x;
+                  }
+                  else if (spritesToDraw[a].depthZ)
+                      return (true);
+                  else if (spritesToDraw[b].depthZ)
+                      return (false);
                   else
-                      return positionSpriteA.x < positionSpriteB.x;
+                      return (a < b);
               });
 
     for (size_t i = 0; i < index.size(); i++)
