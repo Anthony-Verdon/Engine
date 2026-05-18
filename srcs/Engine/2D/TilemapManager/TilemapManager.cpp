@@ -7,6 +7,7 @@
 #include "Json/Json.hpp"
 
 std::map<std::string, Tilemap> TilemapManager::tilemaps;
+std::vector<std::string> TilemapManager::tilemapOrder;
 
 void TilemapManager::AddTile(const std::string &tilemapName, const ml::vec2 &position, const Tile &tile)
 {
@@ -89,16 +90,13 @@ void TilemapManager::SetBuildCollision(const std::string &tilemapName, bool buil
 void TilemapManager::AddTilemap(const std::string &name, const Tilemap &tilemap)
 {
     tilemaps[name] = tilemap;
+    tilemapOrder.push_back(name);
 }
 
 void TilemapManager::Draw()
 {
-    size_t i = 0;
-    for (auto it = tilemaps.begin(); it != tilemaps.end(); it++)
-    {
-        it->second.Draw(i);
-        i++;
-    }
+    for (size_t i = 0; i < tilemapOrder.size(); i++)
+        tilemaps[tilemapOrder[i]].Draw(i);
 }
 
 void TilemapManager::AddCollisions(b2WorldId worldId)

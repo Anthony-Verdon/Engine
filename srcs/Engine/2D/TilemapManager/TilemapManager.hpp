@@ -10,6 +10,7 @@ class TilemapManager
 {
   private:
     static std::map<std::string, Tilemap> tilemaps;
+    static std::vector<std::string> tilemapOrder;
 
     TilemapManager() = delete;
     ~TilemapManager() = delete;
