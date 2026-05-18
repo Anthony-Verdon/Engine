@@ -44,6 +44,7 @@ class WindowManager
 
     static void StartUpdateLoop(AProgram *program);
     static void StopUpdateLoop();
+    static bool UpdateLoopRunning();
 
     static void SetClearColor(float r, float g, float b, float a);
     // @todo: if we want to avoid using OpenGL and/or GLFW #define

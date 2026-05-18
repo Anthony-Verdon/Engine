@@ -102,7 +102,7 @@ void WindowManager::StartUpdateLoop(AProgram *inProgram)
 
     CHECK_AND_RETURN_VOID(program, "program pointer is NULL");
 
-    while (!glfwWindowShouldClose(window))
+    while (UpdateLoopRunning())
     {
 #ifdef HOTRELOAD
         if (DLLtimestamp != std::filesystem::last_write_time(DLL_NAME ".so"))
@@ -133,6 +133,10 @@ void WindowManager::StopUpdateLoop()
     glfwSetWindowShouldClose(window, true);
 }
 
+bool WindowManager::UpdateLoopRunning()
+{
+    return (!glfwWindowShouldClose(window));
+}
 void WindowManager::SetClearColor(float r, float g, float b, float a)
 {
     glClearColor(r, g, b, a);
