@@ -69,6 +69,20 @@ void PhysicBody::SetLinearVelocity(const ml::vec2 &velocity)
     b2Body_SetLinearVelocity(*id, {velocity.x, velocity.y});
 }
 
+void PhysicBody::SetShapeFilter(const std::string &shapeName, uint64_t categoryBits, uint64_t maskBits)
+{
+    b2ShapeId id = GetShape(shapeName);
+    b2Filter filter = b2Shape_GetFilter(id);
+    filter.categoryBits = categoryBits;
+    filter.maskBits = maskBits;
+    b2Shape_SetFilter(id, filter);
+}
+
+void PhysicBody::SetShapePolygon(const std::string &shapeName, b2Polygon polygon)
+{
+    b2Shape_SetPolygon(GetShape(shapeName), &polygon);
+}
+
 //***************************************
 // BODYBUILDER
 //***************************************

@@ -28,6 +28,8 @@ class PhysicBody
     static float PixelToWorld(float value);
 
     void SetLinearVelocity(const ml::vec2 &velocity);
+    void SetShapeFilter(const std::string &shapeName, uint64_t categoryBits, uint64_t maskBits);
+    void SetShapePolygon(const std::string &shapeName, b2Polygon polygon);
 
     class BodyBuilder
     {
