@@ -71,6 +71,17 @@ std::map<ml::vec2, size_t, Vec2Comparator> TilemapManager::GetTiles(const std::s
     return (std::map<ml::vec2, size_t, Vec2Comparator>{});
 }
 
+int TilemapManager::GetTilemapIndex(const std::string &tilemapName)
+{
+    for (size_t i = 0; i < tilemapOrder.size(); i++)
+    {
+        if (tilemapOrder[i] == tilemapName)
+            return ((int)i);
+    }
+
+    return (-1);
+}
+
 bool TilemapManager::GetBuildCollision(const std::string &tilemapName)
 {
     auto it = tilemaps.find(tilemapName);
