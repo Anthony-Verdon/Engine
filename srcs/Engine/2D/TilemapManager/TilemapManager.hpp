@@ -26,6 +26,8 @@ class TilemapManager
     static std::map<ml::vec2, size_t, Vec2Comparator> GetTiles(const std::string &tilemapName);
     static int GetTilemapIndex(const std::string &tilemapName);
 
+    static void AddMTO(const std::string &tilemapName, const ml::vec2 &position, const MTO &mto);
+
     static bool GetBuildCollision(const std::string &tilemapName);
     static void SetBuildCollision(const std::string &tilemapName, bool buildCollision);
 

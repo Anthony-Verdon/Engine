@@ -5,6 +5,7 @@
 #include "Engine/2D/Tile/Tile.hpp"
 #include <box2d/box2d.h>
 #include <vector>
+#include "Engine/2D/MultiTileObject/MTO.hpp"
 
 struct Vec2Comparator
 {
@@ -22,6 +23,9 @@ class Tilemap
 {
   private:
     std::map<ml::vec2, size_t, Vec2Comparator> tiles;
+    std::vector<MTOInstance> mtoInstances;
+
+    // deprecated, don't think it's really useful now
     std::vector<b2ChainId> chainsId;
     bool buildCollision;
 
@@ -39,6 +43,8 @@ class Tilemap
 
     bool TileExist(const ml::vec2 &position) const;
     Tile GetTile(const ml::vec2 &position) const;
+
+    void AddMTO(const MTOInstance &instance);
 
     bool GetBuildCollision() const { return (buildCollision); }
     void SetBuildCollision(bool buildCollision) { this->buildCollision = buildCollision; }

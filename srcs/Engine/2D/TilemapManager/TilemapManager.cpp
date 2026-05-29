@@ -4,6 +4,7 @@
 #include <set>
 #include "Engine/RessourceManager/RessourceManager.hpp"
 #include "Engine/2D/TileDictionnary/TileDictionnary.hpp"
+#include "Engine/2D/MultiTileObject/MTODictionnary/MTODictionnary.hpp"
 #include "Json/Json.hpp"
 
 std::map<std::string, Tilemap> TilemapManager::tilemaps;
@@ -80,6 +81,19 @@ int TilemapManager::GetTilemapIndex(const std::string &tilemapName)
     }
 
     return (-1);
+}
+
+void TilemapManager::AddMTO(const std::string &tilemapName, const ml::vec2 &position, const MTO &mto)
+{
+    auto it = tilemaps.find(tilemapName);
+    if (it != tilemaps.end())
+    {
+        size_t index = MTODictionnary::AddMTO(mto);
+        MTOInstance mtoInstance;
+        mtoInstance.index = index;
+        mtoInstance.position = position;
+        it->second.AddMTO(mtoInstance);
+    }
 }
 
 bool TilemapManager::GetBuildCollision(const std::string &tilemapName)

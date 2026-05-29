@@ -8,6 +8,8 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include "Engine/2D/MultiTileObject/MTODictionnary/MTODictionnary.hpp"
+#include "Engine/RessourceManager/RessourceManager.hpp"
 
 const std::array<ml::vec2, 4> directions{
     ml::vec2(0, -SPRITE_SIZE), // top
@@ -60,12 +62,30 @@ Tile Tilemap::GetTile(const ml::vec2 &position) const
     return (TileDictionnary::GetTile(it->second));
 }
 
+void Tilemap::AddMTO(const MTOInstance &instance)
+{
+    MTO mtoToAdd = MTODictionnary::GetMTO(instance.index);
+    for (size_t i = 0; i < mtoInstances.size(); i++)
+    {
+        MTO mtoToCompare = MTODictionnary::GetMTO(mtoInstances[i].index);
+        // need to check others elements from the tilemap
+        if (!(instance.position.x + mtoToAdd.size.x * SPRITE_SIZE <= mtoInstances[i].position.x || mtoInstances[i].position.x + mtoToCompare.size.x * SPRITE_SIZE <= instance.position.x || instance.position.y + mtoToAdd.size.y * SPRITE_SIZE <= mtoInstances[i].position.y || mtoInstances[i].position.y + mtoToCompare.size.y * SPRITE_SIZE <= instance.position.y))
+            return; // overlapping
+    }
+    mtoInstances.push_back(instance);
+}
+
 void Tilemap::Draw(int index)
 {
     for (auto it = tiles.begin(); it != tiles.end(); it++)
     {
         Tile tile = TileDictionnary::GetTile(it->second);
         SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(ml::vec3(it->first, index)).SetSpriteOffset(tile.spriteOffset).SetBoundingBox(tile.boundingBox).SetSize(tile.sprite.size).SetSprite(tile.sprite).SetDrawAbsolute(true).Build());
+    }
+    for (size_t i = 0; i < mtoInstances.size(); i++)
+    {
+        MTO mto = MTODictionnary::GetMTO(mtoInstances[i].index);
+        SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(ml::vec3(mtoInstances[i].position, index)).SetSize(mto.sprite.size).SetSprite(mto.sprite).SetDrawAbsolute(true).Build());
     }
 }
 
