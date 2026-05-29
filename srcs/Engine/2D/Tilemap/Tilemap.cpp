@@ -36,6 +36,12 @@ Tilemap::~Tilemap()
 
 void Tilemap::AddTile(const ml::vec2 &position, size_t tileIndex)
 {
+    for (size_t i = 0; i < mtoInstances.size(); i++)
+    {
+        MTO mto = MTODictionnary::GetMTO(mtoInstances[i].index);
+        if (!(position.x + SPRITE_SIZE <= mtoInstances[i].position.x || mtoInstances[i].position.x + mto.size.x * SPRITE_SIZE <= position.x || position.y + SPRITE_SIZE <= mtoInstances[i].position.y || mtoInstances[i].position.y + mto.size.y * SPRITE_SIZE <= position.y))
+            return;
+    }
     tiles[position] = tileIndex;
 }
 
@@ -72,6 +78,15 @@ void Tilemap::AddMTO(const MTOInstance &instance)
         if (!(instance.position.x + mtoToAdd.size.x * SPRITE_SIZE <= mtoInstances[i].position.x || mtoInstances[i].position.x + mtoToCompare.size.x * SPRITE_SIZE <= instance.position.x || instance.position.y + mtoToAdd.size.y * SPRITE_SIZE <= mtoInstances[i].position.y || mtoInstances[i].position.y + mtoToCompare.size.y * SPRITE_SIZE <= instance.position.y))
             return; // overlapping
     }
+    for (size_t x = 0; x < mtoToAdd.size.x; x++)
+    {
+        for (size_t y = 0; y < mtoToAdd.size.y; y++)
+        {
+            ml::vec2 key = instance.position + ml::vec2(x, y) * SPRITE_SIZE;
+            if (tiles.find(key) != tiles.end())
+                return; // overlapping
+        }
+    }
     mtoInstances.push_back(instance);
 }
 
@@ -80,12 +95,12 @@ void Tilemap::Draw(int index)
     for (auto it = tiles.begin(); it != tiles.end(); it++)
     {
         Tile tile = TileDictionnary::GetTile(it->second);
-        SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(ml::vec3(it->first, index)).SetSpriteOffset(tile.spriteOffset).SetBoundingBox(tile.boundingBox).SetSize(tile.sprite.size).SetSprite(tile.sprite).SetDrawAbsolute(true).Build());
+        SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(ml::vec3(it->first + ml::vec2(1, 1) * SPRITE_SIZE / 2, index)).SetSpriteOffset(tile.spriteOffset).SetBoundingBox(tile.boundingBox).SetSize(tile.sprite.size).SetSprite(tile.sprite).SetDrawAbsolute(true).Build());
     }
     for (size_t i = 0; i < mtoInstances.size(); i++)
     {
         MTO mto = MTODictionnary::GetMTO(mtoInstances[i].index);
-        SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(ml::vec3(mtoInstances[i].position, index)).SetSize(mto.sprite.size).SetSprite(mto.sprite).SetDrawAbsolute(true).Build());
+        SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(ml::vec3(mtoInstances[i].position + mto.size * SPRITE_SIZE / 2, index)).SetSize(mto.sprite.size).SetSprite(mto.sprite).SetDrawAbsolute(true).Build());
     }
 }
 
