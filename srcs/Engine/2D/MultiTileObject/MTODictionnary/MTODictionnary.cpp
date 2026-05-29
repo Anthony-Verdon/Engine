@@ -21,3 +21,8 @@ MTO MTODictionnary::GetMTO(size_t index)
         return MTO::none;
     return (MTOs[index]);
 }
+
+void MTODictionnary::UpdateMTO(size_t index, const MTO &mto)
+{
+    MTOs[index] = mto;
+}

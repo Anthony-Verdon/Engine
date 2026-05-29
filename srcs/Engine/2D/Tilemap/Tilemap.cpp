@@ -101,6 +101,14 @@ void Tilemap::Draw(int index)
     {
         MTO mto = MTODictionnary::GetMTO(mtoInstances[i].index);
         SpriteRenderer::Draw(SpriteRenderDataBuilder().SetPosition(ml::vec3(mtoInstances[i].position + mto.size * SPRITE_SIZE / 2, index)).SetSize(mto.sprite.size).SetSprite(mto.sprite).SetDrawAbsolute(true).Build());
+        for (size_t j = 0; j < mto.boundingBoxs.size(); j++)
+        {
+            ml::vec2 position = mtoInstances[i].position + mto.boundingBoxs[j].position;
+            LineRenderer2D::Draw(position, position + ml::vec2(mto.boundingBoxs[j].size.x, 0), ml::vec3(1, 0, 0));
+            LineRenderer2D::Draw(position, position + ml::vec2(0, mto.boundingBoxs[j].size.y), ml::vec3(1, 0, 0));
+            LineRenderer2D::Draw(position + mto.boundingBoxs[j].size, position + ml::vec2(mto.boundingBoxs[j].size.x, 0), ml::vec3(1, 0, 0));
+            LineRenderer2D::Draw(position + mto.boundingBoxs[j].size, position + ml::vec2(0, mto.boundingBoxs[j].size.y), ml::vec3(1, 0, 0));
+        }
     }
 }
 
