@@ -74,10 +74,10 @@ void Tilemap::AddMTO(const MTOInstance &instance)
     for (size_t i = 0; i < mtoInstances.size(); i++)
     {
         MTO mtoToCompare = MTODictionnary::GetMTO(mtoInstances[i].index);
-        // need to check others elements from the tilemap
         if (!(instance.position.x + mtoToAdd.size.x * SPRITE_SIZE <= mtoInstances[i].position.x || mtoInstances[i].position.x + mtoToCompare.size.x * SPRITE_SIZE <= instance.position.x || instance.position.y + mtoToAdd.size.y * SPRITE_SIZE <= mtoInstances[i].position.y || mtoInstances[i].position.y + mtoToCompare.size.y * SPRITE_SIZE <= instance.position.y))
             return; // overlapping
     }
+    // problem on this loop
     for (size_t x = 0; x < mtoToAdd.size.x; x++)
     {
         for (size_t y = 0; y < mtoToAdd.size.y; y++)
@@ -88,6 +88,12 @@ void Tilemap::AddMTO(const MTOInstance &instance)
         }
     }
     mtoInstances.push_back(instance);
+}
+
+void Tilemap::UpdateMTO(size_t index, const MTOInstance &instance)
+{
+    if (index < mtoInstances.size())
+        mtoInstances[index] = instance;
 }
 
 void Tilemap::Draw(int index)

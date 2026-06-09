@@ -45,7 +45,7 @@ class Tilemap
     Tile GetTile(const ml::vec2 &position) const;
 
     void AddMTO(const MTOInstance &instance);
-
+    void UpdateMTO(size_t index, const MTOInstance &instance);
     bool GetBuildCollision() const { return (buildCollision); }
     void SetBuildCollision(bool buildCollision) { this->buildCollision = buildCollision; }
 
@@ -55,4 +55,5 @@ class Tilemap
     void UpdateCollision(b2WorldId worldId);
 
     const std::map<ml::vec2, size_t, Vec2Comparator> &GetTiles() const { return (tiles); }
+    const std::vector<MTOInstance> &GetMTOs() const { return (mtoInstances); }
 };

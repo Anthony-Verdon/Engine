@@ -92,8 +92,28 @@ void TilemapManager::AddMTO(const std::string &tilemapName, const ml::vec2 &posi
         MTOInstance mtoInstance;
         mtoInstance.index = index;
         mtoInstance.position = position;
+        for (size_t i = 0; i < mto.boundingBoxs.size(); i++)
+        {
+            mtoInstance.behaviors.push_back({});
+            mtoInstance.behaviors[i].type = 0;
+        }
         it->second.AddMTO(mtoInstance);
     }
+}
+void TilemapManager::UpdateMTO(const std::string &tilemapName, size_t index, const MTOInstance &instance)
+{
+    auto it = tilemaps.find(tilemapName);
+    if (it != tilemaps.end())
+        it->second.UpdateMTO(index, instance);
+}
+
+std::vector<MTOInstance> TilemapManager::GetMTOs(const std::string &tilemapName)
+{
+    auto it = tilemaps.find(tilemapName);
+    if (it != tilemaps.end())
+        return (it->second.GetMTOs());
+
+    return (std::vector<MTOInstance>{});
 }
 
 bool TilemapManager::GetBuildCollision(const std::string &tilemapName)

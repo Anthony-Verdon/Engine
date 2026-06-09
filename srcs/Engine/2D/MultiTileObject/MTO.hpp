@@ -3,6 +3,7 @@
 #include "Engine/2D/Sprite/Sprite.hpp"
 #include "Matrix/Matrix.hpp"
 #include <vector>
+#include "Json/Json.hpp"
 
 struct MTOBoundingBox;
 struct MTOBoundingBoxBehavior;
@@ -43,4 +44,6 @@ struct MTOBoundingBox
 
 struct MTOBoundingBoxBehavior
 {
+    int type;
+    Json::Node specificParameters;
 };
