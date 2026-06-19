@@ -15,4 +15,6 @@ class MTODictionnary
     static size_t AddMTO(const MTO &mto);
     static MTO GetMTO(size_t index);
     static void UpdateMTO(size_t index, const MTO &mto);
+
+    static size_t GetDictionnarySize() { return MTOs.size(); }
 };

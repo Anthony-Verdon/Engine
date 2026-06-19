@@ -100,6 +100,14 @@ void TilemapManager::AddMTO(const std::string &tilemapName, const ml::vec2 &posi
         it->second.AddMTO(mtoInstance);
     }
 }
+
+void TilemapManager::AddMTO(const std::string &tilemapName, const MTOInstance &instance)
+{
+    auto it = tilemaps.find(tilemapName);
+    if (it != tilemaps.end())
+        it->second.AddMTO(instance);
+}
+
 void TilemapManager::UpdateMTO(const std::string &tilemapName, size_t index, const MTOInstance &instance)
 {
     auto it = tilemaps.find(tilemapName);

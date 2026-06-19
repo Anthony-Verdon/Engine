@@ -25,6 +25,7 @@ class TilemapManager
     static std::map<ml::vec2, size_t, Vec2Comparator> GetTiles(const std::string &tilemapName);
 
     static void AddMTO(const std::string &tilemapName, const ml::vec2 &position, const MTO &mto);
+    static void AddMTO(const std::string &tilemapName, const MTOInstance &instance);
     static void UpdateMTO(const std::string &tilemapName, size_t index, const MTOInstance &instance);
     static std::vector<MTOInstance> GetMTOs(const std::string &tilemapName);
 
